@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+#root {
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.draw {
+  position: absolute;
+  width: 70px;
+  height: 70px;
+  top:100px;
+  left: 20px;
+  z-index: 1;
+}
+
+/* .info-box {
+  width: 100px;
+  height: 100px;
+  right: 0; 
+  z-index: 1;
+  background-color: wheat;
+  padding: 5px;
+} */
+
+.section-selected {
+  position: absolute;
+  z-index: 2;
+  /* top:100px; */
+  left: 20px;
+  margin-top: 200px;
+  background-color: white;
+  padding: 5px;
+  border-radius: 5px;
+  text-align: start;
+
+}
+
+.leaflet-container {
+  height: 100%;
+  z-index: -1;
+  /* border-radius: 10px;
+  margin: 10px; */
+  border: solid black 3px;
+  background-color: rgb(255, 146, 4);
+  overflow: hidden;
+}
