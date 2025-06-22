@@ -1,8 +1,8 @@
 const CoinIcon = L.icon({
-    iconUrl: "./coin-img.png", // Replace with the path to your custom icon
-    iconSize: [25, 25], // Size of the icon
-    iconAnchor: [0, 0], // Point of the icon which will correspond to marker's location
-    popupAnchor: [1, -34], // Point from which the popup should open relative to the iconAnchor
-  });
+  iconUrl: "./coin-img.png",
+  iconSize: [25, 25],
+  iconAnchor: [12.5, 12.5],
+  popupAnchor: [3, 12.5],
+});
 
-export default CoinIcon
+export default CoinIcon;
