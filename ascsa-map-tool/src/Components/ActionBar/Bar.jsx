@@ -4,7 +4,7 @@ import { PiPolygonThin, PiCircleThin, PiSquareThin } from "react-icons/pi";
 import { LuMousePointer2, LuSquarePen } from "react-icons/lu";
 
 import Button from "./Button";
-import { handleDrawCircle, handleDrawRectangle, handleEdit, deactivateDraw } from "../Handlers";
+import { handleDrawShape, handleEdit, deactivateHandlers } from "../Handlers";
 
 const ActionBar = ({ activeTool, setActiveTool, mapRef }) => {
   const customStyle = { width: "2em", height: "2em" };
@@ -29,8 +29,10 @@ const ActionBar = ({ activeTool, setActiveTool, mapRef }) => {
       <Button
         icon={<LuMousePointer2 style={customStyle} strokeWidth={"1.5px"} />}
         event={() => {
-          setActiveTool("select");
-          deactivateDraw(mapRef);
+          if (activeTool != "select") {
+            setActiveTool("select");
+            deactivateHandlers(mapRef);
+          }
         }}
         isActive={activeTool === "select"}
         id="select-action"
@@ -40,7 +42,7 @@ const ActionBar = ({ activeTool, setActiveTool, mapRef }) => {
         icon={<PiSquareThin style={customStyle} strokeWidth={customStroke} />}
         event={() => {
           setActiveTool("rectangle");
-          handleDrawRectangle(mapRef);
+          handleDrawShape(mapRef, "Rectangle");
         }}
         isActive={activeTool === "rectangle"}
         id="rect-action"
@@ -50,7 +52,7 @@ const ActionBar = ({ activeTool, setActiveTool, mapRef }) => {
         icon={<PiCircleThin style={customStyle} strokeWidth={customStroke} />}
         event={() => {
           setActiveTool("circle");
-          handleDrawCircle(mapRef);
+          handleDrawShape(mapRef, "Circle");
         }}
         isActive={activeTool === "circle"}
         id="circle-action"
@@ -58,15 +60,21 @@ const ActionBar = ({ activeTool, setActiveTool, mapRef }) => {
 
       <Button
         icon={<PiPolygonThin style={customStyle} strokeWidth={customStroke} />}
-        event={() => console.log("Circle clicked")}
+        event={() => {
+          setActiveTool("poly");
+          handleDrawShape(mapRef, "Polygons");
+        }}
+        isActive={activeTool === "poly"}
         id="poly-action"
       />
 
       <Button
         icon={<LuSquarePen style={customStyle} strokeWidth={"1.5px"} />}
         event={() => {
-          setActiveTool("edit");
-          handleEdit(mapRef);
+          if (activeTool != "edit") {
+            handleEdit(mapRef);
+            setActiveTool("edit");
+          }
         }}
         id="edit-action"
         isActive={activeTool === "edit"}
