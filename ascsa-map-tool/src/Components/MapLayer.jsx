@@ -1,4 +1,10 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
+
+import L from "leaflet";
+import "leaflet-draw";
+
+import "@geoman-io/leaflet-geoman-free";
+import "@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css";
 
 import {
   MapContainer,
@@ -17,26 +23,63 @@ import { data } from "../data/data_many";
 import Info from "./Info";
 import CanvasMarkersLayer from "./MarkersLayer";
 import ActionBar from "./ActionBar/Bar";
-import DrawRectangleTool from "./RectangleSelection";
 import MarkersList from "./MarkersList";
 
 const MapLayer = () => {
-  
   console.log("[LOG] - Render Map Layer");
 
   const mapRef = useRef();
-  
+
   const [markersInBounds, setMarkersInBounds] = useState([]);
-  const bounds = useState(null);
-
-
-  const [zoom, setZoom] = useState(13);
+  const [bounds, setBounds] = useState(null);
+  const [activeTool, setActiveTool] = useState(null);
 
   const [selectedProperty, setSelectedProperty] = useState(null);
   const [mapReady, setMapReady] = useState(false);
 
-  const [activeTool, setActiveTool] = useState(null);
+  const [zoom, setZoom] = useState(13);
 
+  const onCircleCreated = (e) => {
+    console.log("onCircleSelect - enter");
+
+    if (e.shape === "Circle") {
+      const circle = e.layer;
+      const center = circle.getLatLng();
+      const radius = circle.getRadius();
+
+      // Assuming your data is an array of { lat, lng, ... }
+      const intersectingMarkers = data.features.filter((marker) => {
+        const [lng, lat] = marker.geometry["coordinates"];
+        const markerLatLng = L.latLng(lat, lng);
+
+        return center.distanceTo(markerLatLng) <= radius;
+      });
+
+      setMarkersInBounds(intersectingMarkers);
+      console.log("Here", intersectingMarkers);
+
+      setActiveTool("select");
+      console.log("onCircleSelect - exit");
+    }
+  };
+
+  const onRectangleCreated = (e) => {
+    if (e.shape === "Rectangle") {
+      const rectangle = e.layer;
+      const bounds = rectangle.getBounds();
+
+      const intersectingMarkers = data.features.filter((marker) => {
+        const [lng, lat] = marker.geometry["coordinates"];
+        const markerLatLng = L.latLng(lat, lng);
+
+        return bounds.contains(markerLatLng);
+      });
+
+      setMarkersInBounds(intersectingMarkers);
+      console.log("Rectangle selection:", intersectingMarkers);
+      setActiveTool("select");
+    }
+  };
 
   const ZoomTracker = () => {
     useMapEvents({
@@ -48,6 +91,19 @@ const MapLayer = () => {
     return null;
   };
 
+  useEffect(() => {
+    if (!mapRef.current) return;
+    setActiveTool("select");
+
+    mapRef.current.on("pm:create", onCircleCreated);
+    mapRef.current.on("pm:create", onRectangleCreated);
+
+    // Cleanup
+    return () => {
+      mapRef.current.off("pm:create", onCircleCreated);
+      mapRef.current.off("pm:create", onRectangleCreated);
+    };
+  }, [mapReady]);
 
   return (
     <>
@@ -58,8 +114,8 @@ const MapLayer = () => {
         maxZoom={24}
         scrollWheelZoom={true}
         whenReady={({ target }) => {
-          mapRef.current = target;
           setMapReady(true);
+          mapRef.current = target;
           mapRef.current.fitBounds([
             [37.972834, 23.721197], // Southwest corner
             [37.976726, 23.724362], // Northeast corner
@@ -100,26 +156,22 @@ const MapLayer = () => {
           />
         )}
 
-
         {/* <ClusteredPoints geojson={data} /> */}
 
         <ZoomTracker />
         <ScaleControl position="bottomleft" />
-
-        <DrawRectangleTool
-          active={activeTool === "rectangle"}
-          data={data}
-          onMarkersSelected={setMarkersInBounds}
-          onBoundsChange={bounds.current}
-        />
       </MapContainer>
 
       <Info picked={selectedProperty}> </Info>
 
-      <ActionBar activeTool={activeTool} setActiveTool={setActiveTool} />
-      {activeTool == "rectangle" && <MarkersList markers={markersInBounds} />}
-      
-
+      <ActionBar
+        activeTool={activeTool}
+        setActiveTool={setActiveTool}
+        mapRef={mapRef.current}
+      />
+      {activeTool in ["rectangle", "circle"] && (
+        <MarkersList markers={markersInBounds} />
+      )}
     </>
   );
 };

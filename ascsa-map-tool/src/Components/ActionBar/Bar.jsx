@@ -1,12 +1,14 @@
 import { HStack, IconButton, Box } from "@chakra-ui/react";
 
 import { PiPolygonThin, PiCircleThin, PiSquareThin } from "react-icons/pi";
-import { LuMousePointer2 } from "react-icons/lu";
-import Button from "./Button";
+import { LuMousePointer2, LuSquarePen } from "react-icons/lu";
 
-const ActionBar = ({ activeTool, setActiveTool }) => {
-  const customStyle = { width: "2.6em", height: "2.6em" };
-  const customStroke = "1.5px";
+import Button from "./Button";
+import { handleDrawCircle, handleDrawRectangle, handleEdit, deactivateDraw } from "../Handlers";
+
+const ActionBar = ({ activeTool, setActiveTool, mapRef }) => {
+  const customStyle = { width: "2em", height: "2em" };
+  const customStroke = "5px";
 
   return (
     <HStack
@@ -25,29 +27,49 @@ const ActionBar = ({ activeTool, setActiveTool }) => {
       boxShadow="0px 2px 4px 0px rgba(0, 0, 0, 0.25)"
     >
       <Button
-        icon={<LuMousePointer2 style={customStyle} strokeWidth={"1px"} />}
-        event={() => console.log("Custom button clicked")}
-        id="act0"
+        icon={<LuMousePointer2 style={customStyle} strokeWidth={"1.5px"} />}
+        event={() => {
+          setActiveTool("select");
+          deactivateDraw(mapRef);
+        }}
+        isActive={activeTool === "select"}
+        id="select-action"
       />
 
       <Button
         icon={<PiSquareThin style={customStyle} strokeWidth={customStroke} />}
-        event={() => {setActiveTool("rectangle");}}
+        event={() => {
+          setActiveTool("rectangle");
+          handleDrawRectangle(mapRef);
+        }}
         isActive={activeTool === "rectangle"}
-        id="act2"
+        id="rect-action"
       />
 
       <Button
         icon={<PiCircleThin style={customStyle} strokeWidth={customStroke} />}
-        event={() => {setActiveTool("circle");}}
+        event={() => {
+          setActiveTool("circle");
+          handleDrawCircle(mapRef);
+        }}
         isActive={activeTool === "circle"}
-        id="act3"
+        id="circle-action"
       />
 
       <Button
         icon={<PiPolygonThin style={customStyle} strokeWidth={customStroke} />}
         event={() => console.log("Circle clicked")}
-        id="act3"
+        id="poly-action"
+      />
+
+      <Button
+        icon={<LuSquarePen style={customStyle} strokeWidth={"1.5px"} />}
+        event={() => {
+          setActiveTool("edit");
+          handleEdit(mapRef);
+        }}
+        id="edit-action"
+        isActive={activeTool === "edit"}
       />
     </HStack>
   );
