@@ -4,13 +4,13 @@ const Button = ({ icon, event, isActive, id }) => {
   return (
     <IconButton
       variant="solid"
-      rounded="lg"
-      bg={isActive ? "#C6C6C6" : "gray.200"}
-      color={"black"}
+      rounded="md"
+      bg={isActive ? "#161616" : "#EEEEEE"}
+      color={isActive ? "white" : "black"}
       border={"1px solid #C6C6C6"}
-      _hover={{ bg: "#C6C6C6" }}
+      _hover={isActive ? { bg: "#161616" } : { bg: "#C6C6C6" }}
       id={id}
-      p={1}
+      p={2.5}
       w={"fit"}
       h={"fit"}
       onClick={event}
