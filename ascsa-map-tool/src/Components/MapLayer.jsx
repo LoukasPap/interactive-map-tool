@@ -6,6 +6,8 @@ import "leaflet-draw";
 import "@geoman-io/leaflet-geoman-free";
 import "@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css";
 
+import { booleanPointInPolygon } from "@turf/boolean-point-in-polygon";
+import { point, polygon } from "@turf/helpers";
 import {
   MapContainer,
   TileLayer,
@@ -81,6 +83,29 @@ const MapLayer = () => {
     }
   };
 
+  const onPolygonCreated = (e) => {
+    if (e.shape === "Polygon") {
+      const bounds = e.layer.getLatLngs()[0].map((m) => [m.lng, m.lat]);
+      console.log(bounds);
+
+      const closedBounds = [...bounds, bounds[0]];
+      const polygonBounds = polygon([closedBounds]);
+
+      const intersectingMarkers = data.features.filter((marker) => {
+        const p = point([
+          marker.geometry["coordinates"][0],
+          marker.geometry["coordinates"][1],
+        ]);
+
+        return booleanPointInPolygon(p, polygonBounds);
+      });
+
+      setMarkersInBounds(intersectingMarkers);
+      console.log("Polygon selection:", intersectingMarkers);
+      setActiveTool("select");
+    }
+  };
+
   const ZoomTracker = () => {
     useMapEvents({
       zoomend: (e) => {
@@ -93,15 +118,17 @@ const MapLayer = () => {
 
   useEffect(() => {
     if (!mapRef.current) return;
+    const map = mapRef.current;
     setActiveTool("select");
 
-    mapRef.current.on("pm:create", onCircleCreated);
-    mapRef.current.on("pm:create", onRectangleCreated);
+    map.on("pm:create", onCircleCreated);
+    map.on("pm:create", onRectangleCreated);
+    map.on("pm:create", onPolygonCreated);
 
-    // Cleanup
     return () => {
-      mapRef.current.off("pm:create", onCircleCreated);
-      mapRef.current.off("pm:create", onRectangleCreated);
+      map.off("pm:create", onCircleCreated);
+      map.off("pm:create", onRectangleCreated);
+      map.off("pm:create", onPolygonCreated);
     };
   }, [mapReady]);
 
@@ -169,7 +196,7 @@ const MapLayer = () => {
         setActiveTool={setActiveTool}
         mapRef={mapRef.current}
       />
-      {activeTool in ["rectangle", "circle"] && (
+      {activeTool in ["rectangle", "circle", "polygon"] && (
         <MarkersList markers={markersInBounds} />
       )}
     </>
