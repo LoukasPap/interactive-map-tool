@@ -14,6 +14,7 @@
     "@chakra-ui/react": "^3.21.0",
     "@emotion/react": "^11.14.0",
     "@geoman-io/leaflet-geoman-free": "^2.18.3",
+    "@turf/boolean-point-in-polygon": "^7.2.0",
     "d3": "^7.9.0",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
