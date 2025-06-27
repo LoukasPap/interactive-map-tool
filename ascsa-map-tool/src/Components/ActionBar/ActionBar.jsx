@@ -5,15 +5,15 @@ import { LuMousePointer2, LuSquarePen, LuTrash2 } from "react-icons/lu";
 
 import {
   handleDrawShape,
-  handleEdit,
   handleRemove,
   deactivateHandlers,
 } from "../Handlers";
 
 import Button from "./Button";
+import NonDrawMenu from "./NonDrawMenu";
 
 const Bar = ({ activeTool, setActiveTool, mapRef }) => {
-  const customStyle = { width: "2em", height: "2em" };
+  const customStyle = { width: "2.25em", height: "2.25em" };
   const customStroke = "5px";
 
   return (
@@ -22,8 +22,6 @@ const Bar = ({ activeTool, setActiveTool, mapRef }) => {
         <Portal>
           <ActionBar.Positioner>
             <ActionBar.Content
-              w="fit"
-              bg="white"
               border="1px solid #C6C6C6"
               rounded="2xl"
               boxShadow="0px 2px 4px 0px rgba(0, 0, 0, 0.25)"
@@ -87,17 +85,11 @@ const Bar = ({ activeTool, setActiveTool, mapRef }) => {
                 id="poly-action"
               />
 
-              <Button
-                icon={<LuSquarePen style={customStyle} strokeWidth={"1.5px"} />}
-                event={() => {
-                  if (activeTool != "edit") {
-                    handleEdit(mapRef);
-                    setActiveTool("edit");
-                  }
-                }}
-                id="edit-action"
-                isActive={activeTool === "edit"}
-              />
+              <NonDrawMenu
+                activeTool={activeTool}
+                setActiveTool={setActiveTool}
+                mapRef={mapRef}
+              ></NonDrawMenu>
 
               <Button
                 icon={<LuTrash2 style={customStyle} strokeWidth={"1.5px"} />}

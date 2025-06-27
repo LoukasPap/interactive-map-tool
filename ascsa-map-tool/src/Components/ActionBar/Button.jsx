@@ -5,20 +5,20 @@ const Button = ({ icon, event, isActive, id }) => {
     <IconButton
       variant="solid"
       rounded="md"
-      bg={isActive ? "#161616" : "#EEEEEE"}
-      color={isActive ? "white" : "black"}
-      border={"1px solid #C6C6C6"}
-      _hover={isActive ? { bg: "#161616" } : { bg: "#C6C6C6" }}
+      bg={isActive ? "gray.950" : "white"}
+      color={isActive ? "white" : "gray.900"}
+      border="2px solid #d4d4d8"
+      _hover={isActive ? { bg: "#161616" } : { bg: "gray.300" }}
       id={id}
-      p={2.5}
-      w={"fit"}
-      h={"fit"}
+      p="2.5"
+      w="fit"
+      h="fit"
       onClick={event}
+  
     >
       {icon}
     </IconButton>
   );
 };
-
 
 export default Button;
