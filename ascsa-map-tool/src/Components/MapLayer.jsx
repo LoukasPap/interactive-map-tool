@@ -24,8 +24,8 @@ import { data } from "../data/data_many";
 
 import Info from "./Info";
 import CanvasMarkersLayer from "./MarkersLayer";
-import ActionBar from "./ActionBar/Bar";
 import MarkersList from "./MarkersList";
+import Bar from "./ActionBar/ActionBar";
 
 const MapLayer = () => {
   console.log("[LOG] - Render Map Layer");
@@ -191,11 +191,12 @@ const MapLayer = () => {
 
       <Info picked={selectedProperty}> </Info>
 
-      <ActionBar
+      <Bar
         activeTool={activeTool}
         setActiveTool={setActiveTool}
         mapRef={mapRef.current}
       />
+      
       {activeTool in ["rectangle", "circle", "polygon"] && (
         <MarkersList markers={markersInBounds} />
       )}

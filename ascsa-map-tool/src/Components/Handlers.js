@@ -26,11 +26,18 @@ export const handleEdit = (mapRef) => {
   }
 };
 
+export const handleRemove = (mapRef) => {
+  if (mapRef) {
+    mapRef.pm.toggleGlobalRemovalMode();
+  }
+};
+
 export const deactivateHandlers = (mapRef) => {
   if (mapRef) {
     mapRef.pm.disableDraw("Circle");
     mapRef.pm.disableDraw("Rectangle");
     mapRef.pm.disableDraw("Polygons");
     mapRef.pm.toggleGlobalEditMode();
+    mapRef.pm.toggleGlobalRemovalMode();
   }
 };

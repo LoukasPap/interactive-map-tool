@@ -1,12 +1,12 @@
 import { HStack, IconButton, Box } from "@chakra-ui/react";
 
 import { PiPolygonThin, PiCircleThin, PiSquareThin } from "react-icons/pi";
-import { LuMousePointer2, LuSquarePen } from "react-icons/lu";
+import { LuMousePointer2, LuSquarePen, LuTrash2 } from "react-icons/lu";
 
 import Button from "./Button";
-import { handleDrawShape, handleEdit, deactivateHandlers } from "../Handlers";
+import { handleDrawShape, handleEdit, handleRemove, deactivateHandlers } from "../Handlers";
 
-const ActionBar = ({ activeTool, setActiveTool, mapRef }) => {
+const ActionBarOld = ({ activeTool, setActiveTool, mapRef }) => {
   const customStyle = { width: "2em", height: "2em" };
   const customStroke = "5px";
 
@@ -79,8 +79,20 @@ const ActionBar = ({ activeTool, setActiveTool, mapRef }) => {
         id="edit-action"
         isActive={activeTool === "edit"}
       />
+
+      <Button
+        icon={<LuTrash2 style={customStyle} strokeWidth={"1.5px"} />}
+        event={() => {
+          if (activeTool != "del") {
+            handleRemove(mapRef);
+            setActiveTool("del");
+          }
+        }}
+        id="del-action"
+        isActive={activeTool === "del"}
+      />
     </HStack>
   );
 };
 
-export default ActionBar;
+export default ActionBarOld;
