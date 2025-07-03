@@ -22,13 +22,13 @@ export const handleDrawShape = (mapRef, shape) => {
 
 export const handleEdit = (mapRef) => {
   if (mapRef) {
-    mapRef.pm.toggleGlobalEditMode();
+    mapRef.pm.enableGlobalEditMode();
   }
 };
 
 export const handleRemove = (mapRef) => {
   if (mapRef) {
-    mapRef.pm.toggleGlobalRemovalMode();
+    mapRef.pm.enableGlobalRemovalMode();
   }
 };
 
@@ -37,7 +37,7 @@ export const deactivateHandlers = (mapRef) => {
     mapRef.pm.disableDraw("Circle");
     mapRef.pm.disableDraw("Rectangle");
     mapRef.pm.disableDraw("Polygons");
-    mapRef.pm.toggleGlobalEditMode();
-    mapRef.pm.toggleGlobalRemovalMode();
+    mapRef.pm.disableGlobalEditMode();
+    mapRef.pm.disableGlobalRemovalMode();
   }
 };
