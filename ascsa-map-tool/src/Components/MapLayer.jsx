@@ -41,67 +41,80 @@ const MapLayer = () => {
 
   const [zoom, setZoom] = useState(13);
 
-  const onCircleCreated = (e) => {
-    console.log("onCircleSelect - enter");
-
-    if (e.shape === "Circle") {
-      const circle = e.layer;
-      const center = circle.getLatLng();
-      const radius = circle.getRadius();
-
-      // Assuming your data is an array of { lat, lng, ... }
+  const checkIntersectingMarkers = (shapeType, layer) => {
+    if (shapeType === "Circle") {
+      
+      const center = layer.getLatLng();
+      const radius = layer.getRadius();
       const intersectingMarkers = data.features.filter((marker) => {
         const [lng, lat] = marker.geometry["coordinates"];
         const markerLatLng = L.latLng(lat, lng);
-
         return center.distanceTo(markerLatLng) <= radius;
       });
-
       setMarkersInBounds(intersectingMarkers);
-      console.log("Here", intersectingMarkers);
+      console.log("Circle intersecting markers:", intersectingMarkers);
+   
+    } else if (shapeType === "Rectangle") {
 
+      const bounds = layer.getBounds();
+      const intersectingMarkers = data.features.filter((marker) => {
+        const [lng, lat] = marker.geometry["coordinates"];
+        const markerLatLng = L.latLng(lat, lng);
+        return bounds.contains(markerLatLng);
+      });
+      setMarkersInBounds(intersectingMarkers);
+      console.log("Rectangle intersecting markers:", intersectingMarkers);
+    
+    } else if (shapeType === "Polygon") {
+
+      const bounds = layer.getLatLngs()[0].map((m) => [m.lng, m.lat]);
+      const closedBounds = [...bounds, bounds[0]];
+      const polygonBounds = polygon([closedBounds]);
+      const intersectingMarkers = data.features.filter((marker) => {
+        const p = point([
+          marker.geometry["coordinates"][0],
+          marker.geometry["coordinates"][1],
+        ]);
+        return booleanPointInPolygon(p, polygonBounds);
+      });
+      setMarkersInBounds(intersectingMarkers);
+      console.log("Polygon intersecting markers:", intersectingMarkers);
+    }
+    
+  };
+
+  const onCircleCreated = (e) => {
+    if (e.shape === "Circle") {
+      const circle = e.layer;
+      circle.on("pm:edit", () => {
+        checkIntersectingMarkers("Circle", circle);
+        console.log("This circle was updated!");
+      });
+      checkIntersectingMarkers("Circle", circle);
       setActiveTool("select");
-      console.log("onCircleSelect - exit");
     }
   };
 
   const onRectangleCreated = (e) => {
     if (e.shape === "Rectangle") {
       const rectangle = e.layer;
-      const bounds = rectangle.getBounds();
-
-      const intersectingMarkers = data.features.filter((marker) => {
-        const [lng, lat] = marker.geometry["coordinates"];
-        const markerLatLng = L.latLng(lat, lng);
-
-        return bounds.contains(markerLatLng);
+      rectangle.on("pm:edit", () => {
+        checkIntersectingMarkers("Rectangle", rectangle);
+        console.log("This rectangle was updated!");
       });
-
-      setMarkersInBounds(intersectingMarkers);
-      console.log("Rectangle selection:", intersectingMarkers);
+      checkIntersectingMarkers("Rectangle", rectangle);
       setActiveTool("select");
     }
   };
 
   const onPolygonCreated = (e) => {
     if (e.shape === "Polygon") {
-      const bounds = e.layer.getLatLngs()[0].map((m) => [m.lng, m.lat]);
-      console.log(bounds);
-
-      const closedBounds = [...bounds, bounds[0]];
-      const polygonBounds = polygon([closedBounds]);
-
-      const intersectingMarkers = data.features.filter((marker) => {
-        const p = point([
-          marker.geometry["coordinates"][0],
-          marker.geometry["coordinates"][1],
-        ]);
-
-        return booleanPointInPolygon(p, polygonBounds);
+      const polygonLayer = e.layer;
+      polygonLayer.on("pm:edit", () => {
+        checkIntersectingMarkers("Polygon", polygonLayer);
+        console.log("This polygon was updated!");
       });
-
-      setMarkersInBounds(intersectingMarkers);
-      console.log("Polygon selection:", intersectingMarkers);
+      checkIntersectingMarkers("Polygon", polygonLayer);
       setActiveTool("select");
     }
   };
