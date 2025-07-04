@@ -9,11 +9,11 @@ export const handleDrawShape = (mapRef, shape) => {
         mapRef.pm.enableDraw("Rectangle");
         break;
 
-      case "Polygons":        
+      case "Polygons":
         mapRef.pm.enableDraw("Polygon");
         break;
-        
-        default:
+
+      default:
         console.log("handleDrawShape(mapRed, shape) - Enter default case");
         break;
     }
@@ -29,6 +29,23 @@ export const handleEdit = (mapRef) => {
 export const handleRemove = (mapRef) => {
   if (mapRef) {
     mapRef.pm.enableGlobalRemovalMode();
+  }
+};
+
+export const handleEvent = (mapRef, event) => {
+  switch (event) {
+    case "edit":
+      mapRef.pm.enableGlobalEditMode();
+      console.log("Enable editing");
+      break;
+      
+      case "remove":
+      console.log("Enable removal");
+      mapRef.pm.enableGlobalRemovalMode();
+      break;
+
+    default:
+      console.log("Not event handled");
   }
 };
 
