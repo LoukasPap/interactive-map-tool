@@ -91,17 +91,6 @@ const Bar = ({ activeTool, setActiveTool, mapRef }) => {
                 mapRef={mapRef}
               ></NonDrawMenu>
 
-              <Button
-                icon={<LuTrash2 style={customStyle} strokeWidth={"1.5px"} />}
-                event={() => {
-                  if (activeTool != "del") {
-                    handleRemove(mapRef);
-                    setActiveTool("del");
-                  }
-                }}
-                id="del-action"
-                isActive={activeTool === "del"}
-              />
             </ActionBar.Content>
           </ActionBar.Positioner>
         </Portal>
