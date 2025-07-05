@@ -26,6 +26,7 @@ import Info from "./Info";
 import CanvasMarkersLayer from "./MarkersLayer";
 import MarkersList from "./MarkersList";
 import Bar from "./ActionBar/ActionBar";
+import PeriodBar from "./PeriodBar/Bar";
 
 const MapLayer = () => {
   console.log("[LOG] - Render Map Layer");
@@ -40,6 +41,8 @@ const MapLayer = () => {
   const [mapReady, setMapReady] = useState(false);
 
   const [zoom, setZoom] = useState(13);
+
+  const [periodBarOpen, togglePeriodBar] = useState(false);
 
   const checkIntersectingMarkers = (shapeType, layer) => {
     if (shapeType === "Circle") {
@@ -205,11 +208,14 @@ const MapLayer = () => {
       <Info picked={selectedProperty}> </Info>
 
       <Bar
+        isPeriodBarOpen={periodBarOpen}
         activeTool={activeTool}
         setActiveTool={setActiveTool}
         mapRef={mapRef.current}
       />
-      
+
+      <PeriodBar isOpen={togglePeriodBar}></PeriodBar>
+
       {activeTool in ["rectangle", "circle", "polygon"] && (
         <MarkersList markers={markersInBounds} />
       )}
