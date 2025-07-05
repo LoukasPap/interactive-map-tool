@@ -1,7 +1,7 @@
 import { Button, Text, VStack, Box } from "@chakra-ui/react";
 import { useState } from "react";
 
-const PeriodButton = ({ title = "Ancient Greece", date = "800 - 146 BC" }) => {
+const PeriodButton = ({ title = "Ancient Greece", date = "800 - 146 BC", color="black" }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isActive, setIsActive] = useState(false);
 
@@ -14,15 +14,15 @@ const PeriodButton = ({ title = "Ancient Greece", date = "800 - 146 BC" }) => {
       w="205px"
       h="66px"
       overflow="hidden"
-      top={200}
       bg="gray.200"
-      border="px solid #C6C6C6"
+      border="1px solid"
+      borderColor="gray.300"
       rounded="md"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onClick={handleClick}
     >
-      <VStack zIndex={1} gap={3} pt="4" pb="4" w="inherit">
+      <VStack zIndex={1} gap={3} pt="4" pb="4">
         <Text
           fontSize="3xl"
           color={isActive ? "white" : "black"}
@@ -39,12 +39,12 @@ const PeriodButton = ({ title = "Ancient Greece", date = "800 - 146 BC" }) => {
         </Text>
       </VStack>
       <Box
-        bg="blue.600"
+        bg={color}
         w="200%"
         h={isActive ? "100%" : isHovered ? "15%" : "5px"}
         bottom="0"
         pos="absolute"
-        transition="height 0.3s ease-out"
+        transition="height 0.25s ease-out"
       />
     </Button>
   );
