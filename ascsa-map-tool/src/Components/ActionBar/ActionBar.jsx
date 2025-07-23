@@ -13,14 +13,14 @@ import Button from "./Button";
 import NonDrawMenu from "./NonDrawMenu";
 
 const Bar = ({ isPeriodBarOpen, activeTool, setActiveTool, mapRef }) => {
-  const customStyle = { width: "2.25em", height: "2.25em" };
+  const customStyle = { width: "2.5em", height: "2.5em" };
   const customStroke = "5px";
 
   return (
     <>
       <ActionBar.Root open={true}>
         <Portal>
-          <ActionBar.Positioner mb={isPeriodBarOpen ? "90px" : "0"} transition="margin-bottom 1s">
+          <ActionBar.Positioner mb={isPeriodBarOpen ? "7rem" : "0"} transition="margin-bottom 1s">
             <ActionBar.Content
               border="1px solid #C6C6C6"
               rounded="2xl"

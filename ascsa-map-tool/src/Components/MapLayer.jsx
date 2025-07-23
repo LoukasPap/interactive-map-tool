@@ -27,6 +27,7 @@ import CanvasMarkersLayer from "./MarkersLayer";
 import MarkersList from "./MarkersList";
 import Bar from "./ActionBar/ActionBar";
 import PeriodBar from "./PeriodBar/Bar";
+import Filters from "./FilterBar/Bar";
 
 const MapLayer = () => {
   console.log("[LOG] - Render Map Layer");
@@ -214,7 +215,9 @@ const MapLayer = () => {
         mapRef={mapRef.current}
       />
 
-      <PeriodBar isOpen={togglePeriodBar}></PeriodBar>
+      <Filters togglePeriodBar={togglePeriodBar}></Filters>
+
+      <PeriodBar isOpen={periodBarOpen}></PeriodBar>
 
       {activeTool in ["rectangle", "circle", "polygon"] && (
         <MarkersList markers={markersInBounds} />

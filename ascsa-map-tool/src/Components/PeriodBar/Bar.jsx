@@ -14,10 +14,8 @@ const PeriodBar = ({ isOpen }) => {
   const [marginBottom, setMarginBottom] = useState(0);
 
   const togglePeriodBar = () => {
-    // setMarginBottom((a) => -a + 40);
     setChecked((ch) => !ch);
-    setMarginBottom(checked ? 0 : -20);
-    isOpen(checked);
+    setMarginBottom(checked ? 0 : -60);
   };
 
   const PeriodsCollection = createListCollection({
@@ -54,12 +52,14 @@ const PeriodBar = ({ isOpen }) => {
     <>
       <ActionBar.Root open={true}>
         <Portal>
-          <ActionBar.Positioner mb={marginBottom} transition="all 1s">
+          <ActionBar.Positioner marginBottom={isOpen ? 0 : -60} transition="all 1s">
             <ActionBar.Content
+              w="fit-content"
               border="1px solid"
               borderColor="gray.300"
               rounded="2xl"
               boxShadow="0px 2px 4px 0px rgba(0, 0, 0, 0.25)"
+              
             >
               {PeriodsCollection.items.map((period) => (
                 <PeriodButton
@@ -71,15 +71,6 @@ const PeriodBar = ({ isOpen }) => {
 
               <ActionBar.Separator />
 
-              <Button
-                variant="outline"
-                bg="red.300"
-                size="sm"
-                onClick={togglePeriodBar}
-              >
-                <LuShare />
-                Share
-              </Button>
             </ActionBar.Content>
           </ActionBar.Positioner>
         </Portal>

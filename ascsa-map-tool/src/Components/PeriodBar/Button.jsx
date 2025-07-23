@@ -1,7 +1,11 @@
 import { Button, Text, VStack, Box } from "@chakra-ui/react";
 import { useState } from "react";
 
-const PeriodButton = ({ title = "Ancient Greece", date = "800 - 146 BC", color="black" }) => {
+const PeriodButton = ({
+  title = "Ancient Greece",
+  date = "800 - 146 BC",
+  color = "black",
+}) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isActive, setIsActive] = useState(false);
 
@@ -11,8 +15,8 @@ const PeriodButton = ({ title = "Ancient Greece", date = "800 - 146 BC", color="
 
   return (
     <Button
-      w="205px"
-      h="66px"
+      w="2xs"
+      h="fit"
       overflow="hidden"
       bg="gray.200"
       border="1px solid"
@@ -22,9 +26,10 @@ const PeriodButton = ({ title = "Ancient Greece", date = "800 - 146 BC", color="
       onMouseLeave={() => setIsHovered(false)}
       onClick={handleClick}
     >
-      <VStack zIndex={1} gap={3} pt="4" pb="4">
+      <VStack zIndex={1} gap={2} w="2xs" p="3">
         <Text
-          fontSize="3xl"
+          fontSize="xl"
+          fontWeight="normal"
           color={isActive ? "white" : "black"}
           transition="color 0.3s ease"
         >
@@ -32,6 +37,7 @@ const PeriodButton = ({ title = "Ancient Greece", date = "800 - 146 BC", color="
         </Text>
         <Text
           fontSize="lg"
+          fontWeight="normal"
           color={isActive ? "white" : "gray.600"}
           transition="color 0.3s ease"
         >
@@ -40,7 +46,7 @@ const PeriodButton = ({ title = "Ancient Greece", date = "800 - 146 BC", color="
       </VStack>
       <Box
         bg={color}
-        w="200%"
+        w="100%"
         h={isActive ? "100%" : isHovered ? "15%" : "5px"}
         bottom="0"
         pos="absolute"
