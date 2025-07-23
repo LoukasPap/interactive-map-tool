@@ -43,9 +43,10 @@ const CanvasMarkersLayer = ({ map, geodata, setSelectedProperty }) => {
               .openTooltip();
           },
           click: (e) => {
-            setSelectedProperty(f.properties.Item);
-
+            
+            setSelectedProperty({f});
             console.log("Clicked marker:", f.id);
+
           },
         });
 

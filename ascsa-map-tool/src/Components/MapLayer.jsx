@@ -28,6 +28,7 @@ import MarkersList from "./MarkersList";
 import Bar from "./ActionBar/ActionBar";
 import PeriodBar from "./PeriodBar/Bar";
 import Filters from "./FilterBar/Bar";
+import SinglePointCard from "./PointsDisplay/PointCard";
 
 const MapLayer = () => {
   console.log("[LOG] - Render Map Layer");
@@ -47,7 +48,6 @@ const MapLayer = () => {
 
   const checkIntersectingMarkers = (shapeType, layer) => {
     if (shapeType === "Circle") {
-      
       const center = layer.getLatLng();
       const radius = layer.getRadius();
       const intersectingMarkers = data.features.filter((marker) => {
@@ -57,9 +57,7 @@ const MapLayer = () => {
       });
       setMarkersInBounds(intersectingMarkers);
       console.log("Circle intersecting markers:", intersectingMarkers);
-   
     } else if (shapeType === "Rectangle") {
-
       const bounds = layer.getBounds();
       const intersectingMarkers = data.features.filter((marker) => {
         const [lng, lat] = marker.geometry["coordinates"];
@@ -68,9 +66,7 @@ const MapLayer = () => {
       });
       setMarkersInBounds(intersectingMarkers);
       console.log("Rectangle intersecting markers:", intersectingMarkers);
-    
     } else if (shapeType === "Polygon") {
-
       const bounds = layer.getLatLngs()[0].map((m) => [m.lng, m.lat]);
       const closedBounds = [...bounds, bounds[0]];
       const polygonBounds = polygon([closedBounds]);
@@ -84,7 +80,6 @@ const MapLayer = () => {
       setMarkersInBounds(intersectingMarkers);
       console.log("Polygon intersecting markers:", intersectingMarkers);
     }
-    
   };
 
   const onCircleCreated = (e) => {
@@ -206,7 +201,10 @@ const MapLayer = () => {
         <ScaleControl position="bottomleft" />
       </MapContainer>
 
-      <Info picked={selectedProperty}> </Info>
+      {/* <Info picked={selectedProperty}> </Info> */}
+
+      {console.log("MAP LAYER", [selectedProperty])}
+      <SinglePointCard point={selectedProperty} />
 
       <Bar
         isPeriodBarOpen={periodBarOpen}
