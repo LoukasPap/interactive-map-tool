@@ -214,8 +214,8 @@ const MapLayer = () => {
       />
 
       <Filters togglePeriodBar={togglePeriodBar}></Filters>
-
-      <PeriodBar isOpen={periodBarOpen}></PeriodBar>
+      <FilterCard/>
+      
 
       {activeTool in ["rectangle", "circle", "polygon"] && (
         <MarkersList markers={markersInBounds} />

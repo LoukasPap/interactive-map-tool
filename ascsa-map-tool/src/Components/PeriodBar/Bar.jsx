@@ -2,79 +2,128 @@ import {
   ActionBar,
   Button,
   createListCollection,
-  Portal,
+  Checkbox,
+  VStack,
+  Show,
+  HStack,
+  IconButton,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import { LuShare, LuTrash2 } from "react-icons/lu";
+import { LuSquareCheck, LuSquareMinus } from "react-icons/lu";
 
 import PeriodButton from "./Button";
 
-const PeriodBar = ({ isOpen }) => {
-  const [checked, setChecked] = useState(true);
-  const [marginBottom, setMarginBottom] = useState(0);
+import Ripples from "react-ripples";
 
-  const togglePeriodBar = () => {
-    setChecked((ch) => !ch);
-    setMarginBottom(checked ? 0 : -60);
+const initialPeriodsList = [
+  {
+    title: "Ancient Greece",
+    value: "gr",
+    date: "800 - 146 BC",
+    color: "blue.500",
+    checked: false,
+  },
+  {
+    title: "Roman Empire",
+    value: "ro",
+    date: "27 BC - AD 476",
+    color: "red.500",
+    checked: false,
+  },
+  {
+    title: "Byzantine Empire",
+    value: "by",
+    date: "AD 330 - 1453",
+    color: "orange.500",
+    checked: false,
+  },
+  {
+    title: "Franks",
+    value: "fr",
+    date: "800 - 146 BC",
+    color: "green.500",
+    checked: false,
+  },
+  {
+    title: "Ottoman Empire",
+    value: "ot",
+    date: "AD 1299 - 1922",
+    color: "yellow.500",
+    checked: false,
+  },
+];
+
+const PeriodBar = () => {
+  const [periodsList, setPeriodsList] = useState(initialPeriodsList);
+
+  const handleSelectAll = () => {
+    setPeriodsList(
+      periodsList.map((period) => ({
+        ...period,
+        checked: true,
+      }))
+    );
   };
 
-  const PeriodsCollection = createListCollection({
-    items: [
-      {
-        title: "Ancient Greece",
-        date: "800 - 146 BC",
-        color: "blue.500",
-      },
-      {
-        title: "Roman Empire",
-        date: "27 BC - AD 476",
-        color: "red.500",
-      },
-      {
-        title: "Byzantine Empire",
-        date: "AD 330 - 1453",
-        color: "orange.500",
-      },
-      {
-        title: "Franks",
-        date: "800 - 146 BC",
-        color: "green.500",
-      },
-      {
-        title: "Ottoman Empire",
-        date: "AD 1299 - 1922",
-        color: "yellow.500",
-      },
-    ],
-  });
+  const handleClearAll = () => {
+    setPeriodsList(
+      periodsList.map((period) => ({
+        ...period,
+        checked: false,
+      }))
+    );
+  };
+
+  // Toggle a single period
+  const handleTogglePeriod = (value) => {
+    setPeriodsList(
+      periodsList.map((period) =>
+        period.value === value
+          ? { ...period, checked: !period.checked }
+          : period
+      )
+    );
+  };
 
   return (
     <>
-      <ActionBar.Root open={true}>
-        <Portal>
-          <ActionBar.Positioner marginBottom={isOpen ? 0 : -60} transition="all 1s">
-            <ActionBar.Content
-              w="fit-content"
-              border="1px solid"
-              borderColor="gray.300"
-              rounded="2xl"
-              boxShadow="0px 2px 4px 0px rgba(0, 0, 0, 0.25)"
-              
-            >
-              {PeriodsCollection.items.map((period) => (
-                <PeriodButton
-                  title={period.title}
-                  date={period.date}
-                  color={period.color}
-                />
-              ))}
+      <VStack gapY="15px">
+        {periodsList.map((period) => (
+          <PeriodButton
+            key={period.value}
+            title={period.title}
+            date={period.date}
+            color={period.color}
+            checked={period.checked}
+            onClick={() => handleTogglePeriod(period.value)}
+          />
+        ))}
 
-              <ActionBar.Separator />
+        <HStack justifyContent="space-around" w="100%">
+          <IconButton
+            flexGrow={1}
+            size="2xl"
+            variant="plain"
+            onClick={handleSelectAll}
+            _hover={{bg:"gray.300"}}
+            p={2}
+          >
+            <LuSquareCheck />
+            Select all
+          </IconButton>
 
-            </ActionBar.Content>
-          </ActionBar.Positioner>
-        </Portal>
-      </ActionBar.Root>
+          <IconButton
+            flexGrow={1}
+            size="2xl"
+            variant="plain"
+            onClick={handleClearAll}
+            _hover={{bg:"gray.300"}}
+            p={2}
+          >
+            <LuSquareMinus size={"xl"} /> Clear
+          </IconButton>
+        </HStack>
+      </VStack>
     </>
   );
 };
