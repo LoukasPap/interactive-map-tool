@@ -17,7 +17,7 @@ const FilterCard = () => {
       rounded="10px"
       border="1px solid #C6C6C6"
     >
-      <Box w="100%" h="100%">
+      <Box display="flex" flexDir="column" gapY="10px" w="100%" h="100%">
         <Text fontSize="3xl" fontWeight="bold">
           Filters
         </Text>
@@ -26,17 +26,16 @@ const FilterCard = () => {
           defaultValue="artifacts"
           fitted
           variant="plain"
-          mt="15px"
           value={value}
           onValueChange={(e) => setValue(e.value)}
         >
-          <Tabs.List bg="white" p={1} gap={2}>
+          <Tabs.List bg="white" gap={2}>
             <Tabs.Trigger
               value="artifacts"
               bg={value == "artifacts" ? "#C6C6C6" : "white"}
               border="1px solid #c6c6c6"
             >
-              {/* <LuUser /> */}
+
               Artifacts
             </Tabs.Trigger>
             <Tabs.Trigger
@@ -44,21 +43,19 @@ const FilterCard = () => {
               bg={value == "periods" ? "#C6C6C6" : "white"}
               border="1px solid #c6c6c6"
             >
-              {/* <LuFolder /> */}
+
               Periods
             </Tabs.Trigger>
             <Tabs.Indicator rounded="l2" />
           </Tabs.List>
 
-          <Separator orientation="horizontal" mt="15px" />
+          <Separator orientation="horizontal" mt="15px" size="sm" colorPalette="green"/>
 
           <Tabs.Content value="artifacts">
             Artifacts Filter
           </Tabs.Content>
           <Tabs.Content value="periods">
-            <Bleed>
               <PeriodBar />
-            </Bleed>
           </Tabs.Content>
         </Tabs.Root>
       </Box>
