@@ -15,6 +15,7 @@ import {
   Rectangle,
   ScaleControl,
   ImageOverlay,
+  ZoomControl,
 } from "react-leaflet";
 
 import "leaflet/dist/leaflet.css";
@@ -151,6 +152,7 @@ const MapLayer = () => {
         zoom={15}
         minZoom={0}
         maxZoom={24}
+        zoomControl={false}
         scrollWheelZoom={true}
         whenReady={({ target }) => {
           setMapReady(true);
@@ -199,6 +201,7 @@ const MapLayer = () => {
 
         <ZoomTracker />
         <ScaleControl position="bottomleft" />
+        <ZoomControl position="bottomright" />
       </MapContainer>
 
       {/* <Info picked={selectedProperty}> </Info> */}
