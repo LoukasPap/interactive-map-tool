@@ -8,12 +8,11 @@ const FilterCard = () => {
 
   return (
     <VStack
-      w="20vw"
+      w="inherit"
       h="90vh"
       pos="absolute"
       bg="white"
       p="30px 22px"
-      m="12px"
       rounded="10px"
       border="1px solid #C6C6C6"
     >

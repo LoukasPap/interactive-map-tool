@@ -19,7 +19,7 @@ import {
 } from "react-leaflet";
 
 import "leaflet/dist/leaflet.css";
-
+import { LuMenu } from "react-icons/lu";
 // import ClusteredPoints from "./ClusteredPoints";
 import { data } from "../data/data_many";
 
@@ -27,9 +27,18 @@ import Info from "./Info";
 import CanvasMarkersLayer from "./MarkersLayer";
 import MarkersList from "./MarkersList";
 import Bar from "./ActionBar/ActionBar";
-import PeriodBar from "./PeriodBar/Bar";
+import FilterCard from "./FilterBar/FilterCard";
 import Filters from "./FilterBar/Bar";
 import SinglePointCard from "./PointsDisplay/PointCard";
+import {
+  Box,
+  HStack,
+  Icon,
+  Text,
+  CloseButton,
+  Drawer,
+  Portal,
+} from "@chakra-ui/react";
 
 const MapLayer = () => {
   console.log("[LOG] - Render Map Layer");
@@ -145,6 +154,7 @@ const MapLayer = () => {
     };
   }, [mapReady]);
 
+  const [open, setOpen] = useState(false);
   return (
     <>
       <MapContainer
@@ -216,9 +226,57 @@ const MapLayer = () => {
         mapRef={mapRef.current}
       />
 
-      <Filters togglePeriodBar={togglePeriodBar}></Filters>
-      <FilterCard/>
-      
+      {/* <Filters togglePeriodBar={togglePeriodBar}></Filters> */}
+      <Box w="20vw" m="12px">
+        <HStack
+          h="5vh"
+          w="100%"
+          justifyContent="flex-start"
+          bg="white"
+          paddingInline="10px"
+          border="1px solid #C6C6C6"
+          rounded="10px"
+          mb="5px"
+        >
+          <Icon
+            variant="plain"
+            pos="absolute"
+            rounded="sm"
+            _hover={{ bg: "gray.300" }}
+            onClick={() => setOpen(true)}
+          >
+            <LuMenu size="20" cursor="pointer" />
+          </Icon>
+          <Text fontSize="2xl" textAlign="center" flexGrow={1}>
+            ASCSA Map Tool
+          </Text>
+        </HStack>
+
+        <Drawer.Root open={open} size="sm" placement="start" onOpenChange={(e) => setOpen(e.open)}>
+          <Portal>
+            <Drawer.Backdrop />
+            <Drawer.Positioner>
+              <Drawer.Content>
+                <Drawer.Header>
+                  <Drawer.Title>Drawer Title</Drawer.Title>
+                </Drawer.Header>
+                <Drawer.Body>
+                  <p>
+                    Drawer Body
+                  </p>
+                </Drawer.Body>
+                <Drawer.Footer>
+                </Drawer.Footer>
+                <Drawer.CloseTrigger asChild>
+                  <CloseButton size="sm" />
+                </Drawer.CloseTrigger>
+              </Drawer.Content>
+            </Drawer.Positioner>
+          </Portal>
+        </Drawer.Root>
+
+        <FilterCard />
+      </Box>
 
       {activeTool in ["rectangle", "circle", "polygon"] && (
         <MarkersList markers={markersInBounds} />
