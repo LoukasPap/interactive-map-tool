@@ -243,6 +243,7 @@ const MapLayer = () => {
               pos="absolute"
               rounded="sm"
               _hover={{ bg: "gray.300" }}
+              onClick={() => setOpen(true)}
             >
               <LuMenu size="20" cursor="pointer" />
             </Icon>
@@ -254,6 +255,12 @@ const MapLayer = () => {
           <Filters toggleFilters={toggleFilters} toggleExtra={toggleExtra}></Filters>
         </HStack>
 
+        <Drawer.Root
+          open={open}
+          size="sm"
+          placement="start"
+          onOpenChange={(e) => setOpen(e.open)}
+        >
           <Portal>
             <Drawer.Backdrop />
             <Drawer.Positioner>
