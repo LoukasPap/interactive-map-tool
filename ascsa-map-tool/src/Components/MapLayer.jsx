@@ -54,7 +54,8 @@ const MapLayer = () => {
 
   const [zoom, setZoom] = useState(13);
 
-  const [periodBarOpen, togglePeriodBar] = useState(false);
+  const [areFiltersOpen, toggleFilters] = useState(false);
+  const [isExtraOpen, toggleExtra] = useState(false);
 
   const checkIntersectingMarkers = (shapeType, layer) => {
     if (shapeType === "Circle") {
@@ -220,39 +221,39 @@ const MapLayer = () => {
       <SinglePointCard point={selectedProperty} />
 
       <Bar
-        isPeriodBarOpen={periodBarOpen}
+        isPeriodBarOpen={isExtraOpen}
         activeTool={activeTool}
         setActiveTool={setActiveTool}
         mapRef={mapRef.current}
       />
 
-      {/* <Filters togglePeriodBar={togglePeriodBar}></Filters> */}
-      <Box w="20vw" m="12px">
-        <HStack
-          h="5vh"
-          w="100%"
-          justifyContent="flex-start"
-          bg="white"
-          paddingInline="10px"
-          border="1px solid #C6C6C6"
-          rounded="10px"
-          mb="5px"
-        >
-          <Icon
-            variant="plain"
-            pos="absolute"
-            rounded="sm"
-            _hover={{ bg: "gray.300" }}
-            onClick={() => setOpen(true)}
+      <Box w="100%" m="12px">
+        <HStack w="fill" mb="5px" alignItems="flex-end">
+          <HStack
+            w="20vw"
+            h="5vh"
+            bg="white"
+            justifyContent="flex-start"
+            paddingInline="10px"
+            border="1px solid #C6C6C6"
+            rounded="10px"
           >
-            <LuMenu size="20" cursor="pointer" />
-          </Icon>
-          <Text fontSize="2xl" textAlign="center" flexGrow={1}>
-            ASCSA Map Tool
-          </Text>
+            <Icon
+              variant="plain"
+              pos="absolute"
+              rounded="sm"
+              _hover={{ bg: "gray.300" }}
+            >
+              <LuMenu size="20" cursor="pointer" />
+            </Icon>
+            <Text fontSize="2xl" textAlign="center" flexGrow={1}>
+              ASCSA Map Tool
+            </Text>
+          </HStack>
+
+          <Filters toggleFilters={toggleFilters} toggleExtra={toggleExtra}></Filters>
         </HStack>
 
-        <Drawer.Root open={open} size="sm" placement="start" onOpenChange={(e) => setOpen(e.open)}>
           <Portal>
             <Drawer.Backdrop />
             <Drawer.Positioner>
@@ -275,7 +276,7 @@ const MapLayer = () => {
           </Portal>
         </Drawer.Root>
 
-        <FilterCard />
+        <FilterCard areFiltersOpen={areFiltersOpen}/>
       </Box>
 
       {activeTool in ["rectangle", "circle", "polygon"] && (

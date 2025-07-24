@@ -3,12 +3,17 @@ import { LuFolder, LuSquareCheck, LuUser } from "react-icons/lu";
 import { useState } from "react";
 import PeriodBar from "../PeriodBar/Bar";
 
-const FilterCard = () => {
+const FilterCard = ({areFiltersOpen=false}) => {
   const [value, setValue] = useState("artifacts");
 
   return (
     <VStack
-      w="inherit"
+       style={{
+        opacity: areFiltersOpen ? 1 : 0,
+        pointerEvents: areFiltersOpen ? "auto" : "none",
+        transition: "opacity 0.4s cubic-bezier(.4,0,.2,1)",
+      }}
+      w="20vw"
       h="90vh"
       pos="absolute"
       bg="white"
