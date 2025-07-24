@@ -1,10 +1,5 @@
 import {
-  ActionBar,
-  Button,
-  createListCollection,
-  Checkbox,
   VStack,
-  Show,
   HStack,
   IconButton,
 } from "@chakra-ui/react";
@@ -12,8 +7,6 @@ import { useState } from "react";
 import { LuSquareCheck, LuSquareMinus } from "react-icons/lu";
 
 import PeriodButton from "./Button";
-
-import Ripples from "react-ripples";
 
 const initialPeriodsList = [
   {
