@@ -39,6 +39,7 @@ import {
   Drawer,
   Portal,
 } from "@chakra-ui/react";
+import MarkerClusterLayer from "./MarkerClusterLayer";
 
 const MapLayer = () => {
   console.log("[LOG] - Render Map Layer");
@@ -200,15 +201,16 @@ const MapLayer = () => {
           />
         )}
 
-        {mapReady && (
+        {/* {mapReady && (
           <CanvasMarkersLayer
             map={mapRef.current}
             geodata={data}
             setSelectedProperty={setSelectedProperty}
           />
-        )}
+        )} */}
 
         {/* <ClusteredPoints geojson={data} /> */}
+        <MarkerClusterLayer geojson={data} setSelectedProperty={setSelectedProperty}/>
 
         <ZoomTracker />
         <ScaleControl position="bottomleft" />
