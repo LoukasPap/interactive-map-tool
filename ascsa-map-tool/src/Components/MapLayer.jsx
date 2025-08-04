@@ -135,6 +135,13 @@ const MapLayer = () => {
       zoomend: (e) => {
         const newZoom = e.target.getZoom();
         setZoom(newZoom);
+
+  const MoveTracker = () => {
+    useMapEvents({
+      moveend: (e) => {
+        setBounds(mapRef.current.getBounds());
+        console.log("New bounds:", bounds);
+        
       },
     });
     return null;
@@ -213,6 +220,7 @@ const MapLayer = () => {
         <MarkerClusterLayer geojson={data} setSelectedProperty={setSelectedProperty}/>
 
         <ZoomTracker />
+        <MoveTracker />
         <ScaleControl position="bottomleft" />
         <ZoomControl position="bottomright" />
       </MapContainer>
