@@ -6,8 +6,9 @@ import { useMap } from "react-leaflet";
 import getGenericIcon from "../assets/Icons/Markers/GenericIcon";
 
 import "leaflet-markers-canvas";
+import "../leaflet-iconex";
+import "../demo.css";
 
-const MarkerClusterLayer = ({ geojson, setSelectedProperty }) => {
 import { booleanPointInPolygon } from "@turf/boolean-point-in-polygon";
 import { bboxPolygon } from "@turf/bbox-polygon";
 import { point } from "@turf/helpers";
@@ -52,10 +53,21 @@ const MarkerClusterLayer = ({ geojson, bounds, setSelectedProperty }) => {
         return booleanPointInPolygon(p, bbox);
       })
       .forEach((f) => {
+        const color =
+          f.properties.Era == "Greek"
+            ? "#3B82F6"
+            : f.properties.Era == "Roman"
+            ? "#EF4444"
+            : "#000000";
         const marker = L.marker(
           [f.geometry.coordinates[1], f.geometry.coordinates[0]],
           {
-            icon: getGenericIcon(f.properties.Path),
+            opacity: 1,
+            icon: new L.IconEx({
+              contentHtml: `<i class="fas fa-monument"></i>`,
+              iconFill: color,
+              contentColor: "#000",
+            }),
           }
         ).on({
           click: (e) => {
