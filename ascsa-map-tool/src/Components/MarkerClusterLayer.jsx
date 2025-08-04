@@ -26,6 +26,17 @@ function calculateBounds(bounds) {
   return bboxPolygon(bboxList);
 }
 
+const eraToColor = {
+  Prehistoric: "#71717A",
+  Greece: "#3B82F6",
+  Roman: "#EF4444",
+  Byzantine: "#F97316",
+  Medieval: "#22C55E",
+  Ottoma: "#EAB308",
+  Modern: "#EC4899",
+  No: "#000000",
+};
+
 const MarkerClusterLayer = ({ geojson, bounds, setSelectedProperty }) => {
   const map = useMap();
 
@@ -53,19 +64,13 @@ const MarkerClusterLayer = ({ geojson, bounds, setSelectedProperty }) => {
         return booleanPointInPolygon(p, bbox);
       })
       .forEach((f) => {
-        const color =
-          f.properties.Era == "Greek"
-            ? "#3B82F6"
-            : f.properties.Era == "Roman"
-            ? "#EF4444"
-            : "#000000";
         const marker = L.marker(
           [f.geometry.coordinates[1], f.geometry.coordinates[0]],
           {
             opacity: 1,
             icon: new L.IconEx({
               contentHtml: `<i class="fas fa-monument"></i>`,
-              iconFill: color,
+              iconFill: eraToColor[f.properties.Era],
               contentColor: "#000",
             }),
           }
