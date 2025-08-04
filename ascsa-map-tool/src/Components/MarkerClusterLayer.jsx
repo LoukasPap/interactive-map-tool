@@ -28,11 +28,11 @@ function calculateBounds(bounds) {
 
 const eraToColor = {
   Prehistoric: "#71717A",
-  Greece: "#3B82F6",
+  Greek: "#3B82F6",
   Roman: "#EF4444",
   Byzantine: "#F97316",
   Medieval: "#22C55E",
-  Ottoma: "#EAB308",
+  Turkish: "#EAB308",
   Modern: "#EC4899",
   No: "#000000",
 };
