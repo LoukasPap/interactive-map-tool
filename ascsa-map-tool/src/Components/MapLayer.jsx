@@ -217,7 +217,11 @@ const MapLayer = () => {
         )} */}
 
         {/* <ClusteredPoints geojson={data} /> */}
-        <MarkerClusterLayer geojson={data} setSelectedProperty={setSelectedProperty}/>
+        <MarkerClusterLayer
+          geojson={data}
+          bounds={bounds}
+          setSelectedProperty={setSelectedProperty}
+        />
 
         <ZoomTracker />
         <MoveTracker />
