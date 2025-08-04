@@ -180,6 +180,7 @@ const MapLayer = () => {
             [37.972834, 23.721197], // Southwest corner
             [37.976726, 23.724362], // Northeast corner
           ]);
+        setBounds(mapRef.current.getBounds());
         }}
       >
         <TileLayer
