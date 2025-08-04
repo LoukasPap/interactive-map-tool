@@ -5,7 +5,6 @@ import {
   LuSquarePen,
   LuCheck,
 } from "react-icons/lu";
- "react-icons/ri";
 
 import {
   IconButton,
@@ -55,14 +54,13 @@ const NonDrawMenu = ({ activeTool, setActiveTool, mapRef }) => {
     return (
       <IconButton
         variant="solid"
-        rounded="md"
+        rounded="0"
         bg={nonDrawActions.includes(activeTool) ? "gray.950" : "white"}
         color={nonDrawActions.includes(activeTool) ? "white" : "gray.900"}
-        border="2px solid #d4d4d8"
         _hover={
           nonDrawActions.includes(activeTool)
             ? { bg: "#161616" }
-            : { bg: "gray.300" }
+            : { bg: "gray.200" }
         }
         id="edit-action"
         h="max-content"
@@ -77,9 +75,7 @@ const NonDrawMenu = ({ activeTool, setActiveTool, mapRef }) => {
             setActiveTool(val);
           }
         }}
-        borderTopEndRadius="0"
-        borderBottomEndRadius="0"
-        borderRight="none"
+        border={0}
       >
         {selected[0].icon}
       </IconButton>
@@ -99,22 +95,25 @@ const NonDrawMenu = ({ activeTool, setActiveTool, mapRef }) => {
     >
       <Select.Control>
         <ButtonGroup
-          overflow="hidden"
-          rounded="md"
-          bg={nonDrawActions.includes(activeTool) ? "gray.950" : "white"}
+          rounded="sm"
+          border="1px solid #d4d4d8"
+          overflow={"clip"}
+          backgroundClip={{ base: "padding-box", _hover: "padding-box" }}
           attached
         >
           <SelectTrigger />
+
           <Select.Trigger
             color={nonDrawActions.includes(activeTool) ? "white" : "gray.950"}
             variant="plain"
+            bg={nonDrawActions.includes(activeTool) ? "gray.950" : "white"}
             _hover={{
-              bg: nonDrawActions.includes(activeTool) ? "gray.900" : "gray.300",
+              bg: nonDrawActions.includes(activeTool) ? "gray.900" : "gray.200",
             }}
-            border="2px solid #d4d4d8"
-            rounded="md"
-            borderTopStartRadius="0"
-            borderBottomStartRadius="0"
+            border={0}
+            borderStart={"1px solid"}
+            borderStartColor="gray.300"
+            rounded={0}
             w="2.25em"
             p="2.5"
             display={"flex"}
