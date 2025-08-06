@@ -41,8 +41,20 @@ import {
 } from "@chakra-ui/react";
 import MarkerClusterLayer from "./MarkerClusterLayer";
 
+// for spatial operations
+import { booleanPointInPolygon } from "@turf/boolean-point-in-polygon";
+import { bboxPolygon } from "@turf/bbox-polygon";
+import { point, polygon } from "@turf/helpers";
+
+const initialBounds = [
+  [37.972834, 23.721197], // Southwest corner
+  [37.976726, 23.724362], // Northeast corner
+];
+
 const MapLayer = () => {
   console.log("[LOG] - Render Map Layer");
+  const [periodFilters, setPeriodFilters] = useState([]);
+  const [activeData, setActiveData] = useState([]);
 
   const mapRef = useRef();
 
@@ -62,7 +74,8 @@ const MapLayer = () => {
     if (shapeType === "Circle") {
       const center = layer.getLatLng();
       const radius = layer.getRadius();
-      const intersectingMarkers = data.features.filter((marker) => {
+      
+      const intersectingMarkers = activeData.filter((marker) => {
         const [lng, lat] = marker.geometry["coordinates"];
         const markerLatLng = L.latLng(lat, lng);
         return center.distanceTo(markerLatLng) <= radius;
@@ -71,7 +84,7 @@ const MapLayer = () => {
       console.log("Circle intersecting markers:", intersectingMarkers);
     } else if (shapeType === "Rectangle") {
       const bounds = layer.getBounds();
-      const intersectingMarkers = data.features.filter((marker) => {
+      const intersectingMarkers = activeData.filter((marker) => {
         const [lng, lat] = marker.geometry["coordinates"];
         const markerLatLng = L.latLng(lat, lng);
         return bounds.contains(markerLatLng);
@@ -82,7 +95,7 @@ const MapLayer = () => {
       const bounds = layer.getLatLngs()[0].map((m) => [m.lng, m.lat]);
       const closedBounds = [...bounds, bounds[0]];
       const polygonBounds = polygon([closedBounds]);
-      const intersectingMarkers = data.features.filter((marker) => {
+      const intersectingMarkers = activeData.filter((marker) => {
         const p = point([
           marker.geometry["coordinates"][0],
           marker.geometry["coordinates"][1],
@@ -147,6 +160,38 @@ const MapLayer = () => {
     return null;
   };
 
+  function calculateBounds(bounds) {
+    const northEast = bounds.getNorthEast();
+    const southWest = bounds.getSouthWest();
+    const bboxList = [
+      southWest.lng, // West
+      southWest.lat, // South
+      northEast.lng, // East
+      northEast.lat, // North
+    ];
+
+    return bboxPolygon(bboxList);
+  }
+
+  useEffect(() => {
+    console.log("ActiveData updated:", activeData);
+  }, [activeData]);
+
+  useEffect(() => {
+    let bbox = initialBounds;
+    if (bounds != null) {
+      bbox = calculateBounds(bounds);
+    }
+
+    const newActiveData = data.features
+      .filter((f) => periodFilters.includes(f.properties.Era))
+      .filter((f) => {
+        const p = point(f.geometry.coordinates);
+        return booleanPointInPolygon(p, bbox);
+      });
+    setActiveData(newActiveData);
+  }, [periodFilters, bounds]);
+
   useEffect(() => {
     if (!mapRef.current) return;
     const map = mapRef.current;
@@ -161,7 +206,7 @@ const MapLayer = () => {
       map.off("pm:create", onRectangleCreated);
       map.off("pm:create", onPolygonCreated);
     };
-  }, [mapReady]);
+  }, [mapReady, activeData]);
 
   const [open, setOpen] = useState(false);
   return (
@@ -176,10 +221,7 @@ const MapLayer = () => {
         whenReady={({ target }) => {
           setMapReady(true);
           mapRef.current = target;
-          mapRef.current.fitBounds([
-            [37.972834, 23.721197], // Southwest corner
-            [37.976726, 23.724362], // Northeast corner
-          ]);
+          mapRef.current.fitBounds(initialBounds);
         setBounds(mapRef.current.getBounds());
         }}
       >
@@ -218,9 +260,9 @@ const MapLayer = () => {
         )} */}
 
         {/* <ClusteredPoints geojson={data} /> */}
+
         <MarkerClusterLayer
-          geojson={data}
-          bounds={bounds}
+          geojson={activeData}
           setSelectedProperty={setSelectedProperty}
         />
 
@@ -269,6 +311,12 @@ const MapLayer = () => {
 
           <Filters toggleFilters={toggleFilters} toggleExtra={toggleExtra}></Filters>
         </HStack>
+
+        {/* The filters Card*/}
+        <FilterCard
+          areFiltersOpen={areFiltersOpen}
+          setPeriodFilters={setPeriodFilters}
+        />
 
         <Drawer.Root
           open={open}

@@ -80,6 +80,7 @@ const FilterCard = ({ areFiltersOpen = false, setPeriodFilters }) => {
             value="periods"
             h="100%"
           >
+            <PeriodBar setPeriodFilters={setPeriodFilters}/>
           </Tabs.Content>
         </Tabs.Root>
       </Box>

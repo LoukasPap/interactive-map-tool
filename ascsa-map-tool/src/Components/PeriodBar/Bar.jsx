@@ -1,9 +1,9 @@
 import {
   VStack,
-  HStack,
   IconButton,
   Text,
   Stack,
+  Button,
   Flex,
 } from "@chakra-ui/react";
 import { useState } from "react";
@@ -23,7 +23,7 @@ const initialPeriodsList = [
   {
     title: "Greek",
     value: "gr",
-filterKey: "Greek",
+    filterKey: "Greek",
     date: "900 BC - 30 BC",
     color: "blue.500",
     checked: false,
@@ -31,7 +31,7 @@ filterKey: "Greek",
   {
     title: "Roman Empire",
     value: "ro",
-filterKey: "Roman",
+    filterKey: "Roman",
     date: "753 BCE - 1453 CE",
     color: "red.500",
     checked: false,
@@ -39,7 +39,7 @@ filterKey: "Roman",
   {
     title: "Byzantine",
     value: "by",
-filterKey: "Byzantine",
+    filterKey: "Byzantine",
     date: "330 CE - 1453 CE",
     color: "orange.500",
     checked: false,
@@ -60,7 +60,7 @@ filterKey: "Byzantine",
     color: "yellow.500",
     checked: false,
   },
-{
+  {
     title: "Modern",
     value: "mo",
     filterKey: "Modern",
@@ -78,7 +78,7 @@ filterKey: "Byzantine",
   },
 ];
 
-const PeriodBar = () => {
+const PeriodBar = ({ setPeriodFilters }) => {
   const [periodsList, setPeriodsList] = useState(initialPeriodsList);
 
   const handleSelectAll = () => {
@@ -110,30 +110,39 @@ const PeriodBar = () => {
     );
   };
 
+  const handleApplyFilter = () => {
+    const appliedPeriods = periodsList
+      .filter((p) => p.checked)
+      .map((p) => p.filterKey);
+
+    console.log("[LOG] - Selected filters:", appliedPeriods);
+    setPeriodFilters(appliedPeriods);
+  };
+
   return (
     <Flex h="100%" flexDir="column" justifyContent="space-between" p="0">
       <VStack>
         <Text bg={{ lg: "green", md: "yellow", sm: "orange" }}>gggggg</Text>
-      <VStack gapY={{ lg: "10px", md: "5px" }} w="100%" overflow={"scroll"}>
-        {periodsList.map((period) => (
-          <PeriodButton
-            key={period.value}
-            title={period.title}
-            date={period.date}
-            color={period.color}
-            checked={period.checked}
-            onClick={() => handleTogglePeriod(period.value)}
-          />
-        ))}
-</VStack>
+        <VStack gapY={{ lg: "10px", md: "5px" }} w="100%" overflow={"scroll"}>
+          {periodsList.map((period) => (
+            <PeriodButton
+              key={period.value}
+              title={period.title}
+              date={period.date}
+              color={period.color}
+              checked={period.checked}
+              onClick={() => handleTogglePeriod(period.value)}
+            />
+          ))}
+        </VStack>
 
         <Stack
           direction={{ lg: "row", md: "column" }}
-justifyContent="space-around"
->
+          justifyContent="space-around"
+        >
           <IconButton
-                        size="2xl"
-w="fit"
+            size="2xl"
+            w="fit"
             h="fit"
             variant="plain"
             onClick={handleSelectAll}
@@ -147,7 +156,7 @@ w="fit"
           <IconButton
             flexGrow={1}
             size="2xl"
-w="fit"
+            w="fit"
             h="fit"
             variant="plain"
             onClick={handleClearAll}
@@ -156,7 +165,10 @@ w="fit"
           >
             <LuSquareMinus size={"xl"} /> Clear
           </IconButton>
-        </HStack>
+        </Stack>
+        <Button size="sm" w="100%" fontSize="lg" onClick={handleApplyFilter}>
+          Apply
+        </Button>
       </VStack>
     </Flex>
   );

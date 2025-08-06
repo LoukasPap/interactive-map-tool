@@ -9,22 +9,6 @@ import "leaflet-markers-canvas";
 import "../leaflet-iconex";
 import "../demo.css";
 
-import { booleanPointInPolygon } from "@turf/boolean-point-in-polygon";
-import { bboxPolygon } from "@turf/bbox-polygon";
-import { point } from "@turf/helpers";
-
-function calculateBounds(bounds) {
-  const northEast = bounds.getNorthEast();
-  const southWest = bounds.getSouthWest();
-  const bboxList = [
-    southWest.lng, // West
-    southWest.lat, // South
-    northEast.lng, // East
-    northEast.lat, // North
-  ];
-
-  return bboxPolygon(bboxList);
-}
 
 const eraToColor = {
   Prehistoric: "#71717A",
@@ -37,32 +21,23 @@ const eraToColor = {
   No: "#000000",
 };
 
-const MarkerClusterLayer = ({ geojson, bounds, setSelectedProperty }) => {
+const MarkerClusterLayer = ({ geojson, setSelectedProperty }) => {
   const map = useMap();
 
-
-
   useEffect(() => {
+    console.log("[LOG] - Rendering MarkerCluster");
     if (!map || !geojson) return;
 
-    console.log("[LOG] - Rendering MarkerCluster");
-
-    const bbox = calculateBounds(bounds);
-
     const markerClusterGroup = L.markerClusterGroup({
-      showCoverageOnHover: false,
+      showCoverageOnHover: true,
       zoomToBoundsOnClick: false,
       removeOutsideVisibleBounds: true,
-      disableClusteringAtZoom: 22,
+      disableClusteringAtZoom: 21,
       animate: true,
       chunkedLoading: true,
     });
 
-    geojson.features
-      .filter((f) => {  
-        const p = point(f.geometry.coordinates);
-        return booleanPointInPolygon(p, bbox);
-      })
+    geojson
       .forEach((f) => {
         const marker = L.marker(
           [f.geometry.coordinates[1], f.geometry.coordinates[0]],
@@ -90,7 +65,7 @@ const MarkerClusterLayer = ({ geojson, bounds, setSelectedProperty }) => {
     return () => {
       map.removeLayer(markerClusterGroup);
     };
-  }, [map, bounds, geojson]);
+  }, [map, geojson]);
 
   return null;
 };
