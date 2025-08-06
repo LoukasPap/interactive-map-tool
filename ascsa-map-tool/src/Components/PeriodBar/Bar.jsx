@@ -2,6 +2,9 @@ import {
   VStack,
   HStack,
   IconButton,
+  Text,
+  Stack,
+  Flex,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { LuSquareCheck, LuSquareMinus } from "react-icons/lu";
@@ -108,8 +111,10 @@ const PeriodBar = () => {
   };
 
   return (
-    <>
-      <VStack gapY="15px">
+    <Flex h="100%" flexDir="column" justifyContent="space-between" p="0">
+      <VStack>
+        <Text bg={{ lg: "green", md: "yellow", sm: "orange" }}>gggggg</Text>
+      <VStack gapY={{ lg: "10px", md: "5px" }} w="100%" overflow={"scroll"}>
         {periodsList.map((period) => (
           <PeriodButton
             key={period.value}
@@ -120,14 +125,19 @@ const PeriodBar = () => {
             onClick={() => handleTogglePeriod(period.value)}
           />
         ))}
+</VStack>
 
-        <HStack justifyContent="space-around" w="100%">
+        <Stack
+          direction={{ lg: "row", md: "column" }}
+justifyContent="space-around"
+>
           <IconButton
-            flexGrow={1}
-            size="2xl"
+                        size="2xl"
+w="fit"
+            h="fit"
             variant="plain"
             onClick={handleSelectAll}
-            _hover={{bg:"gray.300"}}
+            _hover={{ bg: "gray.300" }}
             p={2}
           >
             <LuSquareCheck />
@@ -137,16 +147,18 @@ const PeriodBar = () => {
           <IconButton
             flexGrow={1}
             size="2xl"
+w="fit"
+            h="fit"
             variant="plain"
             onClick={handleClearAll}
-            _hover={{bg:"gray.300"}}
+            _hover={{ bg: "gray.300" }}
             p={2}
           >
             <LuSquareMinus size={"xl"} /> Clear
           </IconButton>
         </HStack>
       </VStack>
-    </>
+    </Flex>
   );
 };
 

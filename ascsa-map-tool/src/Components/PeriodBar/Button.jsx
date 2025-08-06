@@ -20,7 +20,7 @@ const PeriodButton = ({
     <Button
       key={value}
       w="100%"
-      h="fit"
+      h={{lg:"fit", md:"40px"}}
       overflow="hidden"
       bg="gray.200"
       border="1px solid"
@@ -30,9 +30,9 @@ const PeriodButton = ({
       onMouseLeave={() => setIsHovered(false)}
       onClick={onClick}
     >
-      <VStack zIndex={1} gap={2} w="2xs" p="3">
+      <VStack zIndex={1} gap={{lg:2, md:0}} p={{lg:"3", md:"2"}}>
         <Text
-          fontSize="xl"
+          fontSize={{lg:"xl", md:"sm"}}
           fontWeight="normal"
           color={checked ? "white" : "black"}
           transition="color 0.3s ease"
@@ -40,7 +40,7 @@ const PeriodButton = ({
           {title}
         </Text>
         <Text
-          fontSize="lg"
+          fontSize={{lg:"lg", md:"xs"}}
           fontWeight="normal"
           color={checked ? "white" : "gray.600"}
           transition="color 0.3s ease"
