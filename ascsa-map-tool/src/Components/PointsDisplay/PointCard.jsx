@@ -26,35 +26,79 @@ import {
   LuExternalLink,
 } from "react-icons/lu";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import PointCardFooter from "./PointCardFooter";
 
-const SinglePointCard = ({ point }) => {
-  const dummyObject = {
-    id: "AgoraID1",
-    title: "Vessel",
-    chronology: "Ancient Greece",
-    date: "July 1st, 1995",
-    section: "B4",
-    link: (
-      <Link href="#" color="blue.500">
-        https://ascsa.net
-        <LuExternalLink />
-      </Link>
-    ),
-    description:
-      "Hephaisteion Garden; fill beside wall. Loose filling encountered in rescue excavation to examine wall found during construction of public toilet in Theseion Park, outside Agora area.",
-    images: [
-      "https://ascsa-net.gr/image?type=preview&id=Agora%3AImage%3A2016.05.0160",
-      "https://ascsa-net.gr/image?type=preview&id=Agora%3AImage%3A2016.05.0161",
-      "https://ascsa-net.gr/image?type=preview&id=Agora%3AImage%3A2015.06.1028",
-      "https://ascsa-net.gr/image?type=preview&id=Agora%3AImage%3A2015.06.1029",
-    ],
-    coords: [23.722605, 37.976641],
-  };
+const initialObject = {
+  name: "name",
+  title: "title",
+  period: "period",
+  era: "era",
+  chronology: "chronology",
+  section: "section",
+  date: "date",
+  material: "material",
+  materialCategory: "materialCategory",
+  description: "description",
+  coords: [23.722605, 37.976641],
+  dimensions: "dimensions",
+  type: "type",
+  category: "category",
+  link: "https://ascsa.net",
+  images: [],
+  lot: "lot",
+  deposit: "deposit",
+};
 
-  const propList = ["title", "chronology", "date", "section", "link"];
+const SinglePointCard = ({ point }) => {
+  const [pointDetails, setPointDetails] = useState(initialObject);
+
+  useEffect(() => {
+    if (point) {
+      console.log("SELECTED POINT", point);
+      setPointDetails({
+        ...pointDetails,
+        ...point.f,
+
+        name: point.f.properties.Name,
+        title: point.f.properties.Title || "N/A",
+        period: point.f.properties.Period || "N/A", // goes with Chronology
+        era: point.f.properties.Era || "N/A",
+        chronology: point.f.properties.Chronology || "N/A",
+
+        section: point.f.properties.SectionNumber || "N/A",
+        date: point.f.properties.Date || "N/A",
+
+        material: point.f.properties.ListedMaterial || "N/A",
+        materialCategory: point.f.properties.MaterialCategory || "N/A",
+
+        description: point.f.properties.Description || "N/A",
+        coords: point.f.geometry.coordinates,
+
+        dimensions: point.f.properties.Dimensions || "N/A",
+        type: point.f.properties.Type || "N/A",
+        category: point.f.properties.Category || "N/A",
+
+        link: `https://ascsa-net.gr/id/agora/${point.f.properties.Type}/${point.f.properties.Name}`, // https://ascsa-net.gr/id/agora/coin/n 205887
+        images: point.f.properties.Parent || [],
+
+        lot: point.f.properties.Lot || "N/A",
+        deposit: point.f.properties.Deposit || "N/A",
+      });
+    }
+  }, [point]);
+
+  const propList = [
+    "title",
+    "period",
+    "material",
+    "section",
+    "date",
+    "dimensions",
+    "lot",
+    "deposit",
+  ];
 
   const [copied, setCopied] = useState(false);
   const [visible, setVisibility] = useState(true);
@@ -64,6 +108,50 @@ const SinglePointCard = ({ point }) => {
     setTimeout(() => setCopied(false), 2000);
     console.log("finito");
   };
+
+  const calculateAspectRatio = (width, height) => {
+    // Simplify the ratio
+    const gcd = (a, b) => (b === 0 ? a : gcd(b, a % b));
+    const divisor = gcd(width, height);
+
+    const simplifiedWidth = width / divisor;
+    const simplifiedHeight = height / divisor;
+
+    return {
+      ratio: simplifiedWidth / simplifiedHeight,
+      displayRatio: `${simplifiedWidth}:${simplifiedHeight}`,
+    };
+  };
+
+  function ImageWithSpinner({ src }) {
+    const [isLoading, setIsLoading] = useState(true);
+
+    return (
+      <>
+        {/* {isLoading && <Spinner position="absolute" zIndex={1} />} */}
+        <Image
+          border="1px solid black"
+          // aspectRatio={3 / 2}
+
+          h="100px"
+          src={src}
+          fit="fill"
+          rounded="md"
+          onLoad={(e) => {
+            setIsLoading(false);
+            const { width, height } = e.target;
+            const { ratio, displayRatio } = calculateAspectRatio(width, height);
+            console.log(width, height, ratio);
+            e.target.style.aspectRatio = ratio;
+          }}
+          onError={(e) => {
+            setIsLoading(false);
+            e.target.style.display = "none";
+          }}
+        />
+      </>
+    );
+  }
 
   return (
     <Card.Root
@@ -86,12 +174,12 @@ const SinglePointCard = ({ point }) => {
         >
           <Group>
             <Card.Title h="fit" overflow="visible">
-              <Text fontSize="3xl">
-                {(point && point.f.id.substr(6)) || "-"}
-              </Text>
+              <Text fontSize="3xl">{(point && pointDetails.name) || "-"}</Text>
             </Card.Title>
 
-            <Clipboard.Root value={(point && point.f.id) || "-"}>
+            <Clipboard.Root
+              value={(point && `Agora:Object:${pointDetails.name}`) || "-"}
+            >
               <Clipboard.Trigger asChild>
                 {/* <Icon _hover={{ bg: "gray.300" }} rounded="sm" p={2} >
                   <LuCopy size={30} cursor="pointer"/>
@@ -105,7 +193,10 @@ const SinglePointCard = ({ point }) => {
             </Clipboard.Root>
           </Group>
 
-          <CloseButton _hover={{ bg: "gray.300" }} onClick={(e)=>setVisibility(!!e.visibility)}>
+          <CloseButton
+            _hover={{ bg: "gray.300" }}
+            onClick={(e) => setVisibility(!!e.visibility)}
+          >
             <LuX style={{ width: "2em", height: "auto" }} />
           </CloseButton>
         </HStack>
@@ -117,7 +208,7 @@ const SinglePointCard = ({ point }) => {
           <SimpleGrid columns={2} gap="4">
             {/* {point && point.f.proper} */}
             {propList.map((prop) => (
-              <DataList.Item key={dummyObject["id"]}>
+              <DataList.Item key={prop}>
                 <DataList.ItemLabel
                   fontSize="xl"
                   fontWeight="semibold"
@@ -126,7 +217,7 @@ const SinglePointCard = ({ point }) => {
                   {prop.charAt(0).toUpperCase() + prop.slice(1)}
                 </DataList.ItemLabel>
                 <DataList.ItemValue fontSize={"lg"}>
-                  {dummyObject[prop]}
+                  {pointDetails[prop]}
                 </DataList.ItemValue>
               </DataList.Item>
             ))}
@@ -135,7 +226,7 @@ const SinglePointCard = ({ point }) => {
               display="flex"
               flexDir="column"
               justifyContent="center"
-              value={dummyObject["coords"]}
+              value={pointDetails["coords"]}
               onStatusChange={handleCopy}
             >
               <Clipboard.Trigger asChild>
@@ -143,7 +234,7 @@ const SinglePointCard = ({ point }) => {
                   variant="solid"
                   fontSize="lg"
                   bg="black"
-                  h="80%"
+                  p={2}
                   w="100%"
                   rounded="md"
                 >
@@ -162,36 +253,37 @@ const SinglePointCard = ({ point }) => {
           <HStack
             gap="4"
             h="fit"
-            maxH="100px"
+            maxH="120px"
             overflow="scroll"
+            pb="0.8em"
             scrollbarColor="black transparent"
             scrollbarWidth="thin"
           >
+            {/* {errorImages == pointDetails["images"].length ? ( */}
+            {/* <Text color="gray">No images</Text> */}
+            {/* ) : ( */}
             <For
-              each={dummyObject["images"]}
+              each={pointDetails["images"]}
               fallback={<Text color="gray">No images</Text>}
             >
-              {(item, index) => (
-                <Image
-                  border="1px solid black"
-                  aspectRatio={3 / 2}
-                  h="100px"
-                  src={item}
-                  fit="contain"
-                  rounded="md"
-                  onError={(e) => {
-                    e.target.onerror = null;
-                    e.target.src = "https://picsum.photos/200/300";
-                  }}
-                />
-              )}
+              {(item, index) => <ImageWithSpinner key={index} src={item} />}
             </For>
+            {/* )} */}
           </HStack>
         </Box>
 
         <Box>
           <Heading>Description</Heading>
-          <Text textAlign="justify">{dummyObject["description"]}</Text>
+          <Text
+            textAlign="justify"
+            maxH="20vh"
+            overflow="scroll"
+            scrollbarColor="black transparent"
+            scrollbarWidth="thin"
+            pr="1em"
+          >
+            {pointDetails["description"]}
+          </Text>
         </Box>
       </Card.Body>
 
