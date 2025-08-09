@@ -202,7 +202,7 @@ const SinglePointCard = ({ point }) => {
         p={0}
         roundedBottom="md"
       >
-        <PointCardFooter />
+        <PointCardFooter source={pointDetails.link} />
       </Card.Footer>
     </Card.Root>
   );

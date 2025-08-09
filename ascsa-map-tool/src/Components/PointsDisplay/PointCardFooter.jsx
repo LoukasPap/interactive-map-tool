@@ -1,5 +1,11 @@
-import { Flex, Button, Icon, VStack, Text } from "@chakra-ui/react";
-import { LuExpand, LuSave, LuStickyNote } from "react-icons/lu";
+import {
+  Flex,
+  Button,
+  Text,
+  LinkBox,
+  LinkOverlay,
+} from "@chakra-ui/react";
+import { LuExpand, LuSave, LuStickyNote, LuGlobe } from "react-icons/lu";
 
 const PointButton = ({ id, label, icon }) => {
   return (
@@ -13,34 +19,49 @@ const PointButton = ({ id, label, icon }) => {
       py={3}
       w="1"
       h="fit"
+      _target={"blank"}
     >
       {icon}
 
       <Text textStyle="lg">{label}</Text>
+
     </Button>
   );
 };
 
-const PointCardFooter = () => {
+const PointCardFooter = ({ source }) => {
   const customStyle = { width: "2.25em", height: "2.25em" };
+
   return (
     <Flex w="100%">
       <PointButton
         id="expand-action"
         label="Expand"
-        icon={<LuExpand style={customStyle} strokeWidth="1.5px"/>}
+        icon={<LuExpand style={customStyle} strokeWidth="1.5px" />}
       />
 
       <PointButton
         id="save-action"
         label="Save"
-        icon={<LuSave style={customStyle} strokeWidth="1.5px"/>}
+        icon={<LuSave style={customStyle} strokeWidth="1.5px" />}
       />
 
       <PointButton
         id="note-action"
         label="Note"
-        icon={<LuStickyNote style={customStyle} strokeWidth="1.5px"/>}
+        icon={<LuStickyNote style={customStyle} strokeWidth="1.5px" />}
+      />
+
+      <PointButton
+        id="source-action"
+        label="Source"
+        icon={
+          <LinkBox >
+            <LinkOverlay href={source}>
+            <LuGlobe style={customStyle} strokeWidth="1.5px" />
+            </LinkOverlay>
+          </LinkBox>
+        }
       />
     </Flex>
   );
