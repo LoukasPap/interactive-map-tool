@@ -8,7 +8,7 @@ import getGenericIcon from "../assets/Icons/Markers/GenericIcon";
 import "leaflet-markers-canvas";
 import "../leaflet-iconex";
 import "../demo.css";
-
+import { getMaterialIcon } from "./Interactions";
 
 const eraToColor = {
   Prehistoric: "#71717A",
@@ -37,27 +37,27 @@ const MarkerClusterLayer = ({ geojson, setSelectedProperty }) => {
       chunkedLoading: true,
     });
 
-    geojson
-      .forEach((f) => {
-        const marker = L.marker(
-          [f.geometry.coordinates[1], f.geometry.coordinates[0]],
-          {
-            opacity: 1,
-            icon: new L.IconEx({
-              contentHtml: `<i class="fas fa-monument"></i>`,
-              iconFill: eraToColor[f.properties.Era],
-              contentColor: "#000",
-            }),
-          }
-        ).on({
-          click: (e) => {
-            setSelectedProperty({ f });
-            console.log("Clicked marker:", f.id);
-          },
-        });
-        marker.bindPopup(f.properties.Item || "Point");
-        markerClusterGroup.addLayer(marker);
+    geojson.forEach((f) => {
+      const iconSVG = getMaterialIcon(f.properties.MaterialCategory[0]);
+      const marker = L.marker(
+        [f.geometry.coordinates[1], f.geometry.coordinates[0]],
+        {
+          opacity: 1,
+          icon: new L.IconEx({
+            contentHtml: iconSVG,
+            iconFill: eraToColor[f.properties.Era],
+            contentHtmlSize: [16, 16],
+          }),
+        }
+      ).on({
+        click: (e) => {
+          setSelectedProperty({ f });
+          console.log("Clicked marker:", f);
+        },
       });
+      marker.bindPopup(f.properties.Title || "-");
+      markerClusterGroup.addLayer(marker);
+    });
 
     map.addLayer(markerClusterGroup);
 
