@@ -258,6 +258,13 @@ const SinglePointCard = ({ point }) => {
             pb="0.8em"
             scrollbarColor="black transparent"
             scrollbarWidth="thin"
+            onWheel={(e) => {
+              e.preventDefault();
+              e.currentTarget.scrollBy({
+                left: e.deltaY*2.5,
+                behavior: "smooth",
+              });
+            }}
           >
             {/* {errorImages == pointDetails["images"].length ? ( */}
             {/* <Text color="gray">No images</Text> */}
