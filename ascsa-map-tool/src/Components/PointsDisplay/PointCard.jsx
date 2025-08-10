@@ -11,23 +11,23 @@ import {
   Icon,
   IconButton,
   CloseButton,
-  Link,
+
   For,
   Image,
-  Container,
   Heading,
   Box,
+  Tag,
 } from "@chakra-ui/react";
 import {
   LuCopy,
   LuX,
   LuMapPin,
   LuMapPinCheckInside,
-  LuExternalLink,
+  LuInfo,
 } from "react-icons/lu";
+import { Tooltip } from "../ui/tooltip";
 
 import { useEffect, useState } from "react";
-
 import PointCardFooter from "./PointCardFooter";
 
 const initialObject = {
@@ -96,8 +96,6 @@ const SinglePointCard = ({ point }) => {
     "section",
     "date",
     "dimensions",
-    "lot",
-    "deposit",
   ];
 
   const [copied, setCopied] = useState(false);
@@ -170,11 +168,11 @@ const SinglePointCard = ({ point }) => {
           alignItems="center"
           justifyContent="space-between"
           h="fit"
-          gap="4"
+          gap="2"
         >
           <Group>
             <Card.Title h="fit" overflow="visible">
-              <Text fontSize="3xl">{(point && pointDetails.name) || "-"}</Text>
+              <Text fontSize="2xl">{(point && pointDetails.name) || "-"}</Text>
             </Card.Title>
 
             <Clipboard.Root
@@ -193,6 +191,34 @@ const SinglePointCard = ({ point }) => {
             </Clipboard.Root>
           </Group>
 
+          <Tooltip
+            content={`Deposit: ${pointDetails.deposit}`}
+            interactive
+            openDelay={200}
+            closeDelay={200}
+          >
+            <Tag.Root colorPalette="orange" size="xl">
+              <Tag.Label>{pointDetails.deposit}</Tag.Label>
+              <Tag.EndElement>
+                <LuInfo />
+              </Tag.EndElement>
+            </Tag.Root>
+          </Tooltip>
+
+          <Tooltip
+            content={`Lot: ${pointDetails.lot}`}
+            interactive
+            openDelay={200}
+            closeDelay={200}
+          >
+            <Tag.Root colorPalette="blue" size="xl">
+              <Tag.Label>{pointDetails.lot}</Tag.Label>
+              <Tag.EndElement>
+                <LuInfo />
+              </Tag.EndElement>
+            </Tag.Root>
+          </Tooltip>
+
           <CloseButton
             _hover={{ bg: "gray.300" }}
             onClick={(e) => setVisibility(!!e.visibility)}
@@ -200,7 +226,7 @@ const SinglePointCard = ({ point }) => {
             <LuX style={{ width: "2em", height: "auto" }} />
           </CloseButton>
         </HStack>
-        <Separator size="sm" mt={1} />
+        <Separator size="sm" mt={1} borderColor={"gray.300"} />
       </Card.Header>
 
       <Card.Body gap="4">
