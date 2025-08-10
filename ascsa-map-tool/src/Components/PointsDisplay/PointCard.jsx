@@ -11,7 +11,6 @@ import {
   Icon,
   IconButton,
   CloseButton,
-
   For,
   Image,
   Heading,
@@ -29,6 +28,7 @@ import { Tooltip } from "../ui/tooltip";
 
 import { useEffect, useState } from "react";
 import PointCardFooter from "./PointCardFooter";
+import DimensionsTable from "./DimensionsTable";
 
 const initialObject = {
   name: "name",
@@ -42,7 +42,7 @@ const initialObject = {
   materialCategory: "materialCategory",
   description: "description",
   coords: [23.722605, 37.976641],
-  dimensions: "dimensions",
+  dimensions: [],
   type: "type",
   category: "category",
   link: "https://ascsa.net",
@@ -76,7 +76,7 @@ const SinglePointCard = ({ point }) => {
         description: point.f.properties.Description || "N/A",
         coords: point.f.geometry.coordinates,
 
-        dimensions: point.f.properties.Dimensions || "N/A",
+        dimensions: point.f.properties.FormattedDimensions || [],
         type: point.f.properties.Type || "N/A",
         category: point.f.properties.Category || "N/A",
 
@@ -89,14 +89,7 @@ const SinglePointCard = ({ point }) => {
     }
   }, [point]);
 
-  const propList = [
-    "title",
-    "period",
-    "material",
-    "section",
-    "date",
-    "dimensions",
-  ];
+  const propList = ["title", "period", "material", "section", "date"];
 
   const [copied, setCopied] = useState(false);
   const [visible, setVisibility] = useState(true);
@@ -168,11 +161,11 @@ const SinglePointCard = ({ point }) => {
           alignItems="center"
           justifyContent="space-between"
           h="fit"
-          gap="2"
+          gap="1"
         >
           <Group>
             <Card.Title h="fit" overflow="visible">
-              <Text fontSize="2xl">{(point && pointDetails.name) || "-"}</Text>
+              <Text fontSize="3xl">{(point && pointDetails.name) || "-"}</Text>
             </Card.Title>
 
             <Clipboard.Root
@@ -229,7 +222,7 @@ const SinglePointCard = ({ point }) => {
         <Separator size="sm" mt={1} borderColor={"gray.300"} />
       </Card.Header>
 
-      <Card.Body gap="4">
+      <Card.Body gap="4" maxH="80vh" overflow="scroll">
         <DataList.Root color="black" size="lg">
           <SimpleGrid columns={2} gap="4">
             {/* {point && point.f.proper} */}
@@ -271,7 +264,15 @@ const SinglePointCard = ({ point }) => {
                 </Button>
               </Clipboard.Trigger>
             </Clipboard.Root>
+
+          <Box gridColumn="span 2">
+            <Heading mb="1">Dimensions</Heading>
+            <DimensionsTable
+              dimensions={pointDetails.dimensions}
+            />
+          </Box>
           </SimpleGrid>
+
         </DataList.Root>
 
         <Box>
