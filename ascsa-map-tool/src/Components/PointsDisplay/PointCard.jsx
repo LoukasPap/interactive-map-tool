@@ -261,7 +261,7 @@ const SinglePointCard = ({ point }) => {
             onWheel={(e) => {
               e.preventDefault();
               e.currentTarget.scrollBy({
-                left: e.deltaY*2.5,
+                left: e.deltaY * 2.5,
                 behavior: "smooth",
               });
             }}
