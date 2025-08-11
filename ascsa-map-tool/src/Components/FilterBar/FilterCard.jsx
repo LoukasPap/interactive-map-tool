@@ -8,6 +8,7 @@ import {
 import { LuFolder, LuSquareCheck, LuUser } from "react-icons/lu";
 import { useState } from "react";
 import PeriodBar from "../PeriodBar/Bar";
+import Filters from "./Filters";
 
 const FilterCard = ({ areFiltersOpen = false, setPeriodFilters }) => {
   const [value, setValue] = useState("artifacts");
@@ -74,13 +75,11 @@ const FilterCard = ({ areFiltersOpen = false, setPeriodFilters }) => {
             colorPalette="green"
           />
 
-          <Tabs.Content value="artifacts">Artifacts Filter</Tabs.Content>
-          <Tabs.Content
-            justifyContent="space-between"
-            value="periods"
-            h="100%"
-          >
-            <PeriodBar setPeriodFilters={setPeriodFilters}/>
+          <Tabs.Content value="artifacts">
+            <Filters />
+          </Tabs.Content>
+          <Tabs.Content justifyContent="space-between" value="periods" h="100%">
+            <PeriodBar setPeriodFilters={setPeriodFilters} />
           </Tabs.Content>
         </Tabs.Root>
       </Box>
