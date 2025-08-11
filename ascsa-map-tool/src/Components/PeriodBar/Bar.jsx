@@ -10,6 +10,7 @@ import { useState } from "react";
 import { LuSquareCheck, LuSquareMinus } from "react-icons/lu";
 
 import PeriodButton from "./Button";
+import QuickSelectionButtons from "../FilterBar/QuickSelectionButtons";
 
 const initialPeriodsList = [
   {
@@ -136,36 +137,7 @@ const PeriodBar = ({ setPeriodFilters }) => {
           ))}
         </VStack>
 
-        <Stack
-          direction={{ lg: "row", md: "column" }}
-          justifyContent="space-around"
-        >
-          <IconButton
-            size="2xl"
-            w="fit"
-            h="fit"
-            variant="plain"
-            onClick={handleSelectAll}
-            _hover={{ bg: "gray.300" }}
-            p={2}
-          >
-            <LuSquareCheck />
-            Select all
-          </IconButton>
-
-          <IconButton
-            flexGrow={1}
-            size="2xl"
-            w="fit"
-            h="fit"
-            variant="plain"
-            onClick={handleClearAll}
-            _hover={{ bg: "gray.300" }}
-            p={2}
-          >
-            <LuSquareMinus size={"xl"} /> Clear
-          </IconButton>
-        </Stack>
+        <QuickSelectionButtons handleSelectAll={handleSelectAll} handleClearAll={handleClearAll} />
         <Button size="sm" w="100%" fontSize="lg" onClick={handleApplyFilter}>
           Apply
         </Button>
