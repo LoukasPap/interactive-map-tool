@@ -12,7 +12,8 @@ const QuickSelectionButtons = ({handleSelectAll, handleClearAll}) => {
         w="fit"
         h="fit"
         variant="plain"
-        onClick={handleSelectAll}
+        // Disable event bubbling to not trigger accordion expansion/contraction
+        onClick={(e) => {e.stopPropagation(); handleSelectAll();}} 
         _hover={{ bg: "gray.300" }}
         p={2}
       >
@@ -26,7 +27,7 @@ const QuickSelectionButtons = ({handleSelectAll, handleClearAll}) => {
         w="fit"
         h="fit"
         variant="plain"
-        onClick={handleClearAll}
+        onClick={(e) => {e.stopPropagation(); handleClearAll()}}
         _hover={{ bg: "gray.300" }}
         p={2}
       >

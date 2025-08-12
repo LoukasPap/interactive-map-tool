@@ -1,12 +1,9 @@
 import {
-  Box,
-  Container,
   For,
   Heading,
-  HStack,
   SimpleGrid,
-  Stack,
-  Text,
+  Accordion,
+  Group,
 } from "@chakra-ui/react";
 import QuickSelectionButtons from "../QuickSelectionButtons";
 import MaterialButton from "./MaterialButton";
@@ -51,9 +48,9 @@ const initialMaterialList = [
   },
 ];
 
-
 const MaterialSection = () => {
   const [materialsList, setMaterialsList] = useState(initialMaterialList);
+  const [value, setValue] = useState(["material-filter"]);
 
   const handleSelectAll = () => {
     setMaterialsList(
@@ -62,6 +59,8 @@ const MaterialSection = () => {
         checked: true,
       }))
     );
+
+    controlAccordionState();
   };
 
   const handleClearAll = () => {
@@ -71,6 +70,8 @@ const MaterialSection = () => {
         checked: false,
       }))
     );
+
+    controlAccordionState();
   };
 
   const handleToggleMaterial = (value) => {
@@ -83,27 +84,57 @@ const MaterialSection = () => {
     );
   };
 
-  return (
-    <Box w="100%">
-      <HStack justifyContent="space-between">
-        <Heading fontWeight={"normal"}>{"Materials".toUpperCase()}</Heading>
-        <QuickSelectionButtons handleSelectAll={handleSelectAll} handleClearAll={handleClearAll} />
-      </HStack>
 
-      <SimpleGrid mt="1" gap="2" columns={[2]} h="fit">
-        <For each={materialsList}>
-          {(m) => (
-            <MaterialButton
-              key={m.value}
-              material={m.title}
-              color={m.color}
-              checked={m.checked}
-              onClick={() => handleToggleMaterial(m.value)}
+  const controlAccordionState = () => {
+      if (!value.includes("material-filter")) {
+        setValue(["material-filter"]);
+    }
+  }
+
+
+  return (
+    <Accordion.Root
+      multiple
+      collapsible
+      w="100%"
+      variant={"enclosed"}
+      size="lg"
+      borderColor={"gray.400"}
+      rounded="xl"
+      onValueChange={(e) => {
+        setValue(e.value);
+        console.log("value is", e.value);
+      }}
+      value={value}
+    >
+      <Accordion.Item value="material-filter">
+        <Accordion.ItemTrigger justifyContent="space-between">
+          <Heading fontWeight={"normal"}>{"Materials".toUpperCase()}</Heading>
+          <Group>
+            <QuickSelectionButtons
+              handleSelectAll={handleSelectAll}
+              handleClearAll={handleClearAll}
             />
-          )}
-        </For>
-      </SimpleGrid>
-    </Box>
+            <Accordion.ItemIndicator color={"gray.400"} />
+          </Group>
+        </Accordion.ItemTrigger>
+        <Accordion.ItemContent>
+          <SimpleGrid mt="1" gap="2" columns={[2]} h="fit" mb="5">
+            <For each={materialsList}>
+              {(m) => (
+                <MaterialButton
+                  key={m.value}
+                  material={m.title}
+                  color={m.color}
+                  checked={m.checked}
+                  onClick={() => handleToggleMaterial(m.value)}
+                />
+              )}
+            </For>
+          </SimpleGrid>
+        </Accordion.ItemContent>
+      </Accordion.Item>
+    </Accordion.Root>
   );
 };
 
