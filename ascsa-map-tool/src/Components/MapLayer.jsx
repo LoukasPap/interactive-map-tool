@@ -186,19 +186,24 @@ const MapLayer = () => {
   }, [activeData]);
 
   useEffect(() => {
-    let bbox = initialBounds;
-    if (bounds != null) {
-      bbox = calculateBounds(bounds);
-    }
+      let bbox = initialBounds;
+      if (bounds != null) {
+        bbox = calculateBounds(bounds);
+      }
 
-    const newActiveData = data.features
-      .filter((f) => periodFilters.includes(f.properties.Era))
-      .filter((f) => {
-        const p = point(f.geometry.coordinates);
-        return booleanPointInPolygon(p, bbox);
-      });
-    setActiveData(newActiveData);
-  }, [periodFilters, bounds]);
+      const newActiveData = data.features
+        .filter((f) => periodFilters.includes(f.properties.Era))
+        .filter((f) =>
+          filters.materials.some((material) =>
+            f.properties.MaterialCategory.includes(material)
+          )
+        )
+        .filter((f) => {
+          const p = point(f.geometry.coordinates);
+          return booleanPointInPolygon(p, bbox);
+        });
+      setActiveData(newActiveData);
+  }, [filters, periodFilters, bounds]);
 
   useEffect(() => {
     if (!mapRef.current) return;
