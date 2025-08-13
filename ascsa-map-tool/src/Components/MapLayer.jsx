@@ -38,6 +38,7 @@ import {
   CloseButton,
   Drawer,
   Portal,
+  VStack,
 } from "@chakra-ui/react";
 import MarkerClusterLayer from "./MarkerClusterLayer";
 
@@ -54,12 +55,19 @@ const initialBounds = [
 const MapLayer = () => {
   console.log("[LOG] - Render Map Layer");
   const [periodFilters, setPeriodFilters] = useState([]);
+
+  const [filters, setFilters] = useState({ materials: [], section: "" });
+  const prevFilters = usePrevious(filters);
+  const [bounds, setBounds] = useState(null);
+  const dataInBounds = useRef(null);
+
+  const mapRef = useRef();
   const [activeData, setActiveData] = useState([]);
 
   const mapRef = useRef();
 
   const [markersInBounds, setMarkersInBounds] = useState([]);
-  const [bounds, setBounds] = useState(null);
+
   const [activeTool, setActiveTool] = useState(null);
 
   const [selectedProperty, setSelectedProperty] = useState(null);
@@ -74,7 +82,7 @@ const MapLayer = () => {
     if (shapeType === "Circle") {
       const center = layer.getLatLng();
       const radius = layer.getRadius();
-      
+
       const intersectingMarkers = activeData.filter((marker) => {
         const [lng, lat] = marker.geometry["coordinates"];
         const markerLatLng = L.latLng(lat, lng);
@@ -213,7 +221,7 @@ const MapLayer = () => {
     <>
       <MapContainer
         center={[37.974724, 23.722502]}
-        zoom={15}
+        zoom={17}
         minZoom={0}
         maxZoom={24}
         zoomControl={false}
@@ -222,10 +230,12 @@ const MapLayer = () => {
           setMapReady(true);
           mapRef.current = target;
           mapRef.current.fitBounds(initialBounds);
-        setBounds(mapRef.current.getBounds());
+          setBounds(mapRef.current.getBounds());
         }}
       >
         <TileLayer
+          maxZoom="24"
+          zoom="17"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
@@ -284,39 +294,45 @@ const MapLayer = () => {
         mapRef={mapRef.current}
       />
 
-      <Box w="100%" m="12px">
-        <HStack w="fill" mb="5px" alignItems="flex-end">
-          <HStack
-            w="20vw"
-            h="5vh"
-            bg="white"
-            justifyContent="flex-start"
-            paddingInline="10px"
-            border="1px solid #C6C6C6"
-            rounded="10px"
-          >
-            <Icon
-              variant="plain"
-              pos="absolute"
-              rounded="sm"
-              _hover={{ bg: "gray.300" }}
-              onClick={() => setOpen(true)}
+      <Box w="fit" m="12px" pos={"relative"} h="100%" pointerEvents="none">
+        <HStack alignItems="flex-end" pointerEvents="auto">
+          <VStack>
+            <HStack
+              w="22.5vw"
+              h="5vh"
+              bg="white"
+              justifyContent="flex-start"
+              paddingInline="10px"
+              border="1px solid #C6C6C6"
+              rounded="10px"
             >
-              <LuMenu size="20" cursor="pointer" />
-            </Icon>
-            <Text fontSize="2xl" textAlign="center" flexGrow={1}>
-              ASCSA Map Tool
-            </Text>
-          </HStack>
+              <Icon
+                variant="plain"
+                pos="absolute"
+                rounded="sm"
+                _hover={{ bg: "gray.300" }}
+                onClick={() => setOpen(true)}
+              >
+                <LuMenu size="20" cursor="pointer" />
+              </Icon>
+              <Text fontSize="2xl" textAlign="center" flexGrow={1}>
+                ASCSA Map Tool
+              </Text>
+            </HStack>
 
-          <Filters toggleFilters={toggleFilters} toggleExtra={toggleExtra}></Filters>
+            {/* The filters Card*/}
+            <FilterCard
+              areFiltersOpen={areFiltersOpen}
+              setPeriodFilters={setPeriodFilters}
+              setFilters={setFilters}
+            />
+          </VStack>
+
+          <Filters
+            toggleFilters={toggleFilters}
+            toggleExtra={toggleExtra}
+          ></Filters>
         </HStack>
-
-        {/* The filters Card*/}
-        <FilterCard
-          areFiltersOpen={areFiltersOpen}
-          setPeriodFilters={setPeriodFilters}
-        />
 
         <Drawer.Root
           open={open}

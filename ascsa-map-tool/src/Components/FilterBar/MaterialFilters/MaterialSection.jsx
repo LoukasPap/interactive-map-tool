@@ -1,12 +1,7 @@
-import {
-  For,
-  Heading,
-  SimpleGrid,
-  Accordion,
-  Group,
-} from "@chakra-ui/react";
+import { For, Heading, SimpleGrid, Accordion, Group } from "@chakra-ui/react";
 import QuickSelectionButtons from "../QuickSelectionButtons";
 import MaterialButton from "./MaterialButton";
+import { useState, useEffect } from "react";
 import Section from "./SectionFilters";
 
 const initialMaterialList = [
@@ -48,11 +43,20 @@ const initialMaterialList = [
   },
 ];
 
-const MaterialSection = () => {
+
+const MaterialSection = ({ setFilters }) => {
   const [materialsList, setMaterialsList] = useState(initialMaterialList);
   const [section, setSection] = useState("");
 
   const [openItems, setOpenItems] = useState(["material-filter", "section-filter"]);
+
+  useEffect(() => {
+    setFilters({
+      "materials": materialsList.filter(m => m.checked).map(m => m.value),
+      "section": section
+    });
+
+  }, [section, materialsList]);
 
 
   const handleSelectAll = () => {

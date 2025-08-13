@@ -1,43 +1,43 @@
-import {
-  Box,
-  Tabs,
-  Text,
-  VStack,
-  Separator,
-} from "@chakra-ui/react";
-import { LuFolder, LuSquareCheck, LuUser } from "react-icons/lu";
+import { Box, Tabs, Text, VStack, Separator, Button } from "@chakra-ui/react";
 import { useState } from "react";
 import PeriodBar from "../PeriodBar/Bar";
 import Filters from "./Filters";
 
-const FilterCard = ({ areFiltersOpen = false, setPeriodFilters }) => {
+const FilterCard = ({ areFiltersOpen = false, setPeriodFilters, setFilters }) => {
   const [value, setValue] = useState("artifacts");
 
   return (
     <VStack
-       style={{
+      style={{
         opacity: areFiltersOpen ? 1 : 0,
         pointerEvents: areFiltersOpen ? "auto" : "none",
         transition: "opacity 0.4s cubic-bezier(.4,0,.2,1)",
       }}
-      w={{ sm: "30vw", md: "25vw", lg: "20vw" }}
-      h="90vh"
-      pos="fixed"
+      w={{ sm: "30vw", md: "25vw", lg: "22.5vw" }}
       bg="white"
       p="30px 22px"
       rounded="10px"
       border="1px solid #C6C6C6"
+      top="calc(5vh + 5px)"
+      bottom="calc(12px + 12px)"
+      position="absolute"
     >
       <Box
         display="flex"
-        justifyContent="space-between"
+        justifyContent="start"
         flexDir="column"
-        gapY="10px"
+        // gapY="5px"
         w="100%"
         overflowY="scroll"
         overflowX="hidden"
+        h="100vh"
       >
+        <Text fontSize="3xl" fontWeight="bold">
+          Filters
+        </Text>
+
         <Tabs.Root
+          h="inherit"
           justifyContent="space-between"
           defaultValue="artifacts"
           fitted
@@ -45,11 +45,6 @@ const FilterCard = ({ areFiltersOpen = false, setPeriodFilters }) => {
           value={value}
           onValueChange={(e) => setValue(e.value)}
         >
-
-          <Text fontSize="3xl" fontWeight="bold" position="sticky">
-            Filters
-          </Text>
-
           <Tabs.List bg="white" position="sticky" gap={2} mt={2}>
             <Tabs.Trigger
               value="artifacts"
@@ -68,17 +63,13 @@ const FilterCard = ({ areFiltersOpen = false, setPeriodFilters }) => {
             <Tabs.Indicator rounded="l2" />
           </Tabs.List>
 
-          <Separator
-            orientation="horizontal"
-            mt="15px"
-            size="sm"
-            colorPalette="green"
-          />
+          <Separator size="sm" mt={4} borderColor={"gray.300"} />
 
-          <Tabs.Content value="artifacts">
-            <Filters />
-          </Tabs.Content>
-          <Tabs.Content justifyContent="space-between" value="periods" h="100%">
+            <Tabs.Content value="artifacts" pos={"relative"}>
+              <Filters applyFilters={setFilters}/>
+            </Tabs.Content>
+
+          <Tabs.Content justifyContent="space-between" value="periods">
             <PeriodBar setPeriodFilters={setPeriodFilters} />
           </Tabs.Content>
         </Tabs.Root>
