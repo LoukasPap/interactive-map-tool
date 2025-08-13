@@ -7,7 +7,7 @@ import {
 } from "@chakra-ui/react";
 import QuickSelectionButtons from "../QuickSelectionButtons";
 import MaterialButton from "./MaterialButton";
-import { useState } from "react";
+import Section from "./SectionFilters";
 
 const initialMaterialList = [
   {
@@ -50,7 +50,7 @@ const initialMaterialList = [
 
 const MaterialSection = () => {
   const [materialsList, setMaterialsList] = useState(initialMaterialList);
-  const [value, setValue] = useState(["material-filter"]);
+  const [section, setSection] = useState("");
 
   const handleSelectAll = () => {
     setMaterialsList(
@@ -133,6 +133,22 @@ const MaterialSection = () => {
             </For>
           </SimpleGrid>
         </Accordion.ItemContent>
+
+      </Accordion.Item>
+
+      <Accordion.Item value="section-filter" bg="gray.100">
+        
+        <Accordion.ItemTrigger justifyContent="space-between">
+          <Heading fontWeight={"normal"} fontSize="md">
+            {"SECTION"}
+          </Heading>
+          <Accordion.ItemIndicator color={"gray.400"} />
+        </Accordion.ItemTrigger>
+        
+        <Accordion.ItemContent>
+          <Section setSection={setSection}/>
+        </Accordion.ItemContent>
+
       </Accordion.Item>
     </Accordion.Root>
   );
