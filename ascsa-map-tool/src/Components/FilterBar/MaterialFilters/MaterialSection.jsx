@@ -12,37 +12,37 @@ import { useState } from "react";
 const initialMaterialList = [
   {
     title: "Ceramics",
-    value: "CE",
+    value: "Ceramics",
     color: "#C66F23",
     checked: false,
   },
   {
     title: "Metals",
-    value: "ME",
+    value: "Metals",
     color: "#C6B623",
     checked: false,
   },
   {
     title: "Organics",
-    value: "OR",
+    value: "Organics",
     color: "#7DC623",
     checked: false,
   },
   {
     title: "Stones",
-    value: "ST",
+    value: "Stones",
     color: "#7F7F7F",
     checked: false,
   },
   {
     title: "Glass and Gems",
-    value: "GG",
+    value: "Glass and Gems",
     color: "#23C698",
     checked: false,
   },
   {
     title: "Miscellaneous",
-    value: "MI",
+    value: "Miscellaneous",
     color: "#000",
     checked: false,
   },
