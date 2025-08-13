@@ -52,6 +52,9 @@ const MaterialSection = () => {
   const [materialsList, setMaterialsList] = useState(initialMaterialList);
   const [section, setSection] = useState("");
 
+  const [openItems, setOpenItems] = useState(["material-filter", "section-filter"]);
+
+
   const handleSelectAll = () => {
     setMaterialsList(
       materialsList.map((material) => ({
@@ -74,23 +77,21 @@ const MaterialSection = () => {
     controlAccordionState();
   };
 
-  const handleToggleMaterial = (value) => {
+  const selectMaterial = (value) => {
     setMaterialsList(
       materialsList.map((material) =>
-        material.value === value
+        material.value == value
           ? { ...material, checked: !material.checked }
           : material
       )
     );
   };
 
-
   const controlAccordionState = () => {
-      if (!value.includes("material-filter")) {
-        setValue(["material-filter"]);
+    if (!openItems.includes("material-filter")) {
+      setOpenItems(ot => [...ot, "material-filter"]);
     }
-  }
-
+  };
 
   return (
     <Accordion.Root
@@ -100,17 +101,19 @@ const MaterialSection = () => {
       variant={"enclosed"}
       size="lg"
       borderColor={"gray.400"}
-      rounded="xl"
+      rounded="lg"
       onValueChange={(e) => {
-        setValue(e.value);
-        console.log("value is", e.value);
+        setOpenItems(e.value);
       }}
-      value={value}
+      value={openItems}
     >
-      <Accordion.Item value="material-filter">
+      <Accordion.Item value="material-filter" bg="gray.100">
+
         <Accordion.ItemTrigger justifyContent="space-between">
-          <Heading fontWeight={"normal"}>{"Materials".toUpperCase()}</Heading>
-          <Group>
+          <Heading fontWeight={"normal"} fontSize="md">
+            {"MATERIALS"}
+          </Heading>
+          <Group display={{ md: "none", lg: "flex" }}>
             <QuickSelectionButtons
               handleSelectAll={handleSelectAll}
               handleClearAll={handleClearAll}
@@ -118,8 +121,9 @@ const MaterialSection = () => {
             <Accordion.ItemIndicator color={"gray.400"} />
           </Group>
         </Accordion.ItemTrigger>
+        
         <Accordion.ItemContent>
-          <SimpleGrid mt="1" gap="2" columns={[2]} h="fit" mb="5">
+          <SimpleGrid mb="5" gap="2" columns={[2]} h="fit">
             <For each={materialsList}>
               {(m) => (
                 <MaterialButton
@@ -127,7 +131,7 @@ const MaterialSection = () => {
                   material={m.title}
                   color={m.color}
                   checked={m.checked}
-                  onClick={() => handleToggleMaterial(m.value)}
+                  onClick={() => selectMaterial(m.value)}
                 />
               )}
             </For>
