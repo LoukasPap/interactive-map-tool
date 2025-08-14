@@ -41,7 +41,7 @@ const StonesIcon = `
   </svg>
   `;
 
-export const getMaterialIcon = (material) => {
+export const getMaterialIconSTR = (material) => {
   return material == "Ceramics"
     ? CeramicIcon
     : material == "Metals and Minerals"
