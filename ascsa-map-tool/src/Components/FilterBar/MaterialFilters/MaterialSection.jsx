@@ -12,8 +12,8 @@ const initialMaterialList = [
     checked: false,
   },
   {
-    title: "Metals",
-    value: "Metals",
+    title: "Metals and Minerals",
+    value: "Metals and Minerals",
     color: "#C6B623",
     checked: false,
   },
@@ -132,7 +132,7 @@ const MaterialSection = ({ setFilters }) => {
               {(m) => (
                 <MaterialButton
                   key={m.value}
-                  material={m.title}
+                  material={m.value}
                   color={m.color}
                   checked={m.checked}
                   onClick={() => selectMaterial(m.value)}

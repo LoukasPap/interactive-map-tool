@@ -3,12 +3,11 @@ import L from "leaflet";
 import "leaflet.markercluster";
 import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 import { useMap } from "react-leaflet";
-import getGenericIcon from "../assets/Icons/Markers/GenericIcon";
 
 import "leaflet-markers-canvas";
 import "../leaflet-iconex";
 import "../demo.css";
-import { getMaterialIcon } from "./Interactions";
+import { getMaterialIconSTR } from "./Interactions";
 
 const eraToColor = {
   Prehistoric: "#71717A",
@@ -38,7 +37,7 @@ const MarkerClusterLayer = ({ geojson, setSelectedProperty }) => {
     });
 
     geojson.forEach((f) => {
-      const iconSVG = getMaterialIcon(f.properties.MaterialCategory[0]);
+      const iconSVG = getMaterialIconSTR(f.properties.MaterialCategory[0]);
       const marker = L.marker(
         [f.geometry.coordinates[1], f.geometry.coordinates[0]],
         {

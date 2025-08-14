@@ -3,12 +3,13 @@ import { Icon } from "lucide-react";
 import { getMaterialIconSVG } from "./MaterialIcons";
 import { useState } from "react";
 
-const MaterialButton = ({ material, color, checked, onClick }) => {
+const MaterialButton = ({ key, material, color, checked, onClick }) => {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
     <>
       <Button
+        key={key}
         h="40px"
         size="xl"
         justifyContent={"start"}
