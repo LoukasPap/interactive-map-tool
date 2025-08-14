@@ -43,21 +43,21 @@ const initialMaterialList = [
   },
 ];
 
-
 const MaterialSection = ({ setFilters }) => {
   const [materialsList, setMaterialsList] = useState(initialMaterialList);
   const [section, setSection] = useState("");
 
-  const [openItems, setOpenItems] = useState(["material-filter", "section-filter"]);
+  const [openItems, setOpenItems] = useState([
+    "material-filter",
+    "section-filter",
+  ]);
 
   useEffect(() => {
     setFilters({
-      "materials": materialsList.filter(m => m.checked).map(m => m.value),
-      "section": section
+      materials: materialsList.filter((m) => m.checked).map((m) => m.value),
+      section: section,
     });
-
   }, [section, materialsList]);
-
 
   const handleSelectAll = () => {
     setMaterialsList(
@@ -93,7 +93,7 @@ const MaterialSection = ({ setFilters }) => {
 
   const controlAccordionState = () => {
     if (!openItems.includes("material-filter")) {
-      setOpenItems(ot => [...ot, "material-filter"]);
+      setOpenItems((ot) => [...ot, "material-filter"]);
     }
   };
 
@@ -112,7 +112,6 @@ const MaterialSection = ({ setFilters }) => {
       value={openItems}
     >
       <Accordion.Item value="material-filter" bg="gray.100">
-
         <Accordion.ItemTrigger justifyContent="space-between">
           <Heading fontWeight={"normal"} fontSize="md">
             {"MATERIALS"}
@@ -125,7 +124,7 @@ const MaterialSection = ({ setFilters }) => {
             <Accordion.ItemIndicator color={"gray.400"} />
           </Group>
         </Accordion.ItemTrigger>
-        
+
         <Accordion.ItemContent>
           <SimpleGrid mb="5" gap="2" columns={[2]} h="fit">
             <For each={materialsList}>
@@ -141,22 +140,19 @@ const MaterialSection = ({ setFilters }) => {
             </For>
           </SimpleGrid>
         </Accordion.ItemContent>
-
       </Accordion.Item>
 
       <Accordion.Item value="section-filter" bg="gray.100">
-        
         <Accordion.ItemTrigger justifyContent="space-between">
           <Heading fontWeight={"normal"} fontSize="md">
             {"SECTION"}
           </Heading>
           <Accordion.ItemIndicator color={"gray.400"} />
         </Accordion.ItemTrigger>
-        
-        <Accordion.ItemContent>
-          <Section setSection={setSection}/>
-        </Accordion.ItemContent>
 
+        <Accordion.ItemContent>
+          <Section setSectionObj={setSection} />
+        </Accordion.ItemContent>
       </Accordion.Item>
     </Accordion.Root>
   );

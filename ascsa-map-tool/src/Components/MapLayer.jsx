@@ -47,6 +47,11 @@ import { booleanPointInPolygon } from "@turf/boolean-point-in-polygon";
 import { bboxPolygon } from "@turf/bbox-polygon";
 import { point, polygon } from "@turf/helpers";
 
+import {
+  isSectionEmpty,
+  getSectionFilter,
+} from "./Helpers";
+
 const initialBounds = [
   [37.972834, 23.721197], // Southwest corner
   [37.976726, 23.724362], // Northeast corner
@@ -191,18 +196,27 @@ const MapLayer = () => {
         bbox = calculateBounds(bounds);
       }
 
-      const newActiveData = data.features
-        .filter((f) => periodFilters.includes(f.properties.Era))
-        .filter((f) =>
-          filters.materials.some((material) =>
-            f.properties.MaterialCategory.includes(material)
-          )
+    let newActiveData = data.features
+      .filter((f) => periodFilters.includes(f.properties.Era))
+      .filter((f) =>
+        filters.materials.some((material) =>
+          f.properties.MaterialCategory.includes(material)
         )
-        .filter((f) => {
-          const p = point(f.geometry.coordinates);
-          return booleanPointInPolygon(p, bbox);
-        });
-      setActiveData(newActiveData);
+      )
+      .filter((f) => {
+        const p = point(f.geometry.coordinates);
+        return booleanPointInPolygon(p, bbox);
+      });
+
+    if (!isSectionEmpty(filters.section)) {
+      const sectionFilter = getSectionFilter(filters.section);
+      console.log("[DEBUG] sectionFilter:", sectionFilter);
+      newActiveData = newActiveData.filter(
+        (f) => f.properties[sectionFilter] == filters.section[sectionFilter]
+      );
+    }
+
+    setActiveData(newActiveData);
   }, [filters, periodFilters, bounds]);
 
   useEffect(() => {
