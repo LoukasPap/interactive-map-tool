@@ -3,13 +3,12 @@ import { Icon } from "lucide-react";
 import { getMaterialIconSVG } from "./MaterialIcons";
 import { useState } from "react";
 
-const MaterialButton = ({ key, material, color, checked, onClick }) => {
-  const [isHovered, setIsHovered] = useState(false);
-
+const MaterialButton = ({ materialObject, onClick }) => {
+                  
   return (
     <>
       <Button
-        key={key}
+        key={materialObject.key}
         h="40px"
         size="xl"
         justifyContent={"start"}
@@ -20,20 +19,20 @@ const MaterialButton = ({ key, material, color, checked, onClick }) => {
         _hover={{ bg: "gray.300" }}
         onClick={onClick}
       >
-        {getMaterialIconSVG(material, color)}
+        {getMaterialIconSVG(materialObject.value, materialObject.color)}
         <Text
           fontSize={"lg"}
           fontWeight={"sem"}
-          color={checked ? "#fff" : "#000"}
+          color={materialObject.checked ? "#fff" : "#000"}
           transition="color 0.3s ease"
         >
-          {material}
+          {materialObject.title}
         </Text>
 
         <Box
           bg="#3A3A3A"
           w="100%"
-          h={checked ? "100%" : "0"}
+          h={materialObject.checked ? "100%" : "0"}
           bottom="0"
           left="0"
           pos="absolute"
