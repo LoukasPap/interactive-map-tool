@@ -151,10 +151,15 @@ const SinglePointCard = ({ point }) => {
       position="fixed"
       top="12px"
       right="12px"
-      rounded="md"
-      variant="elevated"
+      
+      maxH="calc(100% - 12px*2)" // we set 12px * 2 to take into the 12px distance from top and bottom
+      rounded="xl"
       border="1px solid"
       borderColor="gray.300"
+
+      overflow="scroll"
+      scrollbarColor="black transparent"
+      scrollbarWidth="thin"
     >
       <Card.Header mt="2">
         <HStack
@@ -222,7 +227,7 @@ const SinglePointCard = ({ point }) => {
         <Separator size="sm" mt={1} borderColor={"gray.300"} />
       </Card.Header>
 
-      <Card.Body gap="4" maxH="80vh" overflow="scroll">
+      <Card.Body gap="4" maxH="100%" overflow="scroll">
         <DataList.Root color="black" size="lg">
           <SimpleGrid columns={2} gap="4">
             {/* {point && point.f.proper} */}
@@ -265,14 +270,11 @@ const SinglePointCard = ({ point }) => {
               </Clipboard.Trigger>
             </Clipboard.Root>
 
-          <Box gridColumn="span 2">
-            <Heading mb="1">Dimensions</Heading>
-            <DimensionsTable
-              dimensions={pointDetails.dimensions}
-            />
-          </Box>
+            <Box gridColumn="span 2">
+              <Heading mb="1">Dimensions</Heading>
+              <DimensionsTable dimensions={pointDetails.dimensions} />
+            </Box>
           </SimpleGrid>
-
         </DataList.Root>
 
         <Box>
@@ -326,7 +328,6 @@ const SinglePointCard = ({ point }) => {
         flexDir="row"
         bg="black"
         p={0}
-        roundedBottom="md"
       >
         <PointCardFooter source={pointDetails.link} />
       </Card.Footer>
