@@ -1,13 +1,11 @@
 import {
   VStack,
-  IconButton,
-  Text,
-  Stack,
   Button,
   Flex,
+  HStack,
+  Heading,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import { LuSquareCheck, LuSquareMinus } from "react-icons/lu";
 
 import PeriodButton from "./Button";
 import QuickSelectionButtons from "../FilterBar/QuickSelectionButtons";
@@ -121,9 +119,17 @@ const PeriodBar = ({ setPeriodFilters }) => {
   };
 
   return (
-    <Flex h="100%" flexDir="column" justifyContent="space-between" p="0">
-      <VStack>
-        <Text bg={{ lg: "green", md: "yellow", sm: "orange" }}>gggggg</Text>
+    <Flex flexDir="column" justifyContent="space-between" gap={3} p="0">
+      <HStack justifyContent="space-between">
+          <Heading fontWeight="normal" fontSize="md">
+            PERIODS
+          </Heading>
+        <QuickSelectionButtons
+          handleSelectAll={handleSelectAll}
+          handleClearAll={handleClearAll}
+        />
+      </HStack>
+        {/* <Text bg={{ lg: "green", md: "yellow", sm: "orange" }}>gggggg</Text> */}
         <VStack gapY={{ lg: "10px", md: "5px" }} w="100%" overflow={"scroll"}>
           {periodsList.map((period) => (
             <PeriodButton
@@ -137,11 +143,9 @@ const PeriodBar = ({ setPeriodFilters }) => {
           ))}
         </VStack>
 
-        <QuickSelectionButtons handleSelectAll={handleSelectAll} handleClearAll={handleClearAll} />
         <Button size="sm" w="100%" fontSize="lg" onClick={handleApplyFilter}>
           Apply
         </Button>
-      </VStack>
     </Flex>
   );
 };
