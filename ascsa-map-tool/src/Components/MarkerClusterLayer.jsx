@@ -7,20 +7,10 @@ import { useMap } from "react-leaflet";
 import "leaflet-markers-canvas";
 import "../leaflet-iconex";
 import "../demo.css";
-import { getMaterialIconSTR } from "./Interactions";
 
-const eraToColor = {
-  Prehistoric: "#71717A",
-  Greek: "#3B82F6",
-  Roman: "#EF4444",
-  Byzantine: "#F97316",
-  Medieval: "#22C55E",
-  Turkish: "#EAB308",
-  Modern: "#EC4899",
-  No: "#000000",
-};
+import { createMarker, attachEvents } from "./MarkersHelpers";
 
-const MarkerClusterLayer = ({ geojson, setSelectedProperty }) => {
+const MarkerClusterLayer = ({ geojson, onMarkerClick }) => {
   const map = useMap();
 
   useEffect(() => {
@@ -36,25 +26,11 @@ const MarkerClusterLayer = ({ geojson, setSelectedProperty }) => {
       chunkedLoading: true,
     });
 
-    geojson.forEach((f) => {
-      const iconSVG = getMaterialIconSTR(f.properties.MaterialCategory[0]);
-      const marker = L.marker(
-        [f.geometry.coordinates[1], f.geometry.coordinates[0]],
-        {
-          opacity: 1,
-          icon: new L.IconEx({
-            contentHtml: iconSVG,
-            iconFill: eraToColor[f.properties.Era],
-            contentHtmlSize: [16, 16],
-          }),
-        }
-      ).on({
-        click: (e) => {
-          setSelectedProperty({ f });
-          console.log("Clicked marker:", f);
-        },
-      });
-      marker.bindPopup(f.properties.Title || "-");
+    geojson.forEach((feature) => {
+      const marker = createMarker(feature);
+
+      attachEvents(marker, onMarkerClick, feature);
+      
       markerClusterGroup.addLayer(marker);
     });
 

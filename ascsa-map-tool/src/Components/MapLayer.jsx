@@ -76,7 +76,7 @@ const MapLayer = () => {
 
   const [activeTool, setActiveTool] = useState(null);
 
-  const [selectedProperty, setSelectedProperty] = useState(null);
+  const [selectedMarker, setSelectedMarker] = useState(null);
   const [mapReady, setMapReady] = useState(false);
 
   const [zoom, setZoom] = useState(13);
@@ -293,7 +293,7 @@ const MapLayer = () => {
 
         <MarkerClusterLayer
           geojson={activeData}
-          setSelectedProperty={setSelectedProperty}
+          onMarkerClick={setSelectedMarker}
         />
 
         <ZoomTracker />
@@ -305,7 +305,7 @@ const MapLayer = () => {
       {/* <Info picked={selectedProperty}> </Info> */}
 
       {console.log("MAP LAYER", [selectedProperty])}
-      <SinglePointCard point={selectedProperty} />
+      <SinglePointCard marker={selectedMarker != null ? selectedMarker.feature : selectedMarker} />
 
       <Bar
         isPeriodBarOpen={isExtraOpen}

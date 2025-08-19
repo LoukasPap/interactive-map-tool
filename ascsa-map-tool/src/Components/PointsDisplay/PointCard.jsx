@@ -51,43 +51,42 @@ const initialObject = {
   deposit: "deposit",
 };
 
-const SinglePointCard = ({ point }) => {
+const SinglePointCard = ({ marker }) => {
   const [pointDetails, setPointDetails] = useState(initialObject);
 
   useEffect(() => {
-    if (point) {
-      console.log("SELECTED POINT", point);
+    console.log("[DEBUG] SELECTED MARKER", marker);
+    if (marker) {
       setPointDetails({
         ...pointDetails,
-        ...point.f,
 
-        name: point.f.properties.Name,
-        title: point.f.properties.Title || "N/A",
-        period: point.f.properties.Period || "N/A", // goes with Chronology
-        era: point.f.properties.Era || "N/A",
-        chronology: point.f.properties.Chronology || "N/A",
+        name: marker.properties.Name,
+        title: marker.properties.Title || "N/A",
+        period: marker.properties.Period || "N/A", // goes with Chronology
+        era: marker.properties.Era || "N/A",
+        chronology: marker.properties.Chronology || "N/A",
 
-        section: point.f.properties.SectionNumber || "N/A",
-        date: point.f.properties.Date || "N/A",
+        section: marker.properties.SectionNumber || "N/A",
+        date: marker.properties.Date || "N/A",
 
-        material: point.f.properties.ListedMaterial.join(", ") || "N/A",
-        materialCategory: point.f.properties.MaterialCategory || "N/A",
+        material: marker.properties.ListedMaterial.join(", ") || "N/A",
+        materialCategory: marker.properties.MaterialCategory || "N/A",
 
-        description: point.f.properties.Description || "N/A",
-        coords: point.f.geometry.coordinates,
+        description: marker.properties.Description || "N/A",
+        coords: marker.geometry.coordinates,
 
-        dimensions: point.f.properties.FormattedDimensions || [],
-        type: point.f.properties.Type || "N/A",
-        category: point.f.properties.Category || "N/A",
+        dimensions: marker.properties.FormattedDimensions || [],
+        type: marker.properties.Type || "N/A",
+        category: marker.properties.Category || "N/A",
 
-        link: `https://ascsa-net.gr/id/agora/${point.f.properties.Type}/${point.f.properties.Name}`, // https://ascsa-net.gr/id/agora/coin/n 205887
-        images: point.f.properties.Parent || [],
+        link: `https://ascsa-net.gr/id/agora/${marker.properties.Type}/${marker.properties.Name}`, // https://ascsa-net.gr/id/agora/coin/n 205887
+        images: marker.properties.Parent || [],
 
-        lot: point.f.properties.Lot || "N/A",
-        deposit: point.f.properties.Deposit || "N/A",
+        lot: marker.properties.Lot || "N/A",
+        deposit: marker.properties.Deposit || "N/A",
       });
     }
-  }, [point]);
+  }, [marker]);
 
   const propList = ["title", "period", "material", "section", "date"];
 
@@ -170,11 +169,11 @@ const SinglePointCard = ({ point }) => {
         >
           <Group>
             <Card.Title h="fit" overflow="visible">
-              <Text fontSize="3xl">{(point && pointDetails.name) || "-"}</Text>
+              <Text fontSize="3xl">{(marker && pointDetails.name) || "-"}</Text>
             </Card.Title>
 
             <Clipboard.Root
-              value={(point && `Agora:Object:${pointDetails.name}`) || "-"}
+              value={(marker && `Agora:Object:${pointDetails.name}`) || "-"}
             >
               <Clipboard.Trigger asChild>
                 {/* <Icon _hover={{ bg: "gray.300" }} rounded="sm" p={2} >
