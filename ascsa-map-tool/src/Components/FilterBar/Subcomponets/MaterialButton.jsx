@@ -16,21 +16,21 @@ const MaterialButton = ({ materialObject, onClick }) => {
         overflow="hidden"
         border="1px solid"
         borderColor="gray.300"
-        _hover={{ bg: "gray.300" }}
+        _hover={{ bg: "gray.200" }}
         onClick={onClick}
       >
         {getMaterialIconSVG(materialObject.value, materialObject.color)}
         <Text
           fontSize={"lg"}
           fontWeight={"sem"}
-          color={materialObject.checked ? "#fff" : "#000"}
+          // color={materialObject.checked ? "#fff" : "#000"}
           transition="color 0.3s ease"
         >
           {materialObject.title}
         </Text>
 
         <Box
-          bg="#3A3A3A"
+          bg="gray.300"
           w="100%"
           h={materialObject.checked ? "100%" : "0"}
           bottom="0"

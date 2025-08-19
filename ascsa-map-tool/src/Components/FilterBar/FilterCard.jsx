@@ -1,7 +1,7 @@
 import { Box, Tabs, Text, VStack, Separator, Button } from "@chakra-ui/react";
 import { useState } from "react";
 import PeriodBar from "../PeriodBar/Bar";
-import Filters from "./Filters";
+import Filters from "./Subcomponets/FiltersAccordion";
 
 const FilterCard = ({ areFiltersOpen = false, setPeriodFilters, setFilters }) => {
   const [value, setValue] = useState("artifacts");
@@ -16,7 +16,7 @@ const FilterCard = ({ areFiltersOpen = false, setPeriodFilters, setFilters }) =>
       w={{ sm: "30vw", md: "25vw", lg: "22.5vw" }}
       bg="white"
       p="30px 22px"
-      rounded="10px"
+      rounded="xl"
       border="1px solid #C6C6C6"
       top="calc(5vh + 5px)"
       bottom="calc(12px + 12px)"
@@ -66,7 +66,7 @@ const FilterCard = ({ areFiltersOpen = false, setPeriodFilters, setFilters }) =>
           <Separator size="sm" mt={4} borderColor={"gray.300"} />
 
             <Tabs.Content value="artifacts" pos={"relative"}>
-              <Filters applyFilters={setFilters}/>
+              <Filters setFilters={setFilters} />
             </Tabs.Content>
 
           <Tabs.Content justifyContent="space-between" value="periods">

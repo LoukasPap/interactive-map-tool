@@ -24,12 +24,15 @@ const Section = ({ setSectionObj }) => {
   }
 
   return (
-    <Stack gap="5" maxW="sm" mb="5">
+    <Stack gap="5" maxW="sm" mb={5} mt={1}>
       <Field.Root orientation="horizontal">
         <Field.Label fontSize="md">
           <Text w="100px">Section Letter</Text>
         </Field.Label>
         <Input
+          size="lg"
+          border="1px solid"
+          borderColor="gray.300"
           placeholder="Enter Letter"
           flex="1"
           value={section.SectionLetter}
@@ -51,6 +54,7 @@ const Section = ({ setSectionObj }) => {
           <Text w="100px">Section Number</Text>
         </Field.Label>
         <NumberInput.Root
+        size="lg"
           flex="1"
           min={0}
           value={section.sectionNumber}
@@ -66,7 +70,7 @@ const Section = ({ setSectionObj }) => {
           }
         >
           <NumberInput.Control />
-          <NumberInput.Input />
+          <NumberInput.Input border="1px solid" borderColor="gray.300" />
         </NumberInput.Root>
       </Field.Root>
     </Stack>
