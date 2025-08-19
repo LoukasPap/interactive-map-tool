@@ -70,7 +70,7 @@ const SinglePointCard = ({ point }) => {
         section: point.f.properties.SectionNumber || "N/A",
         date: point.f.properties.Date || "N/A",
 
-        material: point.f.properties.ListedMaterial || "N/A",
+        material: point.f.properties.ListedMaterial.join(", ") || "N/A",
         materialCategory: point.f.properties.MaterialCategory || "N/A",
 
         description: point.f.properties.Description || "N/A",
@@ -277,7 +277,7 @@ const SinglePointCard = ({ point }) => {
           </SimpleGrid>
         </DataList.Root>
 
-        <Box>
+        {/* <Box>
           <Heading mb={2}>Images</Heading>
           <HStack
             gap="4"
@@ -295,18 +295,18 @@ const SinglePointCard = ({ point }) => {
               });
             }}
           >
-            {/* {errorImages == pointDetails["images"].length ? ( */}
-            {/* <Text color="gray">No images</Text> */}
-            {/* ) : ( */}
             <For
               each={pointDetails["images"]}
               fallback={<Text color="gray">No images</Text>}
             >
               {(item, index) => <ImageWithSpinner key={index} src={item} />}
             </For>
-            {/* )} */}
           </HStack>
-        </Box>
+        </Box> */}
+
+            {/* {errorImages == pointDetails["images"].length ? ( */}
+            {/* <Text color="gray">No images</Text> */}
+            {/* ) : ( */}
 
         <Box>
           <Heading>Description</Heading>
