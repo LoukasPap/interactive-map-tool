@@ -2,7 +2,7 @@ import { Checkbox, HStack, Box } from "@chakra-ui/react";
 import { useState } from "react";
 import { LuEye, LuEyeClosed, LuFilter } from "react-icons/lu";
 
-const Filters = ({ toggleFilters, toggleExtra }) => {
+const EasyButtons = ({ toggleFilters, toggleExtra }) => {
   const [checkedExtra, setCheckedExtra] = useState(true);
   const [checkedFilter, setCheckedFilter] = useState(true);
   const customStyle = { height: "1.5em" };
@@ -105,4 +105,4 @@ const Filters = ({ toggleFilters, toggleExtra }) => {
   );
 };
 
-export default Filters;
+export default EasyButtons;

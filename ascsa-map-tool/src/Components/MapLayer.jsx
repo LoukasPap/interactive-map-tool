@@ -28,8 +28,9 @@ import CanvasMarkersLayer from "./MarkersLayer";
 import MarkersList from "./MarkersList";
 import Bar from "./ActionBar/ActionBar";
 import FilterCard from "./FilterBar/FilterCard";
-import Filters from "./FilterBar/Bar";
+import EasyButtons from "./FilterBar/EasyButtons";
 import SinglePointCard from "./PointsDisplay/PointCard";
+
 import {
   Box,
   HStack,
@@ -347,10 +348,10 @@ const MapLayer = () => {
             />
           </VStack>
 
-          <Filters
+          <EasyButtons
             toggleFilters={toggleFilters}
             toggleExtra={toggleExtra}
-          ></Filters>
+          ></EasyButtons>
         </HStack>
 
         <Drawer.Root
