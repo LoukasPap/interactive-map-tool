@@ -94,3 +94,8 @@ export function getRectangleBackgroundHtml() {
     </svg>
     `;
 }
+
+
+export function showMonuments(filter) {
+  if (filter != "No") return true;
+}

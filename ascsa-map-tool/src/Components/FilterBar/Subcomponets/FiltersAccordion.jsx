@@ -54,12 +54,15 @@ const initialMaterialList = [
 const Filters = ({ setFilters }) => {
   const [materialsList, setMaterialsList] = useState(initialMaterialList);
   const [section, setSection] = useState("");
-  const [monument, setMonument] = useState("");
+  const [monument, setMonument] = useState({
+    ShowMonuments: "Yes",
+    Condition: [],
+  });
 
   const [openItems, setOpenItems] = useState([
     "material-filter",
     "section-filter",
-    "monument-filter"
+    "monument-filter",
   ]);
 
   // useEffect(() => {
@@ -108,9 +111,12 @@ const Filters = ({ setFilters }) => {
   };
 
   const handleApplyFilter = () => {
+    console.log("changed,", monument);
+
     setFilters({
       materials: materialsList.filter((m) => m.checked).map((m) => m.value),
       section: section,
+      monument: monument,
     });
   };
 
@@ -160,7 +166,7 @@ const Filters = ({ setFilters }) => {
         <Accordion.Item value="section-filter" bg="gray.100">
           <Accordion.ItemTrigger justifyContent="space-between">
             <Heading fontWeight={"normal"} fontSize="md">
-              {"SECTION"}
+              SECTION
             </Heading>
             <Accordion.ItemIndicator color={"gray.400"} />
           </Accordion.ItemTrigger>
@@ -169,7 +175,7 @@ const Filters = ({ setFilters }) => {
             <Section setSectionObj={setSection} />
           </Accordion.ItemContent>
         </Accordion.Item>
-        
+
         <Accordion.Item value="monument-filter" bg="gray.100">
           <Accordion.ItemTrigger justifyContent="space-between">
             <Heading fontWeight={"normal"} fontSize="md">
@@ -184,7 +190,13 @@ const Filters = ({ setFilters }) => {
         </Accordion.Item>
       </Accordion.Root>
 
-      <Button size="md" w="100%" fontSize="lg" mt={2} onClick={handleApplyFilter}>
+      <Button
+        size="md"
+        w="100%"
+        fontSize="lg"
+        mt={2}
+        onClick={handleApplyFilter}
+      >
         Apply
       </Button>
     </>

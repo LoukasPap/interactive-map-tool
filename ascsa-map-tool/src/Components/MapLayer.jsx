@@ -21,7 +21,8 @@ import {
 import "leaflet/dist/leaflet.css";
 import { LuMenu } from "react-icons/lu";
 // import ClusteredPoints from "./ClusteredPoints";
-import { data } from "../data/data_many";
+import { data } from "../data/dataframe";
+import { monument_data } from "../data/m_dataframe";
 
 import Info from "./Info";
 import CanvasMarkersLayer from "./MarkersLayer";
@@ -48,10 +49,8 @@ import { booleanPointInPolygon } from "@turf/boolean-point-in-polygon";
 import { bboxPolygon } from "@turf/bbox-polygon";
 import { point, polygon } from "@turf/helpers";
 
-import {
-  isSectionEmpty,
-  getSectionFilter,
-} from "./Helpers";
+import { isSectionEmpty, getSectionFilter } from "./Helpers";
+import { showMonuments } from "./MarkersHelpers";
 
 const initialBounds = [
   [37.972834, 23.721197], // Southwest corner
@@ -63,6 +62,12 @@ const MapLayer = () => {
   const [periodFilters, setPeriodFilters] = useState([]);
 
   const [filters, setFilters] = useState({ materials: [], section: "" });
+  const emptyFiltersState = {
+    materials: [],
+    section: "",
+    monument: "",
+  };
+  const [filters, setFilters] = useState(emptyFiltersState);
   const prevFilters = usePrevious(filters);
   const [bounds, setBounds] = useState(null);
   const dataInBounds = useRef(null);
@@ -192,30 +197,47 @@ const MapLayer = () => {
   }, [activeData]);
 
   useEffect(() => {
-      let bbox = initialBounds;
-      if (bounds != null) {
-        bbox = calculateBounds(bounds);
-      }
+    let bbox = initialBounds;
+    if (bounds != null) {
+      bbox = calculateBounds(bounds);
+    }
+    let newActiveData = [];
+    const monumentsVisibility = filters.monument.ShowMonuments;
 
-    let newActiveData = data.features
-      .filter((f) => periodFilters.includes(f.properties.Era))
-      .filter((f) =>
-        filters.materials.some((material) =>
-          f.properties.MaterialCategory.includes(material)
+    if (monumentsVisibility != "Only") {
+      newActiveData = data.features
+        .filter((f) => periodFilters.includes(f.properties.Era))
+        .filter((f) =>
+          filters.materials.some((material) =>
+            f.properties.MaterialCategory.includes(material)
+          )
         )
-      )
-      .filter((f) => {
-        const p = point(f.geometry.coordinates);
-        return booleanPointInPolygon(p, bbox);
-      });
+        .filter((f) => {
+          const p = point(f.geometry.coordinates);
+          return booleanPointInPolygon(p, bbox);
+        });
 
-    if (!isSectionEmpty(filters.section)) {
-      const sectionFilter = getSectionFilter(filters.section);
-      console.log("[DEBUG] sectionFilter:", sectionFilter);
-      newActiveData = newActiveData.filter(
-        (f) => f.properties[sectionFilter] == filters.section[sectionFilter]
+      if (!isSectionEmpty(filters.section)) {
+        const sectionFilter = getSectionFilter(filters.section);
+        newActiveData = newActiveData.filter(
+          (f) => f.properties[sectionFilter] == filters.section[sectionFilter]
+        );
+      }
+    }
+    console.log("[DEBUG] only", newActiveData);
+
+    let newMonumentData = [];
+    const areMonumentsVisible = showMonuments(monumentsVisibility);
+
+    if (areMonumentsVisible) {
+      console.log("[DEBUG] visiblr");
+      const conditions = filters.monument.Condition || [];
+      newMonumentData = monument_data.features.filter((f) =>
+        conditions.includes(f.properties.CleanCondition)
       );
     }
+
+    newActiveData.push(...newMonumentData);
 
     setActiveData(newActiveData);
   }, [filters, periodFilters, bounds]);
@@ -292,7 +314,7 @@ const MapLayer = () => {
         {/* <ClusteredPoints geojson={data} /> */}
 
         <MarkerClusterLayer
-          geojson={activeData}
+          data={activeData}
           onMarkerClick={setSelectedMarker}
         />
 
@@ -304,8 +326,11 @@ const MapLayer = () => {
 
       {/* <Info picked={selectedProperty}> </Info> */}
 
-      {console.log("MAP LAYER", [selectedProperty])}
-      <SinglePointCard marker={selectedMarker != null ? selectedMarker.feature : selectedMarker} />
+      <SinglePointCard
+        marker={
+          selectedMarker != null ? selectedMarker.feature : selectedMarker
+        }
+      />
 
       <Bar
         isPeriodBarOpen={isExtraOpen}

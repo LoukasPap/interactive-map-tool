@@ -10,12 +10,12 @@ import "../demo.css";
 
 import { createMarker, attachEvents } from "./MarkersHelpers";
 
-const MarkerClusterLayer = ({ geojson, onMarkerClick }) => {
+const MarkerClusterLayer = ({ data, onMarkerClick }) => {
   const map = useMap();
 
   useEffect(() => {
     console.log("[LOG] - Rendering MarkerCluster");
-    if (!map || !geojson) return;
+    if (!map || !data) return;
 
     const markerClusterGroup = L.markerClusterGroup({
       showCoverageOnHover: true,
@@ -26,7 +26,7 @@ const MarkerClusterLayer = ({ geojson, onMarkerClick }) => {
       chunkedLoading: true,
     });
 
-    geojson.forEach((feature) => {
+    data.forEach((feature) => {
       const marker = createMarker(feature);
 
       attachEvents(marker, onMarkerClick, feature);
@@ -40,7 +40,7 @@ const MarkerClusterLayer = ({ geojson, onMarkerClick }) => {
     return () => {
       map.removeLayer(markerClusterGroup);
     };
-  }, [map, geojson]);
+  }, [map, data]);
 
   return null;
 };

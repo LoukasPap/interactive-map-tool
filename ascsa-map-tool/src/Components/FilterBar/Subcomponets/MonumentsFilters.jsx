@@ -9,28 +9,30 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 
+const conditons = createListCollection({
+  items: [
+    { label: "Excellent", value: "Excellent" },
+    { label: "Good", value: "Good" },
+    { label: "Fair", value: "Fair" },
+    { label: "Fully", value: "Fully" },
+    { label: "Poor", value: "Poor" },
+    { label: "Reburied", value: "Reburied" },
+    // We skip Known and Mixed conditions because the monuments in these conditions
+    // do not have coordinates to be drawn on map (i.e. WGS84Centroid)
+  ],
+});
+
+const initialFilterState = {
+  ShowMonuments: "Yes",
+  Condition: [],
+};
+
 const Monument = ({ setMonumentObj }) => {
-  const [monuments, setMonuments] = useState({
-    ShowMonuments: "",
-    Condition: [],
-  });
+  const [monuments, setMonuments] = useState(initialFilterState);
 
   useEffect(() => {
     setMonumentObj(monuments);
   }, [monuments]);
-
-  const conditons = createListCollection({
-    items: [
-      { label: "Excellent", value: "Excellent" },
-      { label: "Good", value: "Good" },
-      { label: "Fair", value: "Fair" },
-      { label: "Poor", value: "Poor" },
-      { label: "Very Poor", value: "Very Poor" },
-      { label: "Known", value: "Known" },
-      { label: "Reburied", value: "Reburied" },
-      { label: "Mixed", value: "Mixed" },
-    ],
-  });
 
   return (
     <Stack gap="5" maxW="sm" mb="5">
@@ -39,7 +41,13 @@ const Monument = ({ setMonumentObj }) => {
           <Text w="100px">Show Monuments</Text>
         </Field.Label>
         <SegmentGroup.Root
-          defaultValue="Yes"
+          value={monuments.ShowMonuments}
+          onValueChange={(e) => {
+            setMonuments((m) => ({
+              ...m,
+              ShowMonuments: e.value,
+            }));      
+          }}
           size="lg"
           flex="1"
           border="1px solid"
@@ -54,7 +62,18 @@ const Monument = ({ setMonumentObj }) => {
         <Field.Label fontSize="md">
           <Text w="100px">Condition</Text>
         </Field.Label>
-        <Select.Root multiple collection={conditons} size="lg" width="100%">
+        <Select.Root
+          value={monuments.Condition}
+          onValueChange={(e) => {
+            setMonuments((m) => ({
+              ...m,
+              Condition: e.value,
+            }));
+          }}
+          multiple
+          collection={conditons}
+          size="lg"
+        >
           <Select.HiddenSelect />
           <Select.Control>
             <Select.Trigger border="1px solid" borderColor="gray.300">
@@ -62,7 +81,7 @@ const Monument = ({ setMonumentObj }) => {
             </Select.Trigger>
             <Select.IndicatorGroup>
               <Select.Indicator />
-            </Select.IndicatorGroup >
+            </Select.IndicatorGroup>
           </Select.Control>
           <Portal>
             <Select.Positioner>
