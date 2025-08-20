@@ -201,28 +201,41 @@ const MapLayer = () => {
     if (bounds != null) {
       bbox = calculateBounds(bounds);
     }
+   
     let newActiveData = [];
     const monumentsVisibility = filters.monument.ShowMonuments;
 
+    // We push the monuments_data second to be more efficient (they are just ~50 allocations)
     if (monumentsVisibility != "Only") {
-      newActiveData = data.features
-        .filter((f) => periodFilters.includes(f.properties.Era))
-        .filter((f) =>
-          filters.materials.some((material) =>
-            f.properties.MaterialCategory.includes(material)
-          )
-        )
-        .filter((f) => {
-          const p = point(f.geometry.coordinates);
-          return booleanPointInPolygon(p, bbox);
-        });
+      newActiveData = data.features;
+    }
 
-      if (!isSectionEmpty(filters.section)) {
-        const sectionFilter = getSectionFilter(filters.section);
-        newActiveData = newActiveData.filter(
-          (f) => f.properties[sectionFilter] == filters.section[sectionFilter]
-        );
-      }
+    if (monumentsVisibility != "No") {
+      const conditions = filters.monument.Condition || [];
+      const monumentData = monument_data.features.filter((f) =>
+        conditions.includes(f.properties.CleanCondition)
+      );
+      newActiveData.push(...monumentData);
+    }
+
+    newActiveData = newActiveData
+      .filter((f) => periodFilters.includes(f.properties.Era))
+      .filter((f) =>
+        filters.materials.some((material) =>
+          f.properties.MaterialCategory.includes(material)
+        )
+      )
+      .filter((f) => {
+        const p = point(f.geometry.coordinates);
+        return booleanPointInPolygon(p, bbox);
+      });
+
+    if (!isSectionEmpty(filters.section)) {
+      const sectionFilter = getSectionFilter(filters.section);
+      newActiveData = newActiveData.filter(
+        (f) => f.properties[sectionFilter] == filters.section[sectionFilter]
+      );
+    }
     }
     console.log("[DEBUG] only", newActiveData);
 
