@@ -28,16 +28,19 @@ export function createMarker(point) {
 }
 
 export function attachEvents(marker, onMarkerClick, feature) {
+  function setStroke(e, color, width) {
+    e.sourceTarget._icon.children[0].children[0].children[0].style.stroke = color;
+    e.sourceTarget._icon.children[0].children[0].children[0].style.strokeWidth = width;
+  }
+
   marker.on({
     click: (e) => {
       onMarkerClick({ feature });
       console.log("Clicked marker:", feature);
-      e.sourceTarget._icon.children[0].children[0].children[0].style.stroke = "red";
-      e.sourceTarget._icon.children[0].children[0].children[0].style.strokeWidth = "1"; 
+      setStroke(e, "red", 1);
     },
     popupclose: (e) => {
-      if (e.target._icon) e.sourceTarget._icon.children[0].children[0].children[0].style.stroke = ""; 
-
+      if (e.target._icon) setStroke(e, "", 0);
     },
   });
 
@@ -100,7 +103,6 @@ export function getRectangleBackgroundHtml() {
     </svg>
     `;
 }
-
 
 export function showMonuments(filter) {
   if (filter != "No") return true;
