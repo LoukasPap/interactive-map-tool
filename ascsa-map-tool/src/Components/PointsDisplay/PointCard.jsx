@@ -16,12 +16,14 @@ import {
   Heading,
   Box,
   Tag,
+  Center,
 } from "@chakra-ui/react";
 import {
   LuCopy,
   LuX,
   LuMapPin,
   LuMapPinCheckInside,
+  LuGlobe,
   LuInfo,
 } from "react-icons/lu";
 import { Tooltip } from "../ui/tooltip";
@@ -150,7 +152,6 @@ const SinglePointCard = ({ marker }) => {
       position="fixed"
       top="12px"
       right="12px"
-      
       maxH="calc(100% - 12px*2)" // we set 12px * 2 to take into the 12px distance from top and bottom
       rounded="xl"
       border="1px solid"
@@ -302,9 +303,21 @@ const SinglePointCard = ({ marker }) => {
             </For>
 
             {+pointDetails["images"].length > 10 ? ( // prefixing "+" transforms str to int
-              <Button w="100px" h="100px" variant="outline" border="1px dashed black">
-              <Text>Visit source<br/>for more images</Text>
-            </Button>
+              <Button
+                w="100px"
+                h="100px"
+                variant="plain"
+                border="1px dashed black"
+              >
+                <Text >
+                  <Center mb={2}>
+                    <LuGlobe size="lg" />
+                  </Center>
+                  Visit source
+                  <br />
+                  for more images
+                </Text>
+              </Button>
             ) : null}
           </HStack>
         </Box>
