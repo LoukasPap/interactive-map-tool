@@ -276,7 +276,7 @@ const SinglePointCard = ({ marker }) => {
           </SimpleGrid>
         </DataList.Root>
 
-        {/* <Box>
+        <Box>
           <Heading mb={2}>Images</Heading>
           <HStack
             gap="4"
@@ -295,13 +295,19 @@ const SinglePointCard = ({ marker }) => {
             }}
           >
             <For
-              each={pointDetails["images"]}
+              each={pointDetails["images"].slice(0, 10)}
               fallback={<Text color="gray">No images</Text>}
             >
               {(item, index) => <ImageWithSpinner key={index} src={item} />}
             </For>
+
+            {+pointDetails["images"].length > 10 ? ( // prefixing "+" transforms str to int
+              <Button w="100px" h="100px" variant="outline" border="1px dashed black">
+              <Text>Visit source<br/>for more images</Text>
+            </Button>
+            ) : null}
           </HStack>
-        </Box> */}
+        </Box>
 
             {/* {errorImages == pointDetails["images"].length ? ( */}
             {/* <Text color="gray">No images</Text> */}
