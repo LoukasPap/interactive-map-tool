@@ -30,12 +30,18 @@ export function createMarker(point) {
 export function attachEvents(marker, onMarkerClick, feature) {
   marker.on({
     click: (e) => {
-      onMarkerClick({feature});
+      onMarkerClick({ feature });
       console.log("Clicked marker:", feature);
+      e.sourceTarget._icon.children[0].children[0].children[0].style.stroke = "red";
+      e.sourceTarget._icon.children[0].children[0].children[0].style.strokeWidth = "1"; 
+    },
+    popupclose: (e) => {
+      if (e.target._icon) e.sourceTarget._icon.children[0].children[0].children[0].style.stroke = ""; 
+
     },
   });
 
-  marker.bindPopup(feature.properties.Title || "-");
+  marker.bindPopup(feature.properties.Title || feature.properties.Name || "-");
 }
 
 export function isMonument(type) {
