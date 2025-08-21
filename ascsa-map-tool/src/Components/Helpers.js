@@ -14,3 +14,7 @@ export function getSectionFilter(section) {
 export function isSectionEmpty(section) {
   return section.SectionNumber === "" ? true : false;
 }
+
+export function isArrayEmpty(arr) {
+  return arr.length == 0 ? true : false;
+}

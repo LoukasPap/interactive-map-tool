@@ -49,7 +49,7 @@ import { booleanPointInPolygon } from "@turf/boolean-point-in-polygon";
 import { bboxPolygon } from "@turf/bbox-polygon";
 import { point, polygon } from "@turf/helpers";
 
-import { isSectionEmpty, getSectionFilter } from "./Helpers";
+import { isSectionEmpty, getSectionFilter, isArrayEmpty } from "./Helpers";
 import { showMonuments } from "./MarkersHelpers";
 
 const initialBounds = [
@@ -201,7 +201,7 @@ const MapLayer = () => {
     if (bounds != null) {
       bbox = calculateBounds(bounds);
     }
-   
+
     let newActiveData = [];
     const monumentsVisibility = filters.monument.ShowMonuments;
 
@@ -212,9 +212,12 @@ const MapLayer = () => {
 
     if (monumentsVisibility != "No") {
       const conditions = filters.monument.Condition || [];
-      const monumentData = monument_data.features.filter((f) =>
-        conditions.includes(f.properties.CleanCondition)
-      );
+      let monumentData = monument_data.features;
+      if (!isArrayEmpty(conditions)) {
+        monumentData = monumentData.filter((f) =>
+          conditions.includes(f.properties.CleanCondition)
+        );
+      }
       newActiveData.push(...monumentData);
     }
 
