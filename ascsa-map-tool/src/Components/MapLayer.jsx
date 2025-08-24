@@ -122,6 +122,19 @@ const MapLayer = () => {
   }, [activeData]);
 
   useEffect(() => {
+    const selectedMarkersNames = markersInBounds.map((m) => m.properties.Name);
+    const domIconElements = document.querySelectorAll(".leaflet-iconex");
+
+    domIconElements.forEach((icon) => {
+      const markerName = icon.id;
+      if (!selectedMarkersNames.includes(markerName)) {
+        icon.style.opacity = "0.1";
+      } else {
+        icon.style.opacity = "1";
+      }
+    });
+  }, [markersInBounds]);
+
     let bbox = initialBounds;
     if (bounds != null) {
       bbox = calculateBounds(bounds);
