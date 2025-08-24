@@ -38,7 +38,24 @@ export const checkIntersectingMarkers = (shapeType, layer, activeData, setMarker
       return booleanPointInPolygon(p, polygonBounds);
     });
     setMarkersInBounds(intersectingMarkers);
-    console.log("Polygon intersecting markers:", intersectingMarkers);
+
+  }
+};
+
+export const onShapeCreated = (e, activeData, setMarkersInBounds) => {
+  switch (e.shape) {
+    case "Circle":
+      onCircleCreated(e, activeData, setMarkersInBounds);
+      break;
+    case "Rectangle":
+      onRectangleCreated(e, activeData, setMarkersInBounds);
+      break;
+    case "Polygon":
+      onPolygonCreated(e, activeData, setMarkersInBounds);
+      break;
+    default:
+      console.log("Problem with e.shape=[", e.shape, "]");
+      
   }
 };
 

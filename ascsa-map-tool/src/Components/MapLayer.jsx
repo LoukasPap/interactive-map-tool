@@ -50,13 +50,7 @@ import { bboxPolygon } from "@turf/bbox-polygon";
 import { point, polygon } from "@turf/helpers";
 
 import { isSectionEmpty, getSectionFilter, isArrayEmpty } from "./Helpers";
-import { showMonuments } from "./MarkersHelpers";
-
-import {
-  onPolygonCreated,
-  onCircleCreated,
-  onRectangleCreated,
-} from "./GeometryOperations";
+import { onShapeCreated } from "./GeometryOperations";
 
 const initialBounds = [
   [37.972834, 23.721197], // Southwest corner
@@ -194,16 +188,8 @@ const MapLayer = () => {
     const map = mapRef.current;
 
     map.on("pm:create", (e) => {
-      onCircleCreated(e, activeData, setMarkersInBounds);
-      setActiveTool("select");
-    });
-    map.on("pm:create", (e) => {
-      onRectangleCreated(e, activeData, setMarkersInBounds, setActiveTool);
-      setActiveTool("select");
-    });
-    map.on("pm:create", (e) => {
-      onPolygonCreated(e, activeData, setMarkersInBounds, setActiveTool);
-      setActiveTool("select");
+      onShapeCreated(e, activeData, setMarkersInBounds);
+      setActiveTool("edit");
     });
 
     return () => {
