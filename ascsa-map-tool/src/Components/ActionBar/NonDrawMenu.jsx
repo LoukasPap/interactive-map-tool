@@ -1,6 +1,5 @@
 import {
   LuChevronDown,
-  LuScissors,
   LuTrash2,
   LuSquarePen,
   LuCheck,
@@ -9,38 +8,35 @@ import {
 import {
   IconButton,
   Select,
-  Menu,
-  Box,
   HStack,
   Portal,
   ButtonGroup,
   createListCollection,
   useSelectContext,
   Text,
-  For,
-  VisuallyHidden,
 } from "@chakra-ui/react";
 
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 
 import { handleEvent } from "../Handlers";
 
 const NonDrawMenu = ({ activeTool, setActiveTool, mapRef }) => {
+  
   const customStyle = { width: "2.25em", height: "2.25em" };
   const popoverCustomStyle = { width: "1.3em", height: "2.25em" };
 
-  const nonDrawActions = ["edit", "remove"];
+  const nonDrawActions = ["Edit", "Remove"];
 
   const ndActions = createListCollection({
     items: [
       {
         label: "Edit",
-        value: "edit",
+        value: "Edit",
         icon: <LuSquarePen style={customStyle} strokeWidth={"1.25px"} />,
       },
       {
         label: "Remove",
-        value: "remove",
+        value: "Remove",
         icon: <LuTrash2 style={customStyle} strokeWidth={"1.25px"} />,
       },
     ],

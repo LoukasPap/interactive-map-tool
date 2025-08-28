@@ -14,7 +14,7 @@ export const handleDrawShape = (mapRef, shape) => {
         break;
 
       default:
-        console.log("handleDrawShape(mapRed, shape) - Enter default case");
+        console.log("handleDrawShape(mapRef, shape) - Enter default case - Shape:", shape);
         break;
     }
   }
@@ -34,18 +34,18 @@ export const handleRemove = (mapRef) => {
 
 export const handleEvent = (mapRef, event) => {
   switch (event) {
-    case "edit":
-      mapRef.pm.enableGlobalEditMode();
+    case "Edit":
       console.log("Enable editing");
+      mapRef.pm.enableGlobalEditMode();
       break;
       
-      case "remove":
+      case "Remove":
       console.log("Enable removal");
       mapRef.pm.enableGlobalRemovalMode();
       break;
 
     default:
-      console.log("Not event handled");
+      console.log(`Event not handled: ${event}`);
   }
 };
 

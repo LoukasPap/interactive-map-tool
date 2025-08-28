@@ -1,6 +1,6 @@
 import { Box, IconButton } from "@chakra-ui/react";
 
-const Button = ({ icon, event, isActive, id }) => {
+const ActionButton = ({ icon, event, isActive, id }) => {
   return (
     <IconButton
       variant="solid"
@@ -22,4 +22,4 @@ const Button = ({ icon, event, isActive, id }) => {
   );
 };
 
-export default Button;
+export default ActionButton;

@@ -51,11 +51,15 @@ import { point, polygon } from "@turf/helpers";
 
 import { isSectionEmpty, getSectionFilter, isArrayEmpty } from "./Helpers";
 import { onShapeCreated } from "./GeometryOperations";
+import { deactivateHandlers, handleDrawShape, handleEvent } from "./Handlers";
 
 const initialBounds = [
   [37.972834, 23.721197], // Southwest corner
   [37.976726, 23.724362], // Northeast corner
 ];
+
+const CLOSE = false;
+const OPEN = true;
 
 const MapLayer = () => {
   console.log("[LOG] - Render Map Layer");
@@ -85,7 +89,7 @@ const MapLayer = () => {
   const [zoom, setZoom] = useState(13);
 
   const [areFiltersOpen, toggleFilters] = useState(false);
-  const [isExtraOpen, toggleExtra] = useState(false);
+  const [shapesBar, toggleShapesBar] = useState(false);
 
   const ZoomTracker = () => {
     useMapEvents({
@@ -201,14 +205,37 @@ const MapLayer = () => {
     const map = mapRef.current;
 
     map.on("pm:create", (e) => {
+      toggleShapesBar(OPEN);
       onShapeCreated(e, activeData, setMarkersInBounds);
-      setActiveTool("edit");
+      setTool("Edit");
     });
 
     return () => {
       map.off("pm:create");
     };
   }, [mapReady, activeData]);
+
+  function setTool(tool) {
+    setActiveTool(tool);
+    
+    switch (tool) {
+      case "Select":
+        deactivateHandlers(mapRef.current);
+        break;
+      case "Edit":
+      case "Remove":
+        handleEvent(mapRef.current, tool);
+        break;
+      case "Circle":
+      case "Rectangle":
+      case "Polygon":
+        handleDrawShape(mapRef.current, tool);
+        break;
+      default:
+        console.log("setTool() - Default case", tool)
+    }
+    
+  }
 
   const [open, setOpen] = useState(false);
   return (
@@ -284,12 +311,15 @@ const MapLayer = () => {
         }
       />
 
-      <Bar
-        isPeriodBarOpen={isExtraOpen}
-        activeTool={activeTool}
-        setActiveTool={setActiveTool}
-        mapRef={mapRef.current}
-      />
+      {mapReady && (
+        <Bar
+          isShapesBarOpen={shapesBar}
+          toggleShapesBar={toggleShapesBar}
+          setTool={setTool}
+          activeTool={activeTool}
+          mapRef={mapRef.current}
+        />
+        )}
 
       <Box w="fit" m="12px" pos={"relative"} h="100%" pointerEvents="none">
         <HStack alignItems="flex-end" pointerEvents="auto">

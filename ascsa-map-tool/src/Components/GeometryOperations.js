@@ -3,9 +3,12 @@ import { booleanPointInPolygon } from "@turf/boolean-point-in-polygon";
 import { bboxPolygon } from "@turf/bbox-polygon";
 import { point, polygon } from "@turf/helpers";
 
-
-
-export const checkIntersectingMarkers = (shapeType, layer, activeData, setMarkersInBounds) => {
+export const checkIntersectingMarkers = (
+  shapeType,
+  layer,
+  activeData,
+  setMarkersInBounds
+) => {
   if (shapeType === "Circle") {
     const center = layer.getLatLng();
     const radius = layer.getRadius();
@@ -16,7 +19,6 @@ export const checkIntersectingMarkers = (shapeType, layer, activeData, setMarker
       return center.distanceTo(markerLatLng) <= radius;
     });
     setMarkersInBounds(intersectingMarkers);
-    console.log("Circle intersecting markers:", intersectingMarkers);
   } else if (shapeType === "Rectangle") {
     const bounds = layer.getBounds();
     const intersectingMarkers = activeData.filter((marker) => {
@@ -25,7 +27,6 @@ export const checkIntersectingMarkers = (shapeType, layer, activeData, setMarker
       return bounds.contains(markerLatLng);
     });
     setMarkersInBounds(intersectingMarkers);
-    console.log("Rectangle intersecting markers:", intersectingMarkers);
   } else if (shapeType === "Polygon") {
     const bounds = layer.getLatLngs()[0].map((m) => [m.lng, m.lat]);
     const closedBounds = [...bounds, bounds[0]];
@@ -38,7 +39,6 @@ export const checkIntersectingMarkers = (shapeType, layer, activeData, setMarker
       return booleanPointInPolygon(p, polygonBounds);
     });
     setMarkersInBounds(intersectingMarkers);
-
   }
 };
 
@@ -55,7 +55,6 @@ export const onShapeCreated = (e, activeData, setMarkersInBounds) => {
       break;
     default:
       console.log("Problem with e.shape=[", e.shape, "]");
-      
   }
 };
 
@@ -64,11 +63,21 @@ export const onCircleCreated = (e, activeData, setMarkersInBounds) => {
     const circleLayer = e.layer;
 
     circleLayer.on("pm:edit", () => {
-      checkIntersectingMarkers("Circle", circleLayer, activeData, setMarkersInBounds);
+      checkIntersectingMarkers(
+        "Circle",
+        circleLayer,
+        activeData,
+        setMarkersInBounds
+      );
       console.log("This circle was updated!");
     });
-    
-    checkIntersectingMarkers("Circle", circleLayer, activeData, setMarkersInBounds);
+
+    checkIntersectingMarkers(
+      "Circle",
+      circleLayer,
+      activeData,
+      setMarkersInBounds
+    );
   }
 };
 
@@ -77,11 +86,21 @@ export const onRectangleCreated = (e, activeData, setMarkersInBounds) => {
     const rectangleLayer = e.layer;
 
     rectangleLayer.on("pm:edit", () => {
-      checkIntersectingMarkers("Rectangle", rectangleLayer, activeData, setMarkersInBounds);
+      checkIntersectingMarkers(
+        "Rectangle",
+        rectangleLayer,
+        activeData,
+        setMarkersInBounds
+      );
       console.log("This rectangle was updated!");
     });
-    
-    checkIntersectingMarkers("Rectangle", rectangleLayer, activeData, setMarkersInBounds);
+
+    checkIntersectingMarkers(
+      "Rectangle",
+      rectangleLayer,
+      activeData,
+      setMarkersInBounds
+    );
   }
 };
 
@@ -90,10 +109,20 @@ export const onPolygonCreated = (e, activeData, setMarkersInBounds) => {
     const polygonLayer = e.layer;
 
     polygonLayer.on("pm:edit", () => {
-      checkIntersectingMarkers("Polygon", polygonLayer, activeData, setMarkersInBounds);
+      checkIntersectingMarkers(
+        "Polygon",
+        polygonLayer,
+        activeData,
+        setMarkersInBounds
+      );
       console.log("This polygon was updated!");
     });
-    
-    checkIntersectingMarkers("Polygon", polygonLayer, activeData, setMarkersInBounds);
+
+    checkIntersectingMarkers(
+      "Polygon",
+      polygonLayer,
+      activeData,
+      setMarkersInBounds
+    );
   }
 };
