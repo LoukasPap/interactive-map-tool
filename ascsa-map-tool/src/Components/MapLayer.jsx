@@ -96,7 +96,12 @@ const MapLayer = () => {
       zoomend: (e) => {
         const newZoom = e.target.getZoom();
         setZoom(newZoom);
-
+        console.log("zoom", newZoom);
+      },
+    });
+    return null;
+  };
+  
   const MoveTracker = () => {
     useMapEvents({
       moveend: (e) => {
