@@ -6,15 +6,11 @@ import "leaflet-draw";
 import "@geoman-io/leaflet-geoman-free";
 import "@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css";
 
-import { booleanPointInPolygon } from "@turf/boolean-point-in-polygon";
-import { point, polygon } from "@turf/helpers";
 import {
   MapContainer,
   TileLayer,
   useMapEvents,
-  Rectangle,
   ScaleControl,
-  ImageOverlay,
   ZoomControl,
 } from "react-leaflet";
 
@@ -24,9 +20,6 @@ import { LuMenu } from "react-icons/lu";
 import { data } from "../data/dataframe";
 import { monument_data } from "../data/m_dataframe";
 
-import Info from "./Info";
-import CanvasMarkersLayer from "./MarkersLayer";
-import MarkersList from "./MarkersList";
 import Bar from "./ActionBar/ActionBar";
 import FilterCard from "./FilterBar/FilterCard";
 import EasyButtons from "./FilterBar/EasyButtons";
@@ -65,7 +58,6 @@ const MapLayer = () => {
   console.log("[LOG] - Render Map Layer");
   const [periodFilters, setPeriodFilters] = useState([]);
 
-  const [filters, setFilters] = useState({ materials: [], section: "" });
   const emptyFiltersState = {
     materials: [],
     section: "",
@@ -101,7 +93,7 @@ const MapLayer = () => {
     });
     return null;
   };
-  
+
   const MoveTracker = () => {
     useMapEvents({
       moveend: (e) => {
