@@ -57,6 +57,7 @@ const OPEN = true;
 const MapLayer = () => {
   console.log("[LOG] - Render Map Layer");
   const [periodFilters, setPeriodFilters] = useState([]);
+  const currentShape = useRef(null);
 
   const emptyFiltersState = {
     materials: [],
@@ -202,6 +203,8 @@ const MapLayer = () => {
     const map = mapRef.current;
 
     map.on("pm:create", (e) => {
+      currentShape.current = e;
+
       toggleShapesBar(OPEN);
       onShapeCreated(e, activeData, setMarkersInBounds);
       setTool("Edit");
@@ -211,6 +214,18 @@ const MapLayer = () => {
       map.off("pm:create");
     };
   }, [mapReady, activeData]);
+
+  function finishShapeCreation() {
+    setTool("Select");
+    toggleShapesBar(CLOSE);
+  }
+
+  function cancelShapeCreation() {
+    setTool("Select");
+    toggleShapesBar(CLOSE);
+    currentShape.current.layer.remove();
+    currentShape.current = null;
+  }
 
   function setTool(tool) {
     setActiveTool(tool);
@@ -310,6 +325,8 @@ const MapLayer = () => {
 
       {mapReady && (
         <Bar
+          finishShape={finishShapeCreation}
+          cancelShape={cancelShapeCreation}
           isShapesBarOpen={shapesBar}
           toggleShapesBar={toggleShapesBar}
           setTool={setTool}
