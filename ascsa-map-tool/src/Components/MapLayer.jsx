@@ -81,6 +81,7 @@ const MapLayer = () => {
 
   const [zoom, setZoom] = useState(13);
 
+  const [markerCard, toggleMarkerCard] = useState(false);
   const [areFiltersOpen, toggleFilters] = useState(false);
   const [shapesBar, toggleShapesBar] = useState(false);
 
@@ -215,6 +216,12 @@ const MapLayer = () => {
     };
   }, [mapReady, activeData]);
 
+
+  function displayMarkerCard(e) {
+    setSelectedMarker(e);
+    toggleMarkerCard(OPEN);
+  }
+
   function finishShapeCreation() {
     setTool("Select");
     toggleShapesBar(CLOSE);
@@ -306,7 +313,7 @@ const MapLayer = () => {
 
         <MarkerClusterLayer
           data={activeData}
-          onMarkerClick={setSelectedMarker}
+          onMarkerClick={displayMarkerCard}
         />
 
         <ZoomTracker />
@@ -321,6 +328,8 @@ const MapLayer = () => {
         marker={
           selectedMarker != null ? selectedMarker.feature : selectedMarker
         }
+        toggleCard={toggleMarkerCard}
+        visible={markerCard}
       />
 
       {mapReady && (
@@ -328,12 +337,11 @@ const MapLayer = () => {
           finishShape={finishShapeCreation}
           cancelShape={cancelShapeCreation}
           isShapesBarOpen={shapesBar}
-          toggleShapesBar={toggleShapesBar}
           setTool={setTool}
           activeTool={activeTool}
           mapRef={mapRef.current}
         />
-        )}
+      )}
 
       <Box w="fit" m="12px" pos={"relative"} h="100%" pointerEvents="none">
         <HStack alignItems="flex-end" pointerEvents="auto">

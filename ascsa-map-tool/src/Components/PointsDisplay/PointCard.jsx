@@ -53,7 +53,7 @@ const initialObject = {
   deposit: "deposit",
 };
 
-const SinglePointCard = ({ marker }) => {
+const SinglePointCard = ({ marker, toggleCard, visible=false }) => {
   const [pointDetails, setPointDetails] = useState(initialObject);
 
   useEffect(() => {
@@ -93,7 +93,6 @@ const SinglePointCard = ({ marker }) => {
   const propList = ["title", "period", "material", "section", "date"];
 
   const [copied, setCopied] = useState(false);
-  const [visible, setVisibility] = useState(true);
 
   const handleCopy = () => {
     setCopied(true);
@@ -219,7 +218,7 @@ const SinglePointCard = ({ marker }) => {
 
           <CloseButton
             _hover={{ bg: "gray.300" }}
-            onClick={(e) => setVisibility(!!e.visibility)}
+            onClick={() => {toggleCard(false);}}
           >
             <LuX style={{ width: "2em", height: "auto" }} />
           </CloseButton>
