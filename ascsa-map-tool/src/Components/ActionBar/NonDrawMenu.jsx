@@ -1,9 +1,4 @@
-import {
-  LuChevronDown,
-  LuTrash2,
-  LuSquarePen,
-  LuCheck,
-} from "react-icons/lu";
+import { LuChevronDown, LuTrash2, LuSquarePen, LuCheck } from "react-icons/lu";
 
 import {
   IconButton,
@@ -16,33 +11,57 @@ import {
   Text,
 } from "@chakra-ui/react";
 
-import { useState } from "react";
-
+import { useEffect, useRef, useState } from "react";
 import { handleEvent } from "../Handlers";
 
+const customStyle = { width: "2.25em", height: "2.25em" };
+const popoverCustomStyle = { width: "1.3em", height: "2.25em" };
+const nonDrawActions = ["Edit", "Remove"];
+const ndActions = createListCollection({
+  items: [
+    {
+      label: "Edit",
+      value: "Edit",
+      icon: <LuSquarePen style={customStyle} strokeWidth={"1.25px"} />,
+    },
+    {
+      label: "Remove",
+      value: "Remove",
+      icon: <LuTrash2 style={customStyle} strokeWidth={"1.25px"} />,
+    },
+  ],
+});
+
 const NonDrawMenu = ({ activeTool, setActiveTool, mapRef }) => {
-  
-  const customStyle = { width: "2.25em", height: "2.25em" };
-  const popoverCustomStyle = { width: "1.3em", height: "2.25em" };
+  const initialNDAction =
+    ndActions.items.find(
+      (a) => a.value === activeTool && nonDrawActions.includes(activeTool)
+    ) || ndActions.items[0];
+  const lastNDActionRef = useRef(initialNDAction);
+  const [selected, setSelected] = useState([initialNDAction]);
 
-  const nonDrawActions = ["Edit", "Remove"];
+  useEffect(() => {
+    if (nonDrawActions.includes(activeTool)) {
+      const found = ndActions.items.find((a) => a.value === activeTool);
+      if (found) {
+        setSelected([found]);
+        lastNDActionRef.current = found;
+      }
+    } else {
+      // Only update if the ref has changed
+      if (selected[0].value !== lastNDActionRef.current.value) {
+        setSelected([lastNDActionRef.current]);
+      }
+    }
+  }, [activeTool]);
 
-  const ndActions = createListCollection({
-    items: [
-      {
-        label: "Edit",
-        value: "Edit",
-        icon: <LuSquarePen style={customStyle} strokeWidth={"1.25px"} />,
-      },
-      {
-        label: "Remove",
-        value: "Remove",
-        icon: <LuTrash2 style={customStyle} strokeWidth={"1.25px"} />,
-      },
-    ],
-  });
-
-  const [selected, setSelected] = useState([ndActions.items[0]]);
+  const handleSelectChange = (e) => {
+    setActiveTool(e.items[0].value);
+    handleEvent(mapRef, e.items[0].value);
+    lastNDActionRef.current = e.items[0];
+    setSelected([e.items[0]]);
+    console.log("DEBUG e onValueChange", e);
+  };
 
   const SelectTrigger = () => {
     const select = useSelectContext();
@@ -65,11 +84,12 @@ const NonDrawMenu = ({ activeTool, setActiveTool, mapRef }) => {
         onClick={() => {
           const val = selected[0].value;
 
-          console.log("updated action:", val);
           if (nonDrawActions.includes(val)) {
             handleEvent(mapRef, val);
             setActiveTool(val);
+            // setSelected([ndActions.items.find((a) => a.value === val)]);
           }
+          console.log("DEBUG - PRESS ACTION:", val, "-", selected);
         }}
         border={0}
       >
@@ -83,11 +103,7 @@ const NonDrawMenu = ({ activeTool, setActiveTool, mapRef }) => {
       positioning={{ placement: "top-end" }}
       collection={ndActions}
       value={selected}
-      onValueChange={(e) => {
-        setSelected(e.items);
-        setActiveTool(e.items[0].value);
-        handleEvent(mapRef, e.items[0].value);
-      }}
+      onValueChange={handleSelectChange}
     >
       <Select.Control>
         <ButtonGroup
