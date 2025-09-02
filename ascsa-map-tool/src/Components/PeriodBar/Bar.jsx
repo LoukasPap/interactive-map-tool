@@ -1,11 +1,5 @@
-import {
-  VStack,
-  Button,
-  Flex,
-  HStack,
-  Heading,
-} from "@chakra-ui/react";
-import { useState } from "react";
+import { VStack, Flex, HStack, Heading } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
 
 import PeriodButton from "./Button";
 import QuickSelectionButtons from "../FilterBar/QuickSelectionButtons";
@@ -109,43 +103,37 @@ const PeriodBar = ({ setPeriodFilters }) => {
     );
   };
 
-  const handleApplyFilter = () => {
+  useEffect(() => {
     const appliedPeriods = periodsList
       .filter((p) => p.checked)
       .map((p) => p.filterKey);
 
-    console.log("[LOG] - Selected filters:", appliedPeriods);
-    setPeriodFilters(appliedPeriods);
-  };
+    setPeriodFilters({ periods: appliedPeriods });
+  }, [periodsList]);
 
   return (
-    <Flex flexDir="column" justifyContent="space-between" gap={3} p="0">
+    <Flex flexDir="column" justifyContent="space-between" gap={3} p="0" >
       <HStack justifyContent="space-between">
-          <Heading fontWeight="normal" fontSize="md">
-            PERIODS
-          </Heading>
+        <Heading fontWeight="normal" fontSize="md">
+          PERIODS
+        </Heading>
         <QuickSelectionButtons
           handleSelectAll={handleSelectAll}
           handleClearAll={handleClearAll}
         />
       </HStack>
-        {/* <Text bg={{ lg: "green", md: "yellow", sm: "orange" }}>gggggg</Text> */}
-        <VStack gapY={{ lg: "10px", md: "5px" }} w="100%" overflow={"scroll"}>
-          {periodsList.map((period) => (
-            <PeriodButton
-              key={period.value}
-              title={period.title}
-              date={period.date}
-              color={period.color}
-              checked={period.checked}
-              onClick={() => handleTogglePeriod(period.value)}
-            />
-          ))}
-        </VStack>
-
-        <Button size="sm" w="100%" fontSize="lg" onClick={handleApplyFilter}>
-          Apply
-        </Button>
+      <VStack gapY={{ lg: "10px", md: "5px" }} w="100%" overflow={"scroll"}>
+        {periodsList.map((period) => (
+          <PeriodButton
+            key={period.value}
+            title={period.title}
+            date={period.date}
+            color={period.color}
+            checked={period.checked}
+            onClick={() => handleTogglePeriod(period.value)}
+          />
+        ))}
+      </VStack>
     </Flex>
   );
 };

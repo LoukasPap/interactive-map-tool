@@ -8,7 +8,7 @@ import {
 } from "@chakra-ui/react";
 import QuickSelectionButtons from "../QuickSelectionButtons";
 import MaterialButton from "./MaterialButton";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Section from "./SectionFilters";
 import Monument from "./MonumentsFilters";
 
@@ -51,26 +51,16 @@ const initialMaterialList = [
   },
 ];
 
-const Filters = ({ setFilters }) => {
+const ArtifactsFilters = ({ setArtifactsFilters }) => {
   const [materialsList, setMaterialsList] = useState(initialMaterialList);
   const [section, setSection] = useState("");
-  const [monument, setMonument] = useState({
-    ShowMonuments: "Yes",
-    Condition: [],
-  });
+  const [monument, setMonument] = useState({ ShowMonuments: "Yes", Condition: [] });
 
   const [openItems, setOpenItems] = useState([
     "material-filter",
     "section-filter",
     "monument-filter",
   ]);
-
-  // useEffect(() => {
-  //   setFilters({
-  //     materials: materialsList.filter((m) => m.checked).map((m) => m.value),
-  //     section: section,
-  //   });
-  // }, [section, materialsList]);
 
   const handleSelectAll = () => {
     setMaterialsList(
@@ -110,97 +100,83 @@ const Filters = ({ setFilters }) => {
     }
   };
 
-  const handleApplyFilter = () => {
-    console.log("changed,", monument);
-
-    setFilters({
+  useEffect(() => {
+    setArtifactsFilters({
       materials: materialsList.filter((m) => m.checked).map((m) => m.value),
       section: section,
       monument: monument,
     });
-  };
+  }, [materialsList, section, monument]);
 
   return (
-    <>
-      <Accordion.Root
-        multiple
-        collapsible
-        w="100%"
-        variant={"enclosed"}
-        size="lg"
-        borderColor={"gray.400"}
-        rounded="lg"
-        onValueChange={(e) => {
-          setOpenItems(e.value);
-        }}
-        value={openItems}
-      >
-        <Accordion.Item value="material-filter" bg="gray.100">
-          <Accordion.ItemTrigger justifyContent="space-between">
-            <Heading fontWeight={"normal"} fontSize="md">
-              {"MATERIALS"}
-            </Heading>
-            <Group display={{ md: "none", lg: "flex" }}>
-              <QuickSelectionButtons
-                handleSelectAll={handleSelectAll}
-                handleClearAll={handleClearAll}
-              />
-              <Accordion.ItemIndicator color={"gray.400"} />
-            </Group>
-          </Accordion.ItemTrigger>
-
-          <Accordion.ItemContent>
-            <SimpleGrid mb="5" gap="2" columns={[2]} h="fit">
-              <For each={materialsList}>
-                {(m) => (
-                  <MaterialButton
-                    materialObject={m}
-                    onClick={() => selectMaterial(m.value)}
-                  />
-                )}
-              </For>
-            </SimpleGrid>
-          </Accordion.ItemContent>
-        </Accordion.Item>
-
-        <Accordion.Item value="section-filter" bg="gray.100">
-          <Accordion.ItemTrigger justifyContent="space-between">
-            <Heading fontWeight={"normal"} fontSize="md">
-              SECTION
-            </Heading>
+    <Accordion.Root
+      multiple
+      collapsible
+      w="100%"
+      variant={"enclosed"}
+      size="lg"
+      borderColor={"gray.400"}
+      rounded="lg"
+      onValueChange={(e) => {
+        setOpenItems(e.value);
+      }}
+      value={openItems}
+    >
+      <Accordion.Item value="material-filter" bg="gray.100">
+        <Accordion.ItemTrigger justifyContent="space-between">
+          <Heading fontWeight={"normal"} fontSize="md">
+            MATERIALS
+          </Heading>
+          <Group display={{ md: "none", lg: "flex" }}>
+            <QuickSelectionButtons
+              handleSelectAll={handleSelectAll}
+              handleClearAll={handleClearAll}
+            />
             <Accordion.ItemIndicator color={"gray.400"} />
-          </Accordion.ItemTrigger>
+          </Group>
+        </Accordion.ItemTrigger>
 
-          <Accordion.ItemContent>
-            <Section setSectionObj={setSection} />
-          </Accordion.ItemContent>
-        </Accordion.Item>
+        <Accordion.ItemContent>
+          <SimpleGrid mb="5" gap="2" columns={[2]} h="fit">
+            <For each={materialsList}>
+              {(m) => (
+                <MaterialButton
+                  materialObject={m}
+                  onClick={() => selectMaterial(m.value)}
+                />
+              )}
+            </For>
+          </SimpleGrid>
+        </Accordion.ItemContent>
+      </Accordion.Item>
 
-        <Accordion.Item value="monument-filter" bg="gray.100">
-          <Accordion.ItemTrigger justifyContent="space-between">
-            <Heading fontWeight={"normal"} fontSize="md">
-              MONUMENTS
-            </Heading>
-            <Accordion.ItemIndicator color={"gray.400"} />
-          </Accordion.ItemTrigger>
+      <Accordion.Item value="section-filter" bg="gray.100">
+        <Accordion.ItemTrigger justifyContent="space-between">
+          <Heading fontWeight={"normal"} fontSize="md">
+            SECTION
+          </Heading>
+          <Accordion.ItemIndicator color={"gray.400"} />
+        </Accordion.ItemTrigger>
 
-          <Accordion.ItemContent>
-            <Monument setMonumentObj={setMonument} />
-          </Accordion.ItemContent>
-        </Accordion.Item>
-      </Accordion.Root>
+        <Accordion.ItemContent>
+          <Section setSectionObj={setSection} />
+        </Accordion.ItemContent>
+      </Accordion.Item>
 
-      <Button
-        size="md"
-        w="100%"
-        fontSize="lg"
-        mt={2}
-        onClick={handleApplyFilter}
-      >
-        Apply
-      </Button>
-    </>
+      <Accordion.Item value="monument-filter" bg="gray.100">
+        <Accordion.ItemTrigger justifyContent="space-between">
+          <Heading fontWeight={"normal"} fontSize="md">
+            MONUMENTS
+          </Heading>
+          <Accordion.ItemIndicator color={"gray.400"} />
+        </Accordion.ItemTrigger>
+
+        <Accordion.ItemContent>
+          <Monument setMonumentObj={setMonument} />
+        </Accordion.ItemContent>
+      </Accordion.Item>
+    </Accordion.Root>
   );
 };
 
-export default Filters;
+export default ArtifactsFilters;

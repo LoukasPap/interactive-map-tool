@@ -56,10 +56,11 @@ const OPEN = true;
 
 const MapLayer = () => {
   console.log("[LOG] - Render Map Layer");
-  const [periodFilters, setPeriodFilters] = useState([]);
+
   const currentShape = useRef(null);
 
   const emptyFiltersState = {
+    periods: [],
     materials: [],
     section: "",
     monument: "",
@@ -163,7 +164,7 @@ const MapLayer = () => {
     }
 
     newActiveData = newActiveData
-      .filter((f) => periodFilters.includes(f.properties.Era))
+      .filter((f) => filters.periods.includes(f.properties.Era))
       .filter((f) =>
         filters.materials.some((material) =>
           f.properties.MaterialCategory.includes(material)
@@ -372,7 +373,6 @@ const MapLayer = () => {
             {/* The filters Card*/}
             <FilterCard
               areFiltersOpen={areFiltersOpen}
-              setPeriodFilters={setPeriodFilters}
               setFilters={setFilters}
             />
           </VStack>

@@ -1,13 +1,37 @@
-import { Box, Tabs, Text, VStack, Separator, Button } from "@chakra-ui/react";
-import { useState } from "react";
+import {
+  Box,
+  Tabs,
+  Text,
+  VStack,
+  Separator,
+  Button,
+  Card,
+} from "@chakra-ui/react";
+import { useRef, useState } from "react";
 import PeriodBar from "../PeriodBar/Bar";
-import Filters from "./Subcomponets/FiltersAccordion";
+import ArtifactsFilters from "./Subcomponets/FiltersAccordion";
 
-const FilterCard = ({ areFiltersOpen = false, setPeriodFilters, setFilters }) => {
+const FilterCard = ({
+  areFiltersOpen = false,
+  setFilters,
+}) => {
   const [value, setValue] = useState("artifacts");
 
+  const filtersState = useRef({});
+
+
+  function updateFilterState(props) {
+    filtersState.current = { ...filtersState.current, ...props };
+  }
+
+  const applyFilters = () => {
+    console.log("changed,", filtersState.current);
+
+    setFilters(filtersState.current);
+  };
+
   return (
-    <VStack
+    <Card.Root
       style={{
         opacity: areFiltersOpen ? 1 : 0,
         pointerEvents: areFiltersOpen ? "auto" : "none",
@@ -15,14 +39,14 @@ const FilterCard = ({ areFiltersOpen = false, setPeriodFilters, setFilters }) =>
       }}
       w={{ sm: "30vw", md: "25vw", lg: "22.5vw" }}
       bg="white"
-      p="30px 22px"
+      // p="30px 22px"
       rounded="xl"
       border="1px solid #C6C6C6"
       top="calc(5vh + 5px)"
       bottom="calc(12px + 12px)"
       position="absolute"
     >
-      <Box
+      {/* <Box
         display="flex"
         justifyContent="start"
         flexDir="column"
@@ -31,11 +55,14 @@ const FilterCard = ({ areFiltersOpen = false, setPeriodFilters, setFilters }) =>
         overflowY="scroll"
         overflowX="hidden"
         h="100vh"
-      >
+      > */}
+      <Card.Header>
         <Text fontSize="3xl" fontWeight="bold">
           Filters
         </Text>
+      </Card.Header>
 
+      <Card.Body overflow={"scroll"}>
         <Tabs.Root
           h="inherit"
           justifyContent="space-between"
@@ -45,7 +72,7 @@ const FilterCard = ({ areFiltersOpen = false, setPeriodFilters, setFilters }) =>
           value={value}
           onValueChange={(e) => setValue(e.value)}
         >
-          <Tabs.List bg="white" position="sticky" gap={2} mt={2}>
+          <Tabs.List bg="white" position="sticky" gap={2}>
             <Tabs.Trigger
               value="artifacts"
               bg={value == "artifacts" ? "#C6C6C6" : "white"}
@@ -65,16 +92,28 @@ const FilterCard = ({ areFiltersOpen = false, setPeriodFilters, setFilters }) =>
 
           <Separator size="sm" mt={4} borderColor={"gray.300"} />
 
-            <Tabs.Content value="artifacts" pos={"relative"}>
-              <Filters setFilters={setFilters} />
-            </Tabs.Content>
+          <Tabs.Content value="artifacts" pos={"relative"}>
+            <ArtifactsFilters setArtifactsFilters={updateFilterState} />
+          </Tabs.Content>
 
           <Tabs.Content justifyContent="space-between" value="periods">
-            <PeriodBar setPeriodFilters={setPeriodFilters} />
+            <PeriodBar setPeriodFilters={updateFilterState} />
           </Tabs.Content>
         </Tabs.Root>
-      </Box>
-    </VStack>
+      </Card.Body>
+
+      <Card.Footer justifyContent="flex-end">
+        <Button
+          size="md"
+          w="100%"
+          fontSize="lg"
+          mt={2}
+          onClick={applyFilters}
+        >
+          Apply
+        </Button>
+      </Card.Footer>
+    </Card.Root>
   );
 };
 
