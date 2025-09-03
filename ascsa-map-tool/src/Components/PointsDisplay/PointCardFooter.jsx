@@ -4,10 +4,18 @@ import {
   Text,
   LinkBox,
   LinkOverlay,
+  Clipboard,
 } from "@chakra-ui/react";
-import { LuExpand, LuSave, LuStickyNote, LuGlobe } from "react-icons/lu";
+import { useState } from "react";
+import {
+  LuExpand,
+  LuSave,
+  LuGlobe,
+  LuMapPinCheckInside,
+  LuMapPin,
+} from "react-icons/lu";
 
-export const PointButton = ({ id, label, icon, onClick=null }) => {
+export const PointButton = ({ id, label, icon, onClick = null }) => {
   return (
     <Button
       flexGrow={1}
@@ -16,7 +24,6 @@ export const PointButton = ({ id, label, icon, onClick=null }) => {
       _hover={{ bg: "gray.950" }}
       color="white"
       flexDir="column"
-      py={3}
       w="1"
       h="75px"
       onClick={onClick}
@@ -25,13 +32,18 @@ export const PointButton = ({ id, label, icon, onClick=null }) => {
       {icon}
 
       <Text textStyle="lg">{label}</Text>
-
     </Button>
   );
 };
 
-const PointCardFooter = ({ source }) => {
+const PointCardFooter = ({ source, coords = "-" }) => {
   const customStyle = { width: "2.25em", height: "2.25em" };
+
+  const [copied, setCopied] = useState(false);
+  const handleCopy = () => {
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   return (
     <Flex w="100%">
@@ -48,18 +60,29 @@ const PointCardFooter = ({ source }) => {
       />
 
       <PointButton
-        id="note-action"
-        label="Note"
-        icon={<LuStickyNote style={customStyle} strokeWidth="1.5px" />}
+        id="coords-action"
+        label="Location"
+        icon={
+          <Clipboard.Root value={coords} onStatusChange={handleCopy}>
+            <Clipboard.Trigger asChild>
+              {copied ? (
+                <LuMapPinCheckInside style={customStyle} strokeWidth="1.5px" />
+              ) : (
+                <LuMapPin style={customStyle} strokeWidth="1.5px" />
+              )}
+            </Clipboard.Trigger>
+          </Clipboard.Root>
+        }
+        onClick={handleCopy}
       />
 
       <PointButton
         id="source-action"
         label="Source"
         icon={
-          <LinkBox >
+          <LinkBox>
             <LinkOverlay href={source}>
-            <LuGlobe style={customStyle} strokeWidth="1.5px" />
+              <LuGlobe style={customStyle} strokeWidth="1.5px" />
             </LinkOverlay>
           </LinkBox>
         }

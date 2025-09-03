@@ -245,31 +245,8 @@ const SinglePointCard = ({ marker, toggleCard }) => {
               </DataList.Item>
             ))}
 
-            <Clipboard.Root
-              display="flex"
-              flexDir="column"
-              justifyContent="center"
-              value={pointDetails["coords"]}
-              onStatusChange={handleCopy}
-            >
-              <Clipboard.Trigger asChild>
-                <Button
-                  variant="solid"
-                  fontSize="lg"
-                  bg="black"
-                  p={2}
-                  w="100%"
-                  rounded="md"
-                >
-                  <Icon size={"xl"}>
-                    {copied ? <LuMapPinCheckInside /> : <LuMapPin />}
-                  </Icon>
-                  Copy WGS84
-                </Button>
-              </Clipboard.Trigger>
-            </Clipboard.Root>
-
-            <Box gridColumn="span 2">
+            
+            <Box gridColumn="span 3">
               <Heading mb="1">Dimensions</Heading>
               <DimensionsTable dimensions={pointDetails.dimensions} />
             </Box>
@@ -337,7 +314,7 @@ const SinglePointCard = ({ marker, toggleCard }) => {
       </Card.Body>
 
       <Card.Footer justifyContent="center" flexDir="row" bg="black" p={0}>
-        <PointCardFooter source={pointDetails.link} />
+        <PointCardFooter source={pointDetails.link} coords={pointDetails.coords} />
       </Card.Footer>
     </Card.Root>
   );
