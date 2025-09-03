@@ -45,6 +45,7 @@ import { point, polygon } from "@turf/helpers";
 import { isSectionEmpty, getSectionFilter, isArrayEmpty } from "./Helpers";
 import { onShapeCreated } from "./GeometryOperations";
 import { deactivateHandlers, handleDrawShape, handleEvent } from "./Handlers";
+import MultipleMarkersCard from "./PointsDisplay/MultipleMarkersCard";
 
 const initialBounds = [
   [37.972834, 23.721197], // Southwest corner
@@ -231,6 +232,9 @@ const MapLayer = () => {
   function cancelShapeCreation() {
     setTool("Select");
     toggleShapesBar(CLOSE);
+
+    toggleMarkersCard("");
+
     currentShape.current.layer.remove();
     currentShape.current = null;
   }
@@ -323,21 +327,23 @@ const MapLayer = () => {
         <ZoomControl position="bottomright" />
       </MapContainer>
 
-      {/* <Info picked={selectedProperty}> </Info> */}
-
-      <SinglePointCard
-        marker={
-          selectedMarker != null ? selectedMarker.feature : selectedMarker
-        }
-        toggleCard={toggleMarkerCard}
-        visible={markerCard}
-      />
+      {markersCard == "single" ? (
+        <SinglePointCard
+          marker={
+            selectedMarker != null ? selectedMarker.feature : selectedMarker
+          }
+          toggleCard={toggleMarkersCard}
+        />
+      ) : markersCard == "multi" ? (
+        <MultipleMarkersCard
+          markers={markersInBounds}
+          finishShape={finishShapeCreation}
+          cancelShape={cancelShapeCreation}
+        />
+      ) : null}
 
       {mapReady && (
         <Bar
-          finishShape={finishShapeCreation}
-          cancelShape={cancelShapeCreation}
-          isShapesBarOpen={shapesBar}
           setTool={setTool}
           activeTool={activeTool}
           mapRef={mapRef.current}

@@ -7,7 +7,7 @@ import {
 } from "@chakra-ui/react";
 import { LuExpand, LuSave, LuStickyNote, LuGlobe } from "react-icons/lu";
 
-const PointButton = ({ id, label, icon }) => {
+export const PointButton = ({ id, label, icon, onClick=null }) => {
   return (
     <Button
       flexGrow={1}
@@ -18,7 +18,8 @@ const PointButton = ({ id, label, icon }) => {
       flexDir="column"
       py={3}
       w="1"
-      h="fit"
+      h="75px"
+      onClick={onClick}
       _target={"blank"}
     >
       {icon}

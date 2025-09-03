@@ -19,14 +19,7 @@ import NonDrawMenu from "./NonDrawMenu";
 const CLOSE = false;
 const OPEN = true;
 
-const Bar = ({
-  finishShape,
-  cancelShape,
-  isShapesBarOpen,
-  activeTool,
-  setTool,
-  mapRef,
-}) => {
+const Bar = ({ activeTool, setTool, mapRef }) => {
   const customStyle = { width: "2.5em", height: "2.5em" };
   const customStroke = "5px";
 
@@ -35,18 +28,12 @@ const Bar = ({
       <HStack h="50px">
         <Group attached>
           <Input placeholder="Enter name" size="lg" w="120px" />
-          <Button
-            p="4"
-            variant="outline"
-            size="lg"
-            color="black"
-            onClick={finishShape}
-          >
+          <Button p="4" variant="outline" size="lg" color="black">
             <LuCheck />
             Finish
           </Button>
         </Group>
-        <Button p="4" variant="outline" size="lg" onClick={cancelShape}>
+        <Button p="4" variant="outline" size="lg">
           <LuX />
           Cancel
         </Button>
@@ -56,7 +43,7 @@ const Bar = ({
 
   const MainActionBar = () => {
     return (
-      <HStack h="50px">
+      <>
         <ActionButton
           icon={<LuMousePointer2 style={customStyle} strokeWidth={"1.5px"} />}
           event={() => {
@@ -106,7 +93,7 @@ const Bar = ({
           setActiveTool={setTool}
           mapRef={mapRef}
         ></NonDrawMenu>
-      </HStack>
+      </>
     );
   };
 
@@ -120,21 +107,9 @@ const Bar = ({
               rounded="lg"
               boxShadow="0px 2px 4px 0px rgba(0, 0, 0, 0.25)"
               overflow="hidden"
-              h="calc(53px + 10px)" // 50px=heights, 10px = 5px (gap) + 5px (padding)
               alignItems="flex-end"
-              p={0}
             >
-              <VStack
-                p="5px"
-                transition="transform 1s"
-                transform={
-                  isShapesBarOpen ? "translateY(55px)" : "translateY(00px)"
-                }
-                gap="5px"
-              >
-                <ShapeDrawingActionBar />
-                <MainActionBar />
-              </VStack>
+              <MainActionBar />
             </ActionBar.Content>
           </ActionBar.Positioner>
         </Portal>
