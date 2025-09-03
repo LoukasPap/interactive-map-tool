@@ -33,7 +33,7 @@ import PointCardFooter from "./PointCardFooter";
 import DimensionsTable from "./DimensionsTable";
 
 const initialObject = {
-  name: "name",
+  inventory: "name",
   title: "title",
   period: "period",
   era: "era",
@@ -53,7 +53,9 @@ const initialObject = {
   deposit: "deposit",
 };
 
-const SinglePointCard = ({ marker, toggleCard, visible=false }) => {
+const propList = ["title", "section", "period", "material"];
+
+const SinglePointCard = ({ marker, toggleCard }) => {
   const [pointDetails, setPointDetails] = useState(initialObject);
 
   useEffect(() => {
@@ -62,7 +64,7 @@ const SinglePointCard = ({ marker, toggleCard, visible=false }) => {
       setPointDetails({
         ...pointDetails,
 
-        name: marker.properties.Name,
+        inventory: marker.properties.Name,
         title: marker.properties.Title || "N/A",
         period: marker.properties.Period || "N/A", // goes with Chronology
         era: marker.properties.Era || "N/A",
@@ -90,8 +92,6 @@ const SinglePointCard = ({ marker, toggleCard, visible=false }) => {
     }
   }, [marker]);
 
-  const propList = ["title", "period", "material", "section", "date"];
-
   const [copied, setCopied] = useState(false);
 
   const handleCopy = () => {
@@ -114,39 +114,82 @@ const SinglePointCard = ({ marker, toggleCard, visible=false }) => {
     };
   };
 
-  function ImageWithSpinner({ src }) {
-    const [isLoading, setIsLoading] = useState(true);
-
+  function CustomImage({ src }) {
     return (
-      <>
-        {/* {isLoading && <Spinner position="absolute" zIndex={1} />} */}
-        <Image
-          border="1px solid black"
-          // aspectRatio={3 / 2}
-
-          h="100px"
-          src={src}
-          fit="fill"
-          rounded="md"
-          onLoad={(e) => {
-            setIsLoading(false);
-            const { width, height } = e.target;
-            const { ratio, displayRatio } = calculateAspectRatio(width, height);
-            console.log(width, height, ratio);
-            e.target.style.aspectRatio = ratio;
-          }}
-          onError={(e) => {
-            setIsLoading(false);
-            e.target.style.display = "none";
-          }}
-        />
-      </>
+      <Image
+        border="1px solid black"
+        h="100px"
+        src={src}
+        fit="fill"
+        rounded="md"
+        onLoad={(e) => {
+          const { width, height } = e.target;
+          const { ratio, displayRatio } = calculateAspectRatio(width, height);
+          console.log(width, height, ratio);
+          e.target.style.aspectRatio = ratio;
+        }}
+        onError={(e) => {
+          e.target.style.display = "none";
+        }}
+      />
     );
   }
 
+  const Header = () => {
+    return (
+      <DataList.Root w="100%">
+        <HStack gap={3} alignItems="top">
+          <DataList.Item key="inventory" flexGrow={1}>
+            <DataList.ItemLabel>Inventory</DataList.ItemLabel>
+            <DataList.ItemValue>
+              <Group>
+                <Card.Title h="fit" overflow="visible">
+                  <Text fontSize="2xl">
+                    {(marker && pointDetails.inventory) || "-"}
+                  </Text>
+                </Card.Title>
+
+                <Clipboard.Root
+                  value={
+                    (marker && `Agora:Object:${pointDetails.inventory}`) || "-"
+                  }
+                >
+                  <Clipboard.Trigger asChild>
+                    <IconButton _hover={{ bg: "gray.300" }} variant="plain">
+                      <Clipboard.Indicator>
+                        <LuCopy size={30} />
+                      </Clipboard.Indicator>
+                    </IconButton>
+                  </Clipboard.Trigger>
+                </Clipboard.Root>
+              </Group>
+            </DataList.ItemValue>
+          </DataList.Item>
+
+          <DataList.Item key="deposit">
+            <DataList.ItemLabel>Deposit</DataList.ItemLabel>
+            <DataList.ItemValue>
+              <Tag.Root colorPalette="blue" size="xl">
+                <Tag.Label>{pointDetails.deposit}</Tag.Label>
+              </Tag.Root>
+            </DataList.ItemValue>
+          </DataList.Item>
+
+          <DataList.Item key="lot">
+            <DataList.ItemLabel>Lot</DataList.ItemLabel>
+            <DataList.ItemValue>
+              <Tag.Root colorPalette="orange" size="xl">
+                <Tag.Label>{pointDetails.lot}</Tag.Label>
+              </Tag.Root>
+            </DataList.ItemValue>
+          </DataList.Item>
+        </HStack>
+      </DataList.Root>
+    );
+  };
+
   return (
     <Card.Root
-      visibility={visible ? "visible" : "hidden"}
       w="20vw"
       position="fixed"
       top="12px"
@@ -155,7 +198,6 @@ const SinglePointCard = ({ marker, toggleCard, visible=false }) => {
       rounded="xl"
       border="1px solid"
       borderColor="gray.300"
-
       overflow="scroll"
       scrollbarColor="black transparent"
       scrollbarWidth="thin"
@@ -167,58 +209,13 @@ const SinglePointCard = ({ marker, toggleCard, visible=false }) => {
           h="fit"
           gap="1"
         >
-          <Group>
-            <Card.Title h="fit" overflow="visible">
-              <Text fontSize="3xl">{(marker && pointDetails.name) || "-"}</Text>
-            </Card.Title>
-
-            <Clipboard.Root
-              value={(marker && `Agora:Object:${pointDetails.name}`) || "-"}
-            >
-              <Clipboard.Trigger asChild>
-                {/* <Icon _hover={{ bg: "gray.300" }} rounded="sm" p={2} >
-                  <LuCopy size={30} cursor="pointer"/>
-                </Icon> */}
-                <IconButton _hover={{ bg: "gray.300" }} variant="plain">
-                  <Clipboard.Indicator>
-                    <LuCopy size={30} />
-                  </Clipboard.Indicator>
-                </IconButton>
-              </Clipboard.Trigger>
-            </Clipboard.Root>
-          </Group>
-
-          <Tooltip
-            content={`Deposit: ${pointDetails.deposit}`}
-            interactive
-            openDelay={200}
-            closeDelay={200}
-          >
-            <Tag.Root colorPalette="orange" size="xl">
-              <Tag.Label>{pointDetails.deposit}</Tag.Label>
-              <Tag.EndElement>
-                <LuInfo />
-              </Tag.EndElement>
-            </Tag.Root>
-          </Tooltip>
-
-          <Tooltip
-            content={`Lot: ${pointDetails.lot}`}
-            interactive
-            openDelay={200}
-            closeDelay={200}
-          >
-            <Tag.Root colorPalette="blue" size="xl">
-              <Tag.Label>{pointDetails.lot}</Tag.Label>
-              <Tag.EndElement>
-                <LuInfo />
-              </Tag.EndElement>
-            </Tag.Root>
-          </Tooltip>
+          <Header />
 
           <CloseButton
             _hover={{ bg: "gray.300" }}
-            onClick={() => {toggleCard(false);}}
+            onClick={() => {
+              toggleCard("");
+            }}
           >
             <LuX style={{ width: "2em", height: "auto" }} />
           </CloseButton>
@@ -228,10 +225,13 @@ const SinglePointCard = ({ marker, toggleCard, visible=false }) => {
 
       <Card.Body gap="4" maxH="100%" overflow="scroll">
         <DataList.Root color="black" size="lg">
-          <SimpleGrid columns={2} gap="4">
+          <SimpleGrid columns={3} gap="4">
             {/* {point && point.f.proper} */}
             {propList.map((prop) => (
-              <DataList.Item key={prop}>
+              <DataList.Item
+                key={prop}
+                gridColumn={prop == "title" ? "span 3" : "span 1"}
+              >
                 <DataList.ItemLabel
                   fontSize="xl"
                   fontWeight="semibold"
@@ -240,7 +240,7 @@ const SinglePointCard = ({ marker, toggleCard, visible=false }) => {
                   {prop.charAt(0).toUpperCase() + prop.slice(1)}
                 </DataList.ItemLabel>
                 <DataList.ItemValue fontSize={"lg"}>
-                  {pointDetails[prop]}
+                  {pointDetails[prop]} {prop === "period" && `(${pointDetails.era})`}
                 </DataList.ItemValue>
               </DataList.Item>
             ))}
@@ -298,7 +298,7 @@ const SinglePointCard = ({ marker, toggleCard, visible=false }) => {
               each={pointDetails["images"].slice(0, 10)}
               fallback={<Text color="gray">No images</Text>}
             >
-              {(item, index) => <ImageWithSpinner key={index} src={item} />}
+              {(item, index) => <CustomImage key={index} src={item} />}
             </For>
 
             {+pointDetails["images"].length > 10 ? ( // prefixing "+" transforms str to int
@@ -308,7 +308,7 @@ const SinglePointCard = ({ marker, toggleCard, visible=false }) => {
                 variant="plain"
                 border="1px dashed black"
               >
-                <Text >
+                <Text>
                   <Center mb={2}>
                     <LuGlobe size="lg" />
                   </Center>
@@ -320,10 +320,6 @@ const SinglePointCard = ({ marker, toggleCard, visible=false }) => {
             ) : null}
           </HStack>
         </Box>
-
-            {/* {errorImages == pointDetails["images"].length ? ( */}
-            {/* <Text color="gray">No images</Text> */}
-            {/* ) : ( */}
 
         <Box>
           <Heading>Description</Heading>
@@ -340,12 +336,7 @@ const SinglePointCard = ({ marker, toggleCard, visible=false }) => {
         </Box>
       </Card.Body>
 
-      <Card.Footer
-        justifyContent="center"
-        flexDir="row"
-        bg="black"
-        p={0}
-      >
+      <Card.Footer justifyContent="center" flexDir="row" bg="black" p={0}>
         <PointCardFooter source={pointDetails.link} />
       </Card.Footer>
     </Card.Root>
