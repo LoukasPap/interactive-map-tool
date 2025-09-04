@@ -6,19 +6,8 @@ import {
   Switch,
   Text,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
 
-const Section = ({ setSectionObj }) => {
-  const [section, setSection] = useState({
-    SectionNumberLetter: "",
-    SectionNumberNumber: 0,
-    SectionNumber: "",
-  });
-
-  useEffect(() => {
-    setSectionObj(section);
-  }, [section]);
-
+const Section = ({ sectionObj, setSectionObj }) => {
   function concatSectionNumber(letter, number) {
     return `${letter} ${number}`.trim();
   }
@@ -35,9 +24,9 @@ const Section = ({ setSectionObj }) => {
           borderColor="gray.300"
           placeholder="Enter Letter"
           flex="1"
-          value={section.SectionLetter}
+          value={sectionObj.SectionNumberLetter}
           onChange={(e) =>
-            setSection((s) => ({
+            setSectionObj((s) => ({
               ...s,
               SectionNumberLetter: e.target.value,
               SectionNumber: concatSectionNumber(
@@ -54,12 +43,12 @@ const Section = ({ setSectionObj }) => {
           <Text w="100px">Section Number</Text>
         </Field.Label>
         <NumberInput.Root
-        size="lg"
+          size="lg"
           flex="1"
           min={0}
-          value={section.sectionNumber}
+          value={sectionObj.SectionNumberNumber}
           onValueChange={(e) =>
-            setSection((s) => ({
+            setSectionObj((s) => ({
               ...s,
               SectionNumberNumber: e.value,
               SectionNumber: concatSectionNumber(

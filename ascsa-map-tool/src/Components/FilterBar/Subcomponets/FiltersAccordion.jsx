@@ -6,7 +6,9 @@ import {
   Group,
   Button,
 } from "@chakra-ui/react";
-import QuickSelectionButtons from "../QuickSelectionButtons";
+import QuickSelectionButtons, {
+  QuickClearButton,
+} from "../QuickSelectionButtons";
 import MaterialButton from "./MaterialButton";
 import { useState, useEffect, useRef } from "react";
 import Section from "./SectionFilters";
@@ -51,9 +53,15 @@ const initialMaterialList = [
   },
 ];
 
+const initialSectionState = {
+  SectionNumberLetter: "",
+  SectionNumberNumber: "",
+  SectionNumber: "",
+};
+
 const ArtifactsFilters = ({ setArtifactsFilters }) => {
   const [materialsList, setMaterialsList] = useState(initialMaterialList);
-  const [section, setSection] = useState("");
+  const [section, setSection] = useState(initialSectionState);
   const [monument, setMonument] = useState({ ShowMonuments: "Yes", Condition: [] });
 
   const [openItems, setOpenItems] = useState([
@@ -92,6 +100,10 @@ const ArtifactsFilters = ({ setArtifactsFilters }) => {
           : material
       )
     );
+  };
+
+  const clearSectionInput = () => {
+    setSection(initialSectionState);
   };
 
   const controlAccordionState = () => {
@@ -155,11 +167,14 @@ const ArtifactsFilters = ({ setArtifactsFilters }) => {
           <Heading fontWeight={"normal"} fontSize="md">
             SECTION
           </Heading>
-          <Accordion.ItemIndicator color={"gray.400"} />
+          <Group>
+            <QuickClearButton onClick={clearSectionInput} />
+            <Accordion.ItemIndicator color={"gray.400"} />
+          </Group>
         </Accordion.ItemTrigger>
 
         <Accordion.ItemContent>
-          <Section setSectionObj={setSection} />
+          <Section sectionObj={section} setSectionObj={setSection} />
         </Accordion.ItemContent>
       </Accordion.Item>
 
