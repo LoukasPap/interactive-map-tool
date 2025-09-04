@@ -1,9 +1,9 @@
 import {
   Field,
+  Group,
   Input,
   NumberInput,
   Stack,
-  Switch,
   Text,
 } from "@chakra-ui/react";
 
@@ -13,17 +13,20 @@ const Section = ({ sectionObj, setSectionObj }) => {
   }
 
   return (
-    <Stack gap="5" maxW="sm" mb={5} mt={1}>
+    <Stack gap={5} mb={5} mt={1} flexDir="row" justifyContent={"space-between"}>
       <Field.Root orientation="horizontal">
         <Field.Label fontSize="md">
           <Text w="100px">Section Letter</Text>
         </Field.Label>
+      </Field.Root>
+
+      <Group gap={1}>
         <Input
           size="lg"
+          w="3xs"
           border="1px solid"
           borderColor="gray.300"
-          placeholder="Enter Letter"
-          flex="1"
+          placeholder="Letter(s)"
           value={sectionObj.SectionNumberLetter}
           onChange={(e) =>
             setSectionObj((s) => ({
@@ -36,32 +39,31 @@ const Section = ({ sectionObj, setSectionObj }) => {
             }))
           }
         />
-      </Field.Root>
 
-      <Field.Root orientation="horizontal">
-        <Field.Label fontSize="md">
-          <Text w="100px">Section Number</Text>
-        </Field.Label>
         <NumberInput.Root
           size="lg"
-          flex="1"
+          w="4xs"
           min={0}
           value={sectionObj.SectionNumberNumber}
           onValueChange={(e) =>
             setSectionObj((s) => ({
               ...s,
-              SectionNumberNumber: e.value,
+              SectionNumberNumber: e.valueAsNumber,
               SectionNumber: concatSectionNumber(
                 s.SectionNumberLetter,
-                e.value
+                e.valueAsNumber
               ),
             }))
           }
         >
           <NumberInput.Control />
-          <NumberInput.Input border="1px solid" borderColor="gray.300" />
+          <NumberInput.Input
+            placeholder="Number"
+            border="1px solid"
+            borderColor="gray.300"
+          />
         </NumberInput.Root>
-      </Field.Root>
+      </Group>
     </Stack>
   );
 };
