@@ -9,7 +9,7 @@ import {
 
 const Section = ({ sectionObj, setSectionObj }) => {
   function concatSectionNumber(letter, number) {
-    return `${letter} ${number}`.trim();
+    return `${letter} ${number || ""}`.trim();
   }
 
   return (
@@ -48,7 +48,7 @@ const Section = ({ sectionObj, setSectionObj }) => {
           onValueChange={(e) =>
             setSectionObj((s) => ({
               ...s,
-              SectionNumberNumber: e.valueAsNumber,
+              SectionNumberNumber: e.value,
               SectionNumber: concatSectionNumber(
                 s.SectionNumberLetter,
                 e.valueAsNumber
