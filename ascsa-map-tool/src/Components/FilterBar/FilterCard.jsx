@@ -62,7 +62,7 @@ const FilterCard = ({
         </Text>
       </Card.Header>
 
-      <Card.Body overflow={"scroll"}>
+      <Card.Body overflow="scroll">
         <Tabs.Root
           h="inherit"
           justifyContent="space-between"
@@ -91,12 +91,12 @@ const FilterCard = ({
           </Tabs.List>
 
           <Separator size="sm" mt={4} borderColor={"gray.300"} />
-
-          <Tabs.Content value="artifacts" pos={"relative"}>
+          
+          <Tabs.Content value="artifacts">
             <ArtifactsFilters setArtifactsFilters={updateFilterState} />
           </Tabs.Content>
 
-          <Tabs.Content justifyContent="space-between" value="periods">
+          <Tabs.Content value="periods">
             <PeriodBar setPeriodFilters={updateFilterState} />
           </Tabs.Content>
         </Tabs.Root>

@@ -18,7 +18,7 @@ import "leaflet/dist/leaflet.css";
 import { LuMenu } from "react-icons/lu";
 // import ClusteredPoints from "./ClusteredPoints";
 import { data } from "../data/dataframe";
-import { monument_data } from "../data/m_dataframe";
+import { monumentData } from "../data/m_dataframe";
 
 import Bar from "./ActionBar/ActionBar";
 import FilterCard from "./FilterBar/FilterCard";
@@ -64,12 +64,12 @@ const MapLayer = () => {
     periods: [],
     materials: [],
     section: "",
-    monument: "",
+    monument: "Yes",
   };
+
   const [filters, setFilters] = useState(emptyFiltersState);
-  const prevFilters = usePrevious(filters);
+
   const [bounds, setBounds] = useState(null);
-  const dataInBounds = useRef(null);
 
   const mapRef = useRef();
   const [activeData, setActiveData] = useState([]);
@@ -83,7 +83,7 @@ const MapLayer = () => {
 
   const [zoom, setZoom] = useState(13);
 
-  const [markerCard, toggleMarkerCard] = useState(false);
+  const [markersCard, toggleMarkersCard] = useState("");
   const [areFiltersOpen, toggleFilters] = useState(false);
   const [shapesBar, toggleShapesBar] = useState(false);
 

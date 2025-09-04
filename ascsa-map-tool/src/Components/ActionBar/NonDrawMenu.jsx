@@ -14,7 +14,7 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { handleEvent } from "../Handlers";
 
-const customStyle = { width: "2.25em", height: "2.25em" };
+const customStyle = { width: "2.25em", height: "2.5em" };
 const popoverCustomStyle = { width: "1.3em", height: "2.25em" };
 const nonDrawActions = ["Edit", "Remove"];
 const ndActions = createListCollection({
@@ -127,6 +127,7 @@ const NonDrawMenu = ({ activeTool, setActiveTool, mapRef }) => {
             borderStartColor="gray.300"
             rounded={0}
             w="2.25em"
+            h="46.5px"
             p="2.5"
             display={"flex"}
             justifyContent={"center"}
