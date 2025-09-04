@@ -350,44 +350,17 @@ const MapLayer = () => {
         />
       )}
 
-      <Box w="fit" m="12px" pos={"relative"} h="100%" pointerEvents="none">
-        <HStack alignItems="flex-end" pointerEvents="auto">
-          <VStack>
-            <HStack
-              w="22.5vw"
-              h="5vh"
-              bg="white"
-              justifyContent="flex-start"
-              paddingInline="10px"
-              border="1px solid #C6C6C6"
-              rounded="10px"
-            >
-              <Icon
-                variant="plain"
-                pos="absolute"
-                rounded="sm"
-                _hover={{ bg: "gray.300" }}
-                onClick={() => setOpen(true)}
-              >
-                <LuMenu size="20" cursor="pointer" />
-              </Icon>
-              <Text fontSize="2xl" textAlign="center" flexGrow={1}>
-                ASCSA Map Tool
-              </Text>
-            </HStack>
-
-            {/* The filters Card*/}
-            <FilterCard
-              areFiltersOpen={areFiltersOpen}
-              setFilters={setFilters}
-            />
-          </VStack>
-
+      <Box w="fit" m="12px" pos="relative" h="100%" pointerEvents="none">
+        <VStack w="22.5vw">
           <EasyButtons
+            toggleDrawer={toggleDrawer}
             toggleFilters={toggleFilters}
-            toggleExtra={toggleExtra}
+            toggleExtra={toggleShapesBar}
           ></EasyButtons>
-        </HStack>
+
+          {/* The filters Card*/}
+          <FilterCard areFiltersOpen={areFiltersOpen} setFilters={setFilters} />
+        </VStack>
 
         <Drawer.Root
           open={open}

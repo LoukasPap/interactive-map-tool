@@ -42,7 +42,7 @@ const FilterCard = ({
       // p="30px 22px"
       rounded="xl"
       border="1px solid #C6C6C6"
-      top="calc(5vh + 5px)"
+      top="calc(3.5vh + 5px)"
       bottom="calc(12px + 12px)"
       position="absolute"
     >
