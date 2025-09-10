@@ -148,9 +148,11 @@ const MapLayer = () => {
     let newActiveData = [];
     const monumentsVisibility = filters.monument.ShowMonuments;
 
-    // We push the monuments_data second to be more efficient (they are just ~50 allocations)
     if (monumentsVisibility != "Only") {
       newActiveData = data.features;
+      newActiveData = newActiveData.filter((f) =>
+        filters.periods.includes(f.properties.Era)
+      );
     }
 
     if (monumentsVisibility != "No") {
@@ -165,7 +167,6 @@ const MapLayer = () => {
     }
 
     newActiveData = newActiveData
-      .filter((f) => filters.periods.includes(f.properties.Era))
       .filter((f) =>
         filters.materials.some((material) =>
           f.properties.MaterialCategory.includes(material)
