@@ -1,24 +1,12 @@
-import {
-  Box,
-  Tabs,
-  Text,
-  VStack,
-  Separator,
-  Button,
-  Card,
-} from "@chakra-ui/react";
+import { Tabs, Text, Separator, Button, Card } from "@chakra-ui/react";
 import { useRef, useState } from "react";
 import PeriodBar from "../PeriodBar/Bar";
 import ArtifactsFilters from "./Subcomponets/FiltersAccordion";
 
-const FilterCard = ({
-  areFiltersOpen = false,
-  setFilters,
-}) => {
+const FilterCard = ({ areFiltersOpen = false, setFilters }) => {
   const [value, setValue] = useState("artifacts");
 
   const filtersState = useRef({});
-
 
   function updateFilterState(props) {
     filtersState.current = { ...filtersState.current, ...props };
@@ -46,23 +34,13 @@ const FilterCard = ({
       bottom="calc(12px + 12px)"
       position="absolute"
     >
-      {/* <Box
-        display="flex"
-        justifyContent="start"
-        flexDir="column"
-        // gapY="5px"
-        w="100%"
-        overflowY="scroll"
-        overflowX="hidden"
-        h="100vh"
-      > */}
       <Card.Header>
         <Text fontSize="3xl" fontWeight="bold">
           Filters
         </Text>
       </Card.Header>
 
-      <Card.Body overflow="scroll">
+      <Card.Body overflow="auto">
         <Tabs.Root
           h="inherit"
           justifyContent="space-between"
@@ -91,7 +69,7 @@ const FilterCard = ({
           </Tabs.List>
 
           <Separator size="sm" mt={4} borderColor={"gray.300"} />
-          
+
           <Tabs.Content value="artifacts">
             <ArtifactsFilters setArtifactsFilters={updateFilterState} />
           </Tabs.Content>
@@ -103,13 +81,7 @@ const FilterCard = ({
       </Card.Body>
 
       <Card.Footer justifyContent="flex-end">
-        <Button
-          size="md"
-          w="100%"
-          fontSize="lg"
-          mt={2}
-          onClick={applyFilters}
-        >
+        <Button size="md" w="100%" fontSize="lg" mt={2} onClick={applyFilters}>
           Apply
         </Button>
       </Card.Footer>

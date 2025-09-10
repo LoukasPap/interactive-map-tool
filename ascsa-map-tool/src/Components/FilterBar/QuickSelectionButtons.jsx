@@ -27,7 +27,6 @@ export const QuickSelectButton = ({ onClick }) => {
 export const QuickClearButton = ({ onClick }) => {
   return(
     <IconButton
-      flexGrow={1}
       size="2xl"
       w="fit"
       h="fit"

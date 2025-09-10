@@ -27,9 +27,6 @@ import SinglePointCard from "./PointsDisplay/PointCard";
 
 import {
   Box,
-  HStack,
-  Icon,
-  Text,
   CloseButton,
   Drawer,
   Portal,
@@ -40,9 +37,10 @@ import MarkerClusterLayer from "./MarkerClusterLayer";
 // for spatial operations
 import { booleanPointInPolygon } from "@turf/boolean-point-in-polygon";
 import { bboxPolygon } from "@turf/bbox-polygon";
-import { point, polygon } from "@turf/helpers";
+import { point } from "@turf/helpers";
 
 import { isSectionEmpty, getSectionFilter, isArrayEmpty } from "./Helpers";
+
 import { onShapeCreated } from "./GeometryOperations";
 import { deactivateHandlers, handleDrawShape, handleEvent } from "./Handlers";
 import MultipleMarkersCard from "./PointsDisplay/MultipleMarkersCard";
@@ -141,6 +139,9 @@ const NONE = "";
     });
   }, [markersInBounds]);
 
+  useEffect(() => {
+    console.log("[FILTERS] trigger", filters);
+
     let bbox = initialBounds;
     if (bounds != null) {
       bbox = calculateBounds(bounds);
@@ -184,24 +185,9 @@ const NONE = "";
         (f) => f.properties[sectionFilter] == filters.section[sectionFilter]
       );
     }
-    }
-    console.log("[DEBUG] only", newActiveData);
-
-    let newMonumentData = [];
-    const areMonumentsVisible = showMonuments(monumentsVisibility);
-
-    if (areMonumentsVisible) {
-      console.log("[DEBUG] visiblr");
-      const conditions = filters.monument.Condition || [];
-      newMonumentData = monument_data.features.filter((f) =>
-        conditions.includes(f.properties.CleanCondition)
-      );
-    }
-
-    newActiveData.push(...newMonumentData);
 
     setActiveData(newActiveData);
-  }, [filters, periodFilters, bounds]);
+  }, [filters, bounds]);
 
   useEffect(() => {
     if (!mapRef.current) return;
@@ -219,7 +205,6 @@ const NONE = "";
       map.off("pm:create");
     };
   }, [mapReady, activeData]);
-
 
   function displayMarkerCard(e) {
     setSelectedMarker(e);
@@ -258,9 +243,8 @@ const NONE = "";
         handleDrawShape(mapRef.current, tool);
         break;
       default:
-        console.log("setTool() - Default case", tool)
+        console.log("setTool() - Default case", tool);
     }
-    
   }
 
   const [open, setOpen] = useState(false);

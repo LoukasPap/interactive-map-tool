@@ -122,7 +122,7 @@ const PeriodBar = ({ setPeriodFilters }) => {
           handleClearAll={handleClearAll}
         />
       </HStack>
-      <VStack gapY={{ lg: "10px", md: "5px" }} w="100%" overflow={"scroll"}>
+      <VStack gapY={{ lg: "10px", md: "5px" }} w="100%" overflow={"auto"}>
         {periodsList.map((period) => (
           <PeriodButton
             key={period.value}

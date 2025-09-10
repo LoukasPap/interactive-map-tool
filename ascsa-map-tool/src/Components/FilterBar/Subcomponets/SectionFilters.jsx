@@ -13,10 +13,10 @@ const Section = ({ sectionObj, setSectionObj }) => {
   }
 
   return (
-    <Stack gap={5} mb={5} mt={1} flexDir="row" justifyContent={"space-between"}>
+    <Stack gap={5} mb={5} mt={1} flexDir="row" justifyContent="space-between">
       <Field.Root orientation="horizontal">
         <Field.Label fontSize="md">
-          <Text w="100px">Section Letter</Text>
+          <Text w="100px">Section</Text>
         </Field.Label>
       </Field.Root>
 
