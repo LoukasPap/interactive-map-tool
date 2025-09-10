@@ -4,7 +4,7 @@ import {
   SimpleGrid,
   Accordion,
   Group,
-  Button,
+  Icon,
 } from "@chakra-ui/react";
 import QuickSelectionButtons, {
   QuickClearButton,
@@ -13,6 +13,8 @@ import MaterialButton from "./MaterialButton";
 import { useState, useEffect, useRef } from "react";
 import Section from "./SectionFilters";
 import Monument from "./MonumentsFilters";
+import { Tooltip } from "../../ui/tooltip";
+import { LuInfo } from "react-icons/lu";
 
 const initialMaterialList = [
   {
@@ -62,7 +64,10 @@ const initialSectionState = {
 const ArtifactsFilters = ({ setArtifactsFilters }) => {
   const [materialsList, setMaterialsList] = useState(initialMaterialList);
   const [section, setSection] = useState(initialSectionState);
-  const [monument, setMonument] = useState({ ShowMonuments: "Yes", Condition: [] });
+  const [monument, setMonument] = useState({
+    ShowMonuments: "Yes",
+    Condition: [],
+  });
 
   const [openItems, setOpenItems] = useState([
     "material-filter",
@@ -78,7 +83,7 @@ const ArtifactsFilters = ({ setArtifactsFilters }) => {
       }))
     );
 
-    controlAccordionState();
+    controlAccordionState("material-filter");
   };
 
   const handleClearAll = () => {
@@ -89,7 +94,7 @@ const ArtifactsFilters = ({ setArtifactsFilters }) => {
       }))
     );
 
-    controlAccordionState();
+    controlAccordionState("material-filter");
   };
 
   const selectMaterial = (value) => {
@@ -104,11 +109,12 @@ const ArtifactsFilters = ({ setArtifactsFilters }) => {
 
   const clearSectionInput = () => {
     setSection(initialSectionState);
+    controlAccordionState("section-filter");
   };
 
-  const controlAccordionState = () => {
-    if (!openItems.includes("material-filter")) {
-      setOpenItems((ot) => [...ot, "material-filter"]);
+  const controlAccordionState = (accordionItem) => {
+    if (!openItems.includes(accordionItem)) {
+      setOpenItems((ot) => [...ot, accordionItem]);
     }
   };
 
@@ -180,9 +186,22 @@ const ArtifactsFilters = ({ setArtifactsFilters }) => {
 
       <Accordion.Item value="monument-filter" bg="gray.100">
         <Accordion.ItemTrigger justifyContent="space-between">
-          <Heading fontWeight={"normal"} fontSize="md">
-            MONUMENTS
-          </Heading>
+          <Group>
+            <Heading fontWeight={"normal"} fontSize="md">
+              MONUMENTS
+            </Heading>
+            <Tooltip
+              content="Monuments are not affected by Period filters"
+              contentProps={{ fontSize: "md", p: "2" }}
+              positioning={{ placement: "right-center" }}
+              openDelay={200}
+              closeDelay={200}
+            >
+              <Icon size="md">
+                <LuInfo />
+              </Icon>
+            </Tooltip>
+          </Group>
           <Accordion.ItemIndicator color={"gray.400"} />
         </Accordion.ItemTrigger>
 

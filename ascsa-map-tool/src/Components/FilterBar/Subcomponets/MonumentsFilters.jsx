@@ -7,8 +7,8 @@ import {
   Select,
   createListCollection,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
 
+import { useEffect, useState } from "react";
 const conditons = createListCollection({
   items: [
     { label: "Excellent", value: "Excellent" },
@@ -22,6 +22,18 @@ const conditons = createListCollection({
   ],
 });
 
+const viewOptionsMapping = {
+  Show: "Yes",
+  Hide: "No",
+  "Show only": "Only",
+};
+
+const viewOptionsMappingReverse = {
+  Yes: "Show",
+  No: "Hide",
+  Only: "Show only",
+};
+
 const initialFilterState = {
   ShowMonuments: "Yes",
   Condition: [],
@@ -34,35 +46,59 @@ const Monument = ({ setMonumentObj }) => {
     setMonumentObj(monuments);
   }, [monuments]);
 
+  // <Checkbox.Root variant={"outline"} size="md" w="100%">
+  //   <Checkbox.HiddenInput />
+  //   <Checkbox.Control border="1px solid" borderColor="gray.300">
+  //     <Checkbox.Indicator />
+  //   </Checkbox.Control>
+  //   <Checkbox.Label />
+  // </Checkbox.Root>;
+
   return (
-    <Stack gap="5" maxW="sm" mb="5">
-      <Field.Root orientation="horizontal">
-        <Field.Label fontSize="md">
-          <Text w="100px">Show Monuments</Text>
+    <Stack mb="5" w="100%">
+      <Field.Root
+        orientation="horizontal"
+        justifyContent="space-between"
+        gap={5}
+      >
+        <Field.Label fontSize="md" >
+          <Text w="100px">View options</Text>
         </Field.Label>
+
         <SegmentGroup.Root
-          value={monuments.ShowMonuments}
+          value={viewOptionsMappingReverse[monuments.ShowMonuments]}
           onValueChange={(e) => {
             setMonuments((m) => ({
               ...m,
-              ShowMonuments: e.value,
-            }));      
+              ShowMonuments: viewOptionsMapping[e.value],
+            }));
           }}
           size="lg"
           flex="1"
           border="1px solid"
           borderColor="gray.300"
         >
-          <SegmentGroup.Indicator bg="gray.300"/>
-          <SegmentGroup.Items w="100%" items={["Yes", "No", "Only"]} />
+          <SegmentGroup.Indicator bg="gray.300" />
+          <SegmentGroup.Items
+            h="35px"
+            w="100%"
+            lineHeight="12px"
+            items={["Show", "Hide", "Show only"]}
+          />
         </SegmentGroup.Root>
       </Field.Root>
 
-      <Field.Root orientation="horizontal">
-        <Field.Label fontSize="md">
+      <Field.Root
+        orientation="horizontal"
+        display="flex"
+        justifyContent="space-between"
+        gap={5}
+      >
+        <Field.Label fontSize="md" flexGrow={0}>
           <Text w="100px">Condition</Text>
         </Field.Label>
         <Select.Root
+          flex="1"
           value={monuments.Condition}
           onValueChange={(e) => {
             setMonuments((m) => ({
