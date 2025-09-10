@@ -3,17 +3,20 @@ import { booleanPointInPolygon } from "@turf/boolean-point-in-polygon";
 import { bboxPolygon } from "@turf/bbox-polygon";
 import { point, polygon } from "@turf/helpers";
 
+import { globalMIBRef } from "./MapLayer";
+
 export const checkIntersectingMarkers = (
   shapeType,
   layer,
   activeData,
   setMarkersInBounds
 ) => {
+  let intersectingMarkers = [];
   if (shapeType === "Circle") {
     const center = layer.getLatLng();
     const radius = layer.getRadius();
 
-    const intersectingMarkers = activeData.filter((marker) => {
+    intersectingMarkers = activeData.filter((marker) => {
       const [lng, lat] = marker.geometry["coordinates"];
       const markerLatLng = L.latLng(lat, lng);
       return center.distanceTo(markerLatLng) <= radius;
@@ -21,7 +24,7 @@ export const checkIntersectingMarkers = (
     setMarkersInBounds(intersectingMarkers);
   } else if (shapeType === "Rectangle") {
     const bounds = layer.getBounds();
-    const intersectingMarkers = activeData.filter((marker) => {
+    intersectingMarkers = activeData.filter((marker) => {
       const [lng, lat] = marker.geometry["coordinates"];
       const markerLatLng = L.latLng(lat, lng);
       return bounds.contains(markerLatLng);
@@ -31,7 +34,7 @@ export const checkIntersectingMarkers = (
     const bounds = layer.getLatLngs()[0].map((m) => [m.lng, m.lat]);
     const closedBounds = [...bounds, bounds[0]];
     const polygonBounds = polygon([closedBounds]);
-    const intersectingMarkers = activeData.filter((marker) => {
+    intersectingMarkers = activeData.filter((marker) => {
       const p = point([
         marker.geometry["coordinates"][0],
         marker.geometry["coordinates"][1],
@@ -40,6 +43,8 @@ export const checkIntersectingMarkers = (
     });
     setMarkersInBounds(intersectingMarkers);
   }
+
+  globalMIBRef.current = intersectingMarkers;
 };
 
 export const onShapeCreated = (e, activeData, setMarkersInBounds) => {

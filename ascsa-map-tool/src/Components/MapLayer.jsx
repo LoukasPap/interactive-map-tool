@@ -53,6 +53,9 @@ import { deactivateHandlers, handleDrawShape, handleEvent } from "./Handlers";
 import MultipleMarkersCard from "./PointsDisplay/MultipleMarkersCard";
 import CollectionsCard from "./Collections/CollectionsCard";
 
+import { createRef } from "react";
+export const globalMIBRef = createRef([]); // MIB: MarkersInBound
+
 const initialBounds = [
   [37.972834, 23.721197], // Southwest corner
   [37.976726, 23.724362], // Northeast corner
@@ -75,6 +78,8 @@ const emptyFiltersState = {
   },
   monument: "Yes",
 };
+
+const iconExClass = ".leaflet-iconex";
 
 const MapLayer = () => {
   console.log("[LOG] - Render Map Layer");
@@ -137,22 +142,33 @@ const MapLayer = () => {
     return bboxPolygon(bboxList);
   }
 
-  useEffect(() => {
-    toggleMarkersCard("multi");
-    console.log("Markers in bound:", markersInBounds);
-
-    const selectedMarkersNames = markersInBounds.map((m) => m.properties.Name);
-    const domIconElements = document.querySelectorAll(".leaflet-iconex");
-
+  function setOpacityOfDOMMarkers(op) {
+    const domIconElements = document.querySelectorAll(iconExClass);
     domIconElements.forEach((icon) => {
-      const markerName = icon.id;
-      if (!selectedMarkersNames.includes(markerName)) {
-        icon.style.opacity = "0.1";
-      } else {
-        icon.style.opacity = "1";
-      }
+      icon.style.opacity = op;
     });
-  }, [markersInBounds]);
+  }
+
+  useEffect(() => {
+    console.log("Markers in bound:", markersInBounds);
+    
+    if (globalMIBRef.current != null && globalMIBRef.current.length != 0) {
+      toggleMarkersCard("multi");
+      const selectedMarkersNames = markersInBounds.map(
+        (m) => m.properties.Name
+      );
+      const domIconElements = document.querySelectorAll(iconExClass);
+
+      domIconElements.forEach((icon) => {
+        const markerName = icon.id;
+        if (!selectedMarkersNames.includes(markerName)) {
+          icon.style.opacity = "0.2";
+        } else {
+          icon.style.opacity = "1";
+        }
+      });
+    }
+  }, [markersInBounds, zoom]);
 
   useEffect(() => {
     console.log("[FILTERS] trigger", filters);
@@ -167,7 +183,7 @@ const MapLayer = () => {
       newActiveData = data.features;
 
       newActiveData = applyPeriodFilter(newActiveData, filters);
-      newActiveData = applyBoundFilter(newActiveData, bbox);
+      // newActiveData = applyBoundFilter(newActiveData, bbox);
     }
 
     // We push the monuments_data second to be more efficient (they are just ~50 allocations)
@@ -210,6 +226,8 @@ const MapLayer = () => {
     toggleShapesBar(CLOSE);
 
     toggleMarkersCard("");
+    globalMIBRef.current = [];
+    setOpacityOfDOMMarkers(1);
 
     currentShape.current.layer.remove();
     currentShape.current = null;
