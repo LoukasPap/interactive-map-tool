@@ -75,7 +75,7 @@ const NONE = "";
 
   const [markersInBounds, setMarkersInBounds] = useState([]);
 
-  const [activeTool, setActiveTool] = useState(null);
+  const [activeTool, setActiveTool] = useState("select");
 
   const [selectedMarker, setSelectedMarker] = useState(null);
   const [mapReady, setMapReady] = useState(false);
