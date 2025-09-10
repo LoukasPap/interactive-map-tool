@@ -1,15 +1,27 @@
 import { Checkbox, HStack, Box, Icon, Center } from "@chakra-ui/react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { LuFilter, LuLibraryBig, LuMenu } from "react-icons/lu";
 
-const EasyButtons = ({ toggleDrawer, toggleFilters, toggleExtra }) => {
-  const [checkedExtra, setCheckedExtra] = useState(true);
-  const [checkedFilter, setCheckedFilter] = useState(true);
+const FILTERS_CARD = "filters";
+const COLLECTIONS_CARD = "collections";
+const NONE = "";
+
+const EasyButtons = ({ toggleDrawer, openUserCard }) => {
+  const [filterClosed, setFilterClosed] = useState(true);
+  const [collectionsClosed, setCollectionsClosed] = useState(true);
+  const curOpenCardRef = useRef(NONE);
+
   const customStyle = { height: "1.5em" };
 
   return (
     <HStack w="100%" h="3.5vh" gap="5px" pointerEvents="auto" display="flex">
-      <Center w="40px" h="100%" rounded="7.5px" bg="white" border="1px solid #C6C6C6">
+      <Center
+        w="40px"
+        h="100%"
+        rounded="7.5px"
+        bg="white"
+        border="1px solid #C6C6C6"
+      >
         <Icon
           justifySelf="center"
           variant="plain"
@@ -20,10 +32,11 @@ const EasyButtons = ({ toggleDrawer, toggleFilters, toggleExtra }) => {
         </Icon>
       </Center>
 
-      {/* Filter button */}
+      {/* Filters button */}
       <Box
         flexGrow={1}
-        bg="white"
+        bg={filterClosed ? "white" : "gray.900"}
+        color={filterClosed ? "black" : "white"}
         h="100%"
         p={2}
         rounded="7.5px"
@@ -32,36 +45,34 @@ const EasyButtons = ({ toggleDrawer, toggleFilters, toggleExtra }) => {
         asChild
       >
         <Checkbox.Root
-          // visibility={"hidden"}
+          id="fil"
           cursor="pointer"
           w="fit"
           minW="6.5em"
-          checked={checkedFilter}
+          checked={filterClosed}
           onCheckedChange={(e) => {
-            setCheckedFilter(!!e.checked);
-            toggleFilters(checkedFilter);
+            setFilterClosed(!!e.checked);
+            setCollectionsClosed(true);
+
+            const checkedCard = !!e.checked ? NONE : FILTERS_CARD;
+            curOpenCardRef.current = checkedCard;
+            openUserCard(checkedCard);
           }}
         >
           <Checkbox.HiddenInput />
           <Checkbox.Control
-            bg="white"
+            bg={filterClosed ? "white" : "gray.900"}
             border="none"
             w="fit"
             h="fit"
             p={0}
             cursor="pointer"
           >
-            {console.log("filter", checkedFilter)}
-            {checkedFilter ? (
-              <LuFilter strokeWidth="1.5px" color="black" style={customStyle} />
-            ) : (
-              <LuFilter
-                strokeWidth="1.5px"
-                stroke="black"
-                fill="black"
-                style={customStyle}
-              />
-            )}
+            <LuFilter
+              color={filterClosed ? "black" : "white"}
+              strokeWidth="1.5px"
+              style={customStyle}
+            />
           </Checkbox.Control>
           <Checkbox.Label w="full" textAlign="center" fontSize="lg" px="1">
             Filters
@@ -69,10 +80,11 @@ const EasyButtons = ({ toggleDrawer, toggleFilters, toggleExtra }) => {
         </Checkbox.Root>
       </Box>
 
-      {/* Extra btn that may need */}
+      {/* Collections button */}
       <Box
         flexGrow={1}
-        bg="white"
+        bg={collectionsClosed ? "white" : "gray.900"}
+        color={collectionsClosed ? "black" : "white"}
         p={2}
         h="100%"
         rounded="md"
@@ -81,38 +93,33 @@ const EasyButtons = ({ toggleDrawer, toggleFilters, toggleExtra }) => {
         asChild
       >
         <Checkbox.Root
+          id="col"
           w="fit"
           minW="6.5em"
-          checked={checkedExtra}
+          checked={collectionsClosed}
           onCheckedChange={(e) => {
-            setCheckedExtra(!!e.checked);
-            toggleExtra(checkedExtra);
+            setCollectionsClosed(!!e.checked);
+            setFilterClosed(true);
+
+            const checkedCard = !!e.checked ? NONE : COLLECTIONS_CARD;
+            curOpenCardRef.current = checkedCard;
+            openUserCard(checkedCard);
           }}
         >
           <Checkbox.HiddenInput />
           <Checkbox.Control
             cursor="pointer"
-            bg="white"
             border="none"
+            bg={collectionsClosed ? "white" : "gray.900"}
             w="fit"
             h="fit"
             p={0}
           >
-            {checkedExtra ? (
-              <LuLibraryBig
-                color="black"
-                strokeWidth="1.5px"
-                style={customStyle}
-              />
-            ) : (
-              <LuLibraryBig
-                color="white"
-                strokeWidth="1.5px"
-                stroke="black"
-                fill="black"
-                style={customStyle}
-              />
-            )}
+            <LuLibraryBig
+              color={collectionsClosed ? "black" : "white"}
+              strokeWidth="1.5px"
+              style={customStyle}
+            />
           </Checkbox.Control>
           <Checkbox.Label
             cursor="pointer"

@@ -46,6 +46,7 @@ import { isSectionEmpty, getSectionFilter, isArrayEmpty } from "./Helpers";
 import { onShapeCreated } from "./GeometryOperations";
 import { deactivateHandlers, handleDrawShape, handleEvent } from "./Handlers";
 import MultipleMarkersCard from "./PointsDisplay/MultipleMarkersCard";
+import CollectionsCard from "./Collections/CollectionsCard";
 
 const initialBounds = [
   [37.972834, 23.721197], // Southwest corner
@@ -55,10 +56,9 @@ const initialBounds = [
 const CLOSE = false;
 const OPEN = true;
 
-const MapLayer = () => {
-  console.log("[LOG] - Render Map Layer");
-
-  const currentShape = useRef(null);
+const FILTER_CARD = "filters";
+const COLLECTIONS_CARD = "collections";
+const NONE = "";
 
   const emptyFiltersState = {
     periods: [],
@@ -85,6 +85,7 @@ const MapLayer = () => {
 
   const [markersCard, toggleMarkersCard] = useState("");
   const [areFiltersOpen, toggleFilters] = useState(false);
+  const [userCardOpen, setUserCardOpen] = useState(NONE);
   const [shapesBar, toggleShapesBar] = useState(false);
 
   const ZoomTracker = () => {
@@ -355,12 +356,21 @@ const MapLayer = () => {
         <VStack w="22.5vw">
           <EasyButtons
             toggleDrawer={toggleDrawer}
-            toggleFilters={toggleFilters}
-            toggleExtra={toggleShapesBar}
+            openUserCard={setUserCardOpen}
           ></EasyButtons>
 
-          {/* The filters Card*/}
-          <FilterCard areFiltersOpen={areFiltersOpen} setFilters={setFilters} />
+          {/* The User Cards*/}
+          {userCardOpen == FILTER_CARD ? (
+            <FilterCard
+              areFiltersOpen={userCardOpen == FILTER_CARD}
+              setFilters={setFilters}
+            />
+          ) : userCardOpen == COLLECTIONS_CARD ? (
+            <CollectionsCard
+              areCollectionsOpen={userCardOpen == COLLECTIONS_CARD}
+              setFilters={setFilters}
+            />
+          ) : null}
         </VStack>
 
         <Drawer.Root

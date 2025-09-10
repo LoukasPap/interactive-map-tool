@@ -1,28 +1,8 @@
-import { Tabs, Text, Separator, Button, Card } from "@chakra-ui/react";
-import { useRef, useState } from "react";
+import { Text, Card } from "@chakra-ui/react";
 
-const CollectionsCard = ({ areCollectionsOpen = false, setFilters }) => {
-  const [value, setValue] = useState("artifacts");
-
-  const filtersState = useRef({});
-
-  function updateFilterState(props) {
-    filtersState.current = { ...filtersState.current, ...props };
-  }
-
-  const applyFilters = () => {
-    console.log("changed,", filtersState.current);
-
-    setFilters(filtersState.current);
-  };
-
+const CollectionsCard = () => {
   return (
     <Card.Root
-      style={{
-        opacity: areCollectionsOpen ? 1 : 0,
-        pointerEvents: areCollectionsOpen ? "auto" : "none",
-        transition: "opacity 0.4s cubic-bezier(.4,0,.2,1)",
-      }}
       w={{ sm: "30vw", md: "25vw", lg: "22.5vw" }}
       bg="white"
       // p="30px 22px"
