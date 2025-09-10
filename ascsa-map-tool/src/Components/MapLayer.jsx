@@ -389,13 +389,7 @@ const NONE = "";
             </Drawer.Positioner>
           </Portal>
         </Drawer.Root>
-
-        <FilterCard areFiltersOpen={areFiltersOpen}/>
       </Box>
-
-      {activeTool in ["rectangle", "circle", "polygon"] && (
-        <MarkersList markers={markersInBounds} />
-      )}
     </>
   );
 };
