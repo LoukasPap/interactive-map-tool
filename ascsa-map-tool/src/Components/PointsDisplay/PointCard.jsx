@@ -198,7 +198,6 @@ const SinglePointCard = ({ marker, toggleCard }) => {
       rounded="xl"
       border="1px solid"
       borderColor="gray.300"
-      overflow="scroll"
       scrollbarColor="black transparent"
       scrollbarWidth="thin"
     >
@@ -223,7 +222,7 @@ const SinglePointCard = ({ marker, toggleCard }) => {
         <Separator size="sm" mt={1} borderColor={"gray.300"} />
       </Card.Header>
 
-      <Card.Body gap="4" maxH="100%" overflow="scroll">
+      <Card.Body gap="4" maxH="100%" overflow="auto">
         <DataList.Root color="black" size="lg">
           <SimpleGrid columns={3} gap="4">
             {/* {point && point.f.proper} */}
@@ -240,12 +239,12 @@ const SinglePointCard = ({ marker, toggleCard }) => {
                   {prop.charAt(0).toUpperCase() + prop.slice(1)}
                 </DataList.ItemLabel>
                 <DataList.ItemValue fontSize={"lg"}>
-                  {pointDetails[prop]} {prop === "period" && `(${pointDetails.era})`}
+                  {pointDetails[prop]}
+                  {prop === "period" && ` (${pointDetails.era})`}
                 </DataList.ItemValue>
               </DataList.Item>
             ))}
 
-            
             <Box gridColumn="span 3">
               <Heading mb="1">Dimensions</Heading>
               <DimensionsTable dimensions={pointDetails.dimensions} />
@@ -258,9 +257,10 @@ const SinglePointCard = ({ marker, toggleCard }) => {
           <HStack
             gap="4"
             h="fit"
-            maxH="120px"
-            overflow="scroll"
-            pb="0.8em"
+            maxH="125px"
+            overflowX="auto"
+            // pb="0.8em"
+            css={{ "-webkit-padding-after": "-1em" }}
             scrollbarColor="black transparent"
             scrollbarWidth="thin"
             onWheel={(e) => {
@@ -303,7 +303,7 @@ const SinglePointCard = ({ marker, toggleCard }) => {
           <Text
             textAlign="justify"
             maxH="20vh"
-            overflow="scroll"
+            overflowY="auto"
             scrollbarColor="black transparent"
             scrollbarWidth="thin"
             pr="1em"
@@ -313,9 +313,10 @@ const SinglePointCard = ({ marker, toggleCard }) => {
         </Box>
       </Card.Body>
 
-      <Card.Footer justifyContent="center" flexDir="row" bg="black" p={0}>
-        <PointCardFooter source={pointDetails.link} coords={pointDetails.coords} />
-      </Card.Footer>
+      <PointCardFooter
+        source={pointDetails.link}
+        coords={pointDetails.coords}
+      />
     </Card.Root>
   );
 };

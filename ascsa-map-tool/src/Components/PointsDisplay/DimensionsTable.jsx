@@ -11,6 +11,7 @@ const DimensionsTable = ({ dimensions }) => {
       maxW="xl"
       maxH="150px"
       pr="0.8em"
+      overflow="auto"
       scrollbarColor="black transparent"
       scrollbarWidth="thin"
     >
@@ -38,7 +39,7 @@ const DimensionsTable = ({ dimensions }) => {
             {(d, index) => (
               <Table.Row key={index} _hover={{ bg: "gray.200" }}>
                 {/* <Table.Cell>{d.abbr}</Table.Cell> */}
-                <Table.Cell>{d.name}</Table.Cell>
+                <Table.Cell>{d.name} ({d.abbr})</Table.Cell>
                 <Table.Cell>{d.value}</Table.Cell>
                 <Table.Cell>{d.note || "-"}</Table.Cell>
               </Table.Row>

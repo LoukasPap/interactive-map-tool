@@ -1,10 +1,10 @@
 import {
-  Flex,
   Button,
   Text,
   LinkBox,
   LinkOverlay,
   Clipboard,
+  Card,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import {
@@ -21,6 +21,7 @@ export const PointButton = ({ id, label, icon, onClick = null }) => {
       flexGrow={1}
       key={id}
       variant="plain"
+      rounded="xl"
       _hover={{ bg: "gray.950" }}
       color="white"
       flexDir="column"
@@ -46,7 +47,15 @@ const PointCardFooter = ({ source, coords = "-" }) => {
   };
 
   return (
-    <Flex w="100%">
+    <Card.Footer
+      w="100%"
+      roundedBottom="xl"
+      backgroundClip="content-box"
+      justifyContent="center"
+      flexDir="row"
+      bg="black"
+      p={0}
+    >
       <PointButton
         id="expand-action"
         label="Expand"
@@ -87,7 +96,7 @@ const PointCardFooter = ({ source, coords = "-" }) => {
           </LinkBox>
         }
       />
-    </Flex>
+    </Card.Footer>
   );
 };
 

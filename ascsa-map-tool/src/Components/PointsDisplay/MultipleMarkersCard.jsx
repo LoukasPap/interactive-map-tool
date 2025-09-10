@@ -18,9 +18,7 @@ import {
   LuChevronLeft,
   LuChevronRight,
   LuCircleX,
-  LuDelete,
   LuSave,
-  LuSquareX,
 } from "react-icons/lu";
 import { PointButton } from "./PointCardFooter";
 
@@ -176,7 +174,7 @@ const MultipleMarkersCard = ({ markers, finishShape, cancelShape }) => {
       border="1px solid"
       borderColor="gray.300"
       gap={2}
-      overflow="scroll"
+      overflow="auto"
     >
       <Card.Header>
         <Text>
