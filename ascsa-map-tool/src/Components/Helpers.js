@@ -1,3 +1,24 @@
+import { booleanPointInPolygon } from "@turf/boolean-point-in-polygon";
+import { point } from "@turf/helpers";
+
+export function applyBoundFilter(data, bbox) {
+  return data.filter((f) => {
+    const p = point(f.geometry.coordinates);
+    return booleanPointInPolygon(p, bbox);
+  });
+}
+
+export function applySectionFilter(data, f) {
+  if (!isSectionEmpty(f.section)) {
+    const sectionFilter = getSectionFilter(f.section);
+    return data.filter(
+      (d) => d.properties[sectionFilter] == f.section[sectionFilter]
+    );
+  }
+
+  return data;
+}
+
 export function getSectionFilter(section) {
   if (
     section.SectionNumberLetter !== "" &&
@@ -9,6 +30,37 @@ export function getSectionFilter(section) {
   } else {
     return "SectionNumberNumber";
   }
+}
+
+export function applyPeriodFilter(newActiveData, filters) {
+  return newActiveData.filter((f) =>
+    filters.periods.includes(f.properties.Era)
+  );
+}
+
+export function applyMonumentFilter(newActiveData, monumentData, monumentsVisibility, filters) {
+  let mData = [];
+  if (monumentsVisibility != "No") {
+    const conditions = filters.monument.Condition || [];
+
+    if (!isArrayEmpty(conditions)) {
+      mData = monumentData.features.filter((f) =>
+        conditions.includes(f.properties.CleanCondition)
+      );
+    } else {
+      mData = monumentData.features;
+    }
+  }
+  newActiveData.push(...mData);
+  return newActiveData;
+}
+
+export function applyMaterialFilter(newActiveData, filters) {
+  return newActiveData.filter((f) =>
+    filters.materials.some((material) =>
+      f.properties.MaterialCategory.includes(material)
+    )
+  );
 }
 
 export function isSectionEmpty(section) {

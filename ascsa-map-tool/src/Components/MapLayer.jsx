@@ -38,9 +38,15 @@ import MarkerClusterLayer from "./MarkerClusterLayer";
 // for spatial operations
 import { booleanPointInPolygon } from "@turf/boolean-point-in-polygon";
 import { bboxPolygon } from "@turf/bbox-polygon";
-import { point } from "@turf/helpers";
 
-import { isSectionEmpty, getSectionFilter, isArrayEmpty } from "./Helpers";
+import {
+  isArrayEmpty,
+  applySectionFilter,
+  applyBoundFilter,
+  applyMonumentFilter,
+  applyPeriodFilter,
+  applyMaterialFilter,
+} from "./Helpers";
 
 import { onShapeCreated } from "./GeometryOperations";
 import { deactivateHandlers, handleDrawShape, handleEvent } from "./Handlers";
@@ -58,6 +64,17 @@ const OPEN = true;
 const FILTER_CARD = "filters";
 const COLLECTIONS_CARD = "collections";
 const NONE = "";
+
+const emptyFiltersState = {
+  periods: [],
+  materials: [],
+  section: {
+    SectionNumber: "",
+    SectionNumberLetter: "",
+    SectionNumberNumber: "",
+  },
+  monument: "Yes",
+};
 
 const MapLayer = () => {
   console.log("[LOG] - Render Map Layer");
@@ -141,52 +158,22 @@ const MapLayer = () => {
     console.log("[FILTERS] trigger", filters);
 
     let bbox = initialBounds;
-    if (bounds != null) {
-      bbox = calculateBounds(bounds);
-    }
+    if (bounds != null) bbox = calculateBounds(bounds);
 
     let newActiveData = [];
     const monumentsVisibility = filters.monument.ShowMonuments;
 
     if (monumentsVisibility != "Only") {
       newActiveData = data.features;
-      newActiveData = newActiveData.filter((f) =>
-        filters.periods.includes(f.properties.Era)
-      );
+
+      newActiveData = applyPeriodFilter(newActiveData, filters);
+      newActiveData = applyBoundFilter(newActiveData, bbox);
     }
 
     // We push the monuments_data second to be more efficient (they are just ~50 allocations)
-    if (monumentsVisibility != "No") {
-      let mData = [];
-      const conditions = filters.monument.Condition || [];
-
-      if (!isArrayEmpty(conditions)) {
-        mData = monumentData.features.filter((f) =>
-          conditions.includes(f.properties.CleanCondition)
-        );
-      } else {
-        mData = monumentData.features;
-      }
-      newActiveData.push(...mData);
-    }
-
-    newActiveData = newActiveData
-      .filter((f) =>
-        filters.materials.some((material) =>
-          f.properties.MaterialCategory.includes(material)
-        )
-      )
-      .filter((f) => {
-        const p = point(f.geometry.coordinates);
-        return booleanPointInPolygon(p, bbox);
-      });
-
-    if (!isSectionEmpty(filters.section)) {
-      const sectionFilter = getSectionFilter(filters.section);
-      newActiveData = newActiveData.filter(
-        (f) => f.properties[sectionFilter] == filters.section[sectionFilter]
-      );
-    }
+    newActiveData = applyMonumentFilter(newActiveData, monumentData, monumentsVisibility, filters);
+    newActiveData = applyMaterialFilter(newActiveData, filters);
+    newActiveData = applySectionFilter(newActiveData, filters);
 
     setActiveData(newActiveData);
   }, [filters, bounds]);
