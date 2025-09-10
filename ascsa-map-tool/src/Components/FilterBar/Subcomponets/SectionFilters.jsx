@@ -13,17 +13,16 @@ const Section = ({ sectionObj, setSectionObj }) => {
   }
 
   return (
-    <Stack gap={5} mb={5} mt={1} flexDir="row" justifyContent="space-between">
+    <Stack gap={5} mb={5} mt={1} flexDir={{smToXl:"column", "2xl":"row"}} justifyContent="space-between">
       <Field.Root orientation="horizontal">
         <Field.Label fontSize="md">
-          <Text w="100px">Section</Text>
+          <Text w="50px">Section</Text>
         </Field.Label>
       </Field.Root>
-
       <Group gap={1}>
         <Input
           size="lg"
-          w="3xs"
+          w="10vw"
           border="1px solid"
           borderColor="gray.300"
           placeholder="Letter(s)"
@@ -42,7 +41,7 @@ const Section = ({ sectionObj, setSectionObj }) => {
 
         <NumberInput.Root
           size="lg"
-          w="4xs"
+          w="fit"
           min={0}
           value={sectionObj.SectionNumberNumber}
           onValueChange={(e) =>

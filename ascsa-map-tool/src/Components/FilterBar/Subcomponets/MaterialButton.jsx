@@ -21,7 +21,7 @@ const MaterialButton = ({ materialObject, onClick }) => {
       >
         {getMaterialIconSVG(materialObject.value, materialObject.color)}
         <Text
-          fontSize={"lg"}
+          fontSize={{smToXl:"md", "2xl":"lg"}}
           fontWeight={"sem"}
           // color={materialObject.checked ? "#fff" : "#000"}
           transition="color 0.3s ease"

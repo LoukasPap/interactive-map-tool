@@ -25,9 +25,9 @@ export const QuickSelectButton = ({ onClick }) => {
 };
 
 export const QuickClearButton = ({ onClick }) => {
-  return(
+  return (
     <IconButton
-      size="2xl"
+      size="2xl" display={{ smToXl: "none"}}
       w="fit"
       h="fit"
       variant="plain"
@@ -48,7 +48,8 @@ export const QuickClearButton = ({ onClick }) => {
 const QuickSelectionButtons = ({ handleSelectAll, handleClearAll }) => {
   return (
     <Stack
-      direction={{ lg: "row", md: "column" }}
+      display={{ smToXl: "none", "2xl": "flex" }}
+      direction="row"
       justifyContent="space-around"
       gap={0}
     >

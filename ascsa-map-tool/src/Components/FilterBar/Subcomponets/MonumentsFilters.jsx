@@ -57,12 +57,15 @@ const Monument = ({ setMonumentObj }) => {
   return (
     <Stack mb="5" w="100%">
       <Field.Root
-        orientation="horizontal"
+        orientation={{
+          smToXl: "vertical",
+          "2xl": "horizontal",
+        }}
         justifyContent="space-between"
         gap={5}
       >
-        <Field.Label fontSize="md" >
-          <Text w="100px">View options</Text>
+        <Field.Label fontSize="md">
+          <Text w="fit">View options</Text>
         </Field.Label>
 
         <SegmentGroup.Root
@@ -73,7 +76,7 @@ const Monument = ({ setMonumentObj }) => {
               ShowMonuments: viewOptionsMapping[e.value],
             }));
           }}
-          size="lg"
+          size={{ smToMd: "lg", lg: "xl" }}
           flex="1"
           border="1px solid"
           borderColor="gray.300"
@@ -89,14 +92,14 @@ const Monument = ({ setMonumentObj }) => {
       </Field.Root>
 
       <Field.Root
-        orientation="horizontal"
+        orientation={{ smToXl: "vertical", "2xl": "horizontal" }}
         display="flex"
         justifyContent="space-between"
         gap={5}
       >
         <Field.Label fontSize="md" flexGrow={0}>
-          <Text w="100px">Condition</Text>
-        </Field.Label>
+          <Text w="fit">Condition</Text>
+        </Field.Label>{" "}
         <Select.Root
           flex="1"
           value={monuments.Condition}
@@ -108,7 +111,7 @@ const Monument = ({ setMonumentObj }) => {
           }}
           multiple
           collection={conditons}
-          size="lg"
+          size={{ smToMd: "xl", lg: "lg" }}
         >
           <Select.HiddenSelect />
           <Select.Control>
