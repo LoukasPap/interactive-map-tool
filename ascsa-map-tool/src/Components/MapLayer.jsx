@@ -158,15 +158,19 @@ const NONE = "";
       );
     }
 
+    // We push the monuments_data second to be more efficient (they are just ~50 allocations)
     if (monumentsVisibility != "No") {
+      let mData = [];
       const conditions = filters.monument.Condition || [];
-      let monumentData = monument_data.features;
+
       if (!isArrayEmpty(conditions)) {
-        monumentData = monumentData.filter((f) =>
+        mData = monumentData.features.filter((f) =>
           conditions.includes(f.properties.CleanCondition)
         );
+      } else {
+        mData = monumentData.features;
       }
-      newActiveData.push(...monumentData);
+      newActiveData.push(...mData);
     }
 
     newActiveData = newActiveData
