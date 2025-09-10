@@ -30,6 +30,7 @@ import {
   CloseButton,
   Drawer,
   Portal,
+  Avatar,
   VStack,
 } from "@chakra-ui/react";
 import MarkerClusterLayer from "./MarkerClusterLayer";
@@ -247,7 +248,7 @@ const NONE = "";
     }
   }
 
-  const [open, setOpen] = useState(false);
+  const [isDrawerOpen, toggleDrawer] = useState(CLOSE);
   return (
     <>
       <MapContainer
@@ -358,25 +359,26 @@ const NONE = "";
         </VStack>
 
         <Drawer.Root
-          open={open}
+          open={isDrawerOpen}
           size="sm"
           placement="start"
-          onOpenChange={(e) => setOpen(e.open)}
+          onOpenChange={(e) => toggleDrawer(e.open)}
         >
           <Portal>
             <Drawer.Backdrop />
             <Drawer.Positioner>
               <Drawer.Content>
                 <Drawer.Header>
-                  <Drawer.Title>Drawer Title</Drawer.Title>
+                  <Avatar.Root size="2xl">
+                    <Avatar.Fallback name="Dummy Name" />
+                    <Avatar.Image src="./coin-img.png" />
+                  </Avatar.Root>
+                  <Drawer.Title fontSize="3xl">John Brook</Drawer.Title>
                 </Drawer.Header>
                 <Drawer.Body>
-                  <p>
-                    Drawer Body
-                  </p>
+                  <p>Drawer Body</p>
                 </Drawer.Body>
-                <Drawer.Footer>
-                </Drawer.Footer>
+                <Drawer.Footer></Drawer.Footer>
                 <Drawer.CloseTrigger asChild>
                   <CloseButton size="sm" />
                 </Drawer.CloseTrigger>
