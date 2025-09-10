@@ -59,12 +59,10 @@ const FILTER_CARD = "filters";
 const COLLECTIONS_CARD = "collections";
 const NONE = "";
 
-  const emptyFiltersState = {
-    periods: [],
-    materials: [],
-    section: "",
-    monument: "Yes",
-  };
+const MapLayer = () => {
+  console.log("[LOG] - Render Map Layer");
+
+  const currentShape = useRef(null);
 
   const [filters, setFilters] = useState(emptyFiltersState);
 
@@ -356,7 +354,6 @@ const NONE = "";
           ) : userCardOpen == COLLECTIONS_CARD ? (
             <CollectionsCard
               areCollectionsOpen={userCardOpen == COLLECTIONS_CARD}
-              setFilters={setFilters}
             />
           ) : null}
         </VStack>
