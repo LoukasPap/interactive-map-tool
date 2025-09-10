@@ -23,7 +23,9 @@ import { monumentData } from "../data/m_dataframe";
 import Bar from "./ActionBar/ActionBar";
 import FilterCard from "./FilterBar/FilterCard";
 import EasyButtons from "./FilterBar/EasyButtons";
-import SinglePointCard from "./PointsDisplay/PointCard";
+
+import SingleMarkerCard from "./MarkerCards/SingleMarkerCard";
+import MultipleMarkersCard from "./MarkerCards/MultipleMarkersCard";
 
 import {
   Box,
@@ -321,7 +323,7 @@ const MapLayer = () => {
       </MapContainer>
 
       {markersCard == "single" ? (
-        <SinglePointCard
+        <SingleMarkerCard
           marker={
             selectedMarker != null ? selectedMarker.feature : selectedMarker
           }

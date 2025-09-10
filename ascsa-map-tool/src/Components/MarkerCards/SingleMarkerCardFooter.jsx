@@ -15,7 +15,7 @@ import {
   LuMapPin,
 } from "react-icons/lu";
 
-export const PointButton = ({ id, label, icon, onClick = null }) => {
+export const MarkerButton = ({ id, label, icon, onClick = null }) => {
   return (
     <Button
       flexGrow={1}
@@ -37,7 +37,7 @@ export const PointButton = ({ id, label, icon, onClick = null }) => {
   );
 };
 
-const PointCardFooter = ({ source, coords = "-" }) => {
+const SingleMarkerCardFooter = ({ source, coords = "-" }) => {
   const customStyle = { width: "2.25em", height: "2.25em" };
 
   const [copied, setCopied] = useState(false);
@@ -56,19 +56,19 @@ const PointCardFooter = ({ source, coords = "-" }) => {
       bg="black"
       p={0}
     >
-      <PointButton
+      <MarkerButton
         id="expand-action"
         label="Expand"
         icon={<LuExpand style={customStyle} strokeWidth="1.5px" />}
       />
 
-      <PointButton
+      <MarkerButton
         id="save-action"
         label="Save"
         icon={<LuSave style={customStyle} strokeWidth="1.5px" />}
       />
 
-      <PointButton
+      <MarkerButton
         id="coords-action"
         label="Location"
         icon={
@@ -85,7 +85,7 @@ const PointCardFooter = ({ source, coords = "-" }) => {
         onClick={handleCopy}
       />
 
-      <PointButton
+      <MarkerButton
         id="source-action"
         label="Source"
         icon={
@@ -100,4 +100,4 @@ const PointCardFooter = ({ source, coords = "-" }) => {
   );
 };
 
-export default PointCardFooter;
+export default SingleMarkerCardFooter;

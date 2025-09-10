@@ -20,7 +20,7 @@ import {
   LuCircleX,
   LuSave,
 } from "react-icons/lu";
-import { PointButton } from "./PointCardFooter";
+import { MarkerButton } from "./SingleMarkerCardFooter";
 
 const eraToColorMapping = {
   Prehistoric: "gray.500",
@@ -136,7 +136,7 @@ const MultipleMarkersCard = ({ markers, finishShape, cancelShape }) => {
           />{" "}
         </Field.Root>
 
-        <PointButton
+        <MarkerButton
           id="save-group"
           label="Save"
           icon={
@@ -148,7 +148,7 @@ const MultipleMarkersCard = ({ markers, finishShape, cancelShape }) => {
           onClick={finishShape}
         />
 
-        <PointButton
+        <MarkerButton
           id="discard-group"
           label="Discard"
           icon={

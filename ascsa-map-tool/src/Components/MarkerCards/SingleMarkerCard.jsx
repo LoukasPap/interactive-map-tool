@@ -8,7 +8,6 @@ import {
   HStack,
   Clipboard,
   Group,
-  Icon,
   IconButton,
   CloseButton,
   For,
@@ -18,18 +17,12 @@ import {
   Tag,
   Center,
 } from "@chakra-ui/react";
-import {
-  LuCopy,
-  LuX,
-  LuMapPin,
-  LuMapPinCheckInside,
-  LuGlobe,
-  LuInfo,
-} from "react-icons/lu";
+import { LuCopy, LuX, LuGlobe } from "react-icons/lu";
+
 import { Tooltip } from "../ui/tooltip";
 
 import { useEffect, useState } from "react";
-import PointCardFooter from "./PointCardFooter";
+import SingleMarkerCardFooter from "./SingleMarkerCardFooter";
 import DimensionsTable from "./DimensionsTable";
 
 const initialObject = {
@@ -55,7 +48,7 @@ const initialObject = {
 
 const propList = ["title", "section", "period", "material"];
 
-const SinglePointCard = ({ marker, toggleCard }) => {
+const SingleMarkerCard = ({ marker, toggleCard }) => {
   const [pointDetails, setPointDetails] = useState(initialObject);
 
   useEffect(() => {
@@ -313,7 +306,7 @@ const SinglePointCard = ({ marker, toggleCard }) => {
         </Box>
       </Card.Body>
 
-      <PointCardFooter
+      <SingleMarkerCardFooter
         source={pointDetails.link}
         coords={pointDetails.coords}
       />
@@ -321,4 +314,4 @@ const SinglePointCard = ({ marker, toggleCard }) => {
   );
 };
 
-export default SinglePointCard;
+export default SingleMarkerCard;

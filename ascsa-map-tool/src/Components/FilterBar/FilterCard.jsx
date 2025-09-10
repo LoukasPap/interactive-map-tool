@@ -1,7 +1,7 @@
 import { Tabs, Text, Separator, Button, Card } from "@chakra-ui/react";
 import { useRef, useState } from "react";
 import PeriodBar from "../PeriodBar/Bar";
-import ArtifactsFilters from "./Subcomponets/FiltersAccordion";
+import ArtifactsFilters from "./Subcomponets/ArtifactsFilters";
 
 const FilterCard = ({ areFiltersOpen = false, setFilters }) => {
   const [value, setValue] = useState("artifacts");
