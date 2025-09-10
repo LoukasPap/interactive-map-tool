@@ -30,11 +30,12 @@ const MarkerClusterLayer = ({ data, onMarkerClick }) => {
       const marker = createMarker(feature);
 
       attachEvents(marker, onMarkerClick, feature);
-      
-      markerClusterGroup.addLayer(marker);
+
+      marker.options.pmIgnore = true;
     });
 
     map.addLayer(markerClusterGroup);
+    markerClusterGroup.options.pmIgnore = true;
 
     // Cleanup on unmount
     return () => {
