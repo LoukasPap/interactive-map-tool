@@ -123,10 +123,9 @@ const NONE = "";
   }
 
   useEffect(() => {
-    console.log("ActiveData updated:", activeData);
-  }, [activeData]);
+    toggleMarkersCard("multi");
+    console.log("Markers in bound:", markersInBounds);
 
-  useEffect(() => {
     const selectedMarkersNames = markersInBounds.map((m) => m.properties.Name);
     const domIconElements = document.querySelectorAll(".leaflet-iconex");
 
@@ -213,12 +212,12 @@ const NONE = "";
 
   function displayMarkerCard(e) {
     setSelectedMarker(e);
-    toggleMarkerCard(OPEN);
+    toggleMarkersCard("single");
   }
 
   function finishShapeCreation() {
     setTool("Select");
-    toggleShapesBar(CLOSE);
+    toggleMarkersCard("");
   }
 
   function cancelShapeCreation() {
