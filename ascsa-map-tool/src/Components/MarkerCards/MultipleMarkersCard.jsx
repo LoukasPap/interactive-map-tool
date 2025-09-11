@@ -76,9 +76,10 @@ const MultipleMarkersCard = ({ markers, finishShape, cancelShape }) => {
         >
           <Image
             src={
-              info.properties.Parent[2] ||
-              info.properties.Parent[1] ||
-              info.properties.Parent[0]
+              info.properties.Parent != null &&
+              (info.properties.Parent[2] ||
+                info.properties.Parent[1] ||
+                info.properties.Parent[0])
             }
             w="70px"
             h="70px"
