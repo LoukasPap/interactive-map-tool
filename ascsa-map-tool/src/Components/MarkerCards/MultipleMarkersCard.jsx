@@ -12,14 +12,20 @@ import {
   Image,
   VStack,
   Input,
+  Dialog,
+  Portal,
+  Stack,
 } from "@chakra-ui/react";
-import { useState } from "react";
+
+import { useState, useRef } from "react";
 import {
+  LuSaveAll,
   LuChevronLeft,
   LuChevronRight,
   LuCircleX,
   LuSave,
 } from "react-icons/lu";
+
 import { MarkerButton } from "./SingleMarkerCardFooter";
 
 const eraToColorMapping = {
@@ -35,7 +41,13 @@ const eraToColorMapping = {
 
 const pageSize = 25;
 
-const MultipleMarkersCard = ({ markers, finishShape, cancelShape }) => {
+const MultipleMarkersCard = ({
+  markers,
+  saveCollection,
+  discardCollection,
+  updateCollection,
+  isSavedInCollection = -1,
+}) => {
   console.log("markers in MultipleMarkersCard: ", markers);
 
   const [page, setPage] = useState(1);
@@ -48,7 +60,6 @@ const MultipleMarkersCard = ({ markers, finishShape, cancelShape }) => {
   const Marker = ({ info }) => {
     return (
       <Button
-        as="div"
         alignContent="center"
         h="80px"
         minH="80px"
@@ -67,13 +78,7 @@ const MultipleMarkersCard = ({ markers, finishShape, cancelShape }) => {
           bottom="0"
           zIndex={-1}
         />
-        <HStack
-          w="100%"
-          gap={4}
-          pl="5px"
-          pr="5px"
-          justifyContent={"space-between"}
-        >
+        <HStack w="100%" gap={4} pl="5px" pr="5px" justifyContent="start">
           <Image
             src={
               info.properties.Parent != null &&
@@ -84,8 +89,6 @@ const MultipleMarkersCard = ({ markers, finishShape, cancelShape }) => {
             w="70px"
             h="70px"
             rounded="sm"
-
-            // style={{ backgroundImage: "url('jewel-img.png')", backgroundSize: 'cover' }}
           />
           <VStack alignItems="self-start" maxW="190px" w="190px" gap={1}>
             <Text
@@ -102,14 +105,22 @@ const MultipleMarkersCard = ({ markers, finishShape, cancelShape }) => {
               </Text>
             )}
           </VStack>
-          <Button>❇️</Button>
         </HStack>
       </Button>
     );
   };
 
-  const Footer = () => {
-    const [value, setValue] = useState("");
+  const Footer = ({ save }) => {
+    const [nameValue, setNameValue] = useState("");
+    const [descriptionValue, setDescriptionValue] = useState("");
+    const [error, setError] = useState(false);
+    const ref = useRef(null);
+
+    function clearInput() {
+      setNameValue("");
+      setDescriptionValue("");
+      setError(false);
+    }
 
     return (
       <Card.Footer
@@ -120,12 +131,7 @@ const MultipleMarkersCard = ({ markers, finishShape, cancelShape }) => {
         flexDir="row"
         bg="black"
       >
-        <Field.Root
-          fontSize="lg"
-          w="fit-content"
-          color="white"
-          size="xl"
-        >
+        {/* <Field.Root fontSize="lg" w="fit-content" color="white" size="xl">
           <Field.Label>Collection name</Field.Label>
           <Input
             value={value}
@@ -135,9 +141,9 @@ const MultipleMarkersCard = ({ markers, finishShape, cancelShape }) => {
 
             // w="100px"
           />{" "}
-        </Field.Root>
+        </Field.Root> */}
 
-        <MarkerButton
+        {/* <MarkerButton
           id="save-group"
           label="Save"
           icon={
@@ -146,20 +152,112 @@ const MultipleMarkersCard = ({ markers, finishShape, cancelShape }) => {
               strokeWidth="1.5px"
             />
           }
-          onClick={finishShape}
-        />
+          onClick={() => save("here")}/> */}
 
-        <MarkerButton
-          id="discard-group"
-          label="Discard"
-          icon={
-            <LuCircleX
-              style={{ width: "2.25em", height: "2.25em" }}
-              strokeWidth="1.5px"
+        {isSavedInCollection == -1 ? (
+          <>
+            <Dialog.Root initialFocusEl={() => ref.current}>
+              <Dialog.Trigger asChild>
+                <MarkerButton
+                  id="save-group"
+                  label="Save"
+                  icon={
+                    <LuSave
+                      style={{ width: "2.25em", height: "2.25em" }}
+                      strokeWidth="1.5px"
+                    />
+                  }
+                />
+              </Dialog.Trigger>
+              <Portal>
+                <Dialog.Backdrop />
+                <Dialog.Positioner>
+                  <Dialog.Content>
+                    <Dialog.Header>
+                      <Dialog.Title>Save Collection</Dialog.Title>
+                    </Dialog.Header>
+                    <Dialog.Body pb="4">
+                      <Stack gap="4">
+                        <Field.Root required invalid={error}>
+                          <Field.Label>
+                            Name <Field.RequiredIndicator color="black" />
+                          </Field.Label>
+                          <Input
+                            value={nameValue}
+                            // _invalid={{border:"1px red solid"}}
+                            onChange={(e) => setNameValue(e.target.value)}
+                            required
+                            placeholder="E.g. ProtoatticAmphoras2"
+                            ref={ref}
+                          />
+                          <Field.ErrorText>
+                            This field is required
+                          </Field.ErrorText>
+                        </Field.Root>
+
+                        <Field.Root>
+                          <Field.Label>Description</Field.Label>
+                          <Input
+                            value={descriptionValue}
+                            onChange={(e) =>
+                              setDescriptionValue(e.target.value)
+                            }
+                            placeholder="A short description of the collection"
+                          />
+                        </Field.Root>
+                      </Stack>
+                    </Dialog.Body>
+                    <Dialog.Footer>
+                      <Dialog.ActionTrigger asChild>
+                        <Button variant="outline" onClick={clearInput}>
+                          Cancel
+                        </Button>
+                      </Dialog.ActionTrigger>
+                      <Button
+                        onClick={() => {
+                          if (nameValue == "" || nameValue == null) {
+                            setError(true);
+                          } else {
+                            save({
+                              name: nameValue,
+                              description: descriptionValue,
+                            });
+                          }
+                        }}
+                      >
+                        Save
+                      </Button>
+                    </Dialog.Footer>
+                  </Dialog.Content>
+                </Dialog.Positioner>
+              </Portal>
+            </Dialog.Root>
+
+            <MarkerButton
+              id="discard-group"
+              label="Discard"
+              icon={
+                <LuCircleX
+                  style={{ width: "2.25em", height: "2.25em" }}
+                  strokeWidth="1.5px"
+                />
+              }
+              onClick={discardCollection}
             />
-          }
-          onClick={cancelShape}
-        />
+          </>
+        ) : (
+          <MarkerButton
+            id="update"
+            label="Update"
+            icon={
+              <LuSaveAll
+                style={{ width: "2.25em", height: "2.25em" }}
+                strokeWidth="1.5px"
+              />
+            }
+            onClick={updateCollection}
+          />
+        )}
       </Card.Footer>
     );
   };
@@ -233,7 +331,7 @@ const MultipleMarkersCard = ({ markers, finishShape, cancelShape }) => {
           {(item, index) => <Marker info={item} key={index} />}
         </For>
       </Card.Body>
-      <Footer />
+      <Footer save={saveCollection} />
     </Card.Root>
   );
 };

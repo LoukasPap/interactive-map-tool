@@ -15,7 +15,6 @@ export const checkIntersectingMarkers = (
   if (shapeType === "Circle") {
     const center = layer.getLatLng();
     const radius = layer.getRadius();
-
     intersectingMarkers = activeData.filter((marker) => {
       const [lng, lat] = marker.geometry["coordinates"];
       const markerLatLng = L.latLng(lat, lng);
@@ -43,27 +42,37 @@ export const checkIntersectingMarkers = (
     });
     setMarkersInBounds(intersectingMarkers);
   }
-
   globalMIBRef.current = intersectingMarkers;
+
 };
 
-export const onShapeCreated = (e, activeData, setMarkersInBounds) => {
+export const onShapeCreated = (
+  e,
+  activeData,
+  setMarkersInBounds,
+  clickShape
+) => {
   switch (e.shape) {
     case "Circle":
-      onCircleCreated(e, activeData, setMarkersInBounds);
+      onCircleCreated(e, activeData, setMarkersInBounds, clickShape);
       break;
     case "Rectangle":
-      onRectangleCreated(e, activeData, setMarkersInBounds);
+      onRectangleCreated(e, activeData, setMarkersInBounds, clickShape);
       break;
     case "Polygon":
-      onPolygonCreated(e, activeData, setMarkersInBounds);
+      onPolygonCreated(e, activeData, setMarkersInBounds, clickShape);
       break;
     default:
       console.log("Problem with e.shape=[", e.shape, "]");
   }
 };
 
-export const onCircleCreated = (e, activeData, setMarkersInBounds) => {
+export const onCircleCreated = (
+  e,
+  activeData,
+  setMarkersInBounds,
+  clickShape
+) => {
   if (e.shape === "Circle") {
     const circleLayer = e.layer;
 
@@ -77,6 +86,12 @@ export const onCircleCreated = (e, activeData, setMarkersInBounds) => {
       console.log("This circle was updated!");
     });
 
+    circleLayer.on("click", (e) => {
+      console.log("Clicked the circle e!", e);
+      clickShape();
+      // e.target._path.style.stroke = "white";
+    });
+
     checkIntersectingMarkers(
       "Circle",
       circleLayer,
@@ -86,7 +101,12 @@ export const onCircleCreated = (e, activeData, setMarkersInBounds) => {
   }
 };
 
-export const onRectangleCreated = (e, activeData, setMarkersInBounds) => {
+export const onRectangleCreated = (
+  e,
+  activeData,
+  setMarkersInBounds,
+  clickShape
+) => {
   if (e.shape === "Rectangle") {
     const rectangleLayer = e.layer;
 
@@ -100,6 +120,11 @@ export const onRectangleCreated = (e, activeData, setMarkersInBounds) => {
       console.log("This rectangle was updated!");
     });
 
+    rectangleLayer.on("click", (e) => {
+      console.log("Clicked the rectangle e!", e);
+      clickShape();
+    });
+
     checkIntersectingMarkers(
       "Rectangle",
       rectangleLayer,
@@ -109,7 +134,12 @@ export const onRectangleCreated = (e, activeData, setMarkersInBounds) => {
   }
 };
 
-export const onPolygonCreated = (e, activeData, setMarkersInBounds) => {
+export const onPolygonCreated = (
+  e,
+  activeData,
+  setMarkersInBounds,
+  clickShape
+) => {
   if (e.shape === "Polygon") {
     const polygonLayer = e.layer;
 
@@ -121,6 +151,11 @@ export const onPolygonCreated = (e, activeData, setMarkersInBounds) => {
         setMarkersInBounds
       );
       console.log("This polygon was updated!");
+    });
+
+    polygonLayer.on("click", (e) => {
+      console.log("Clicked the polygon e!", e);
+      clickShape();
     });
 
     checkIntersectingMarkers(

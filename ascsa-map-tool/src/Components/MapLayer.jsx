@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, createRef } from "react";
 
 import L from "leaflet";
 import "leaflet-draw";
@@ -15,13 +15,13 @@ import {
 } from "react-leaflet";
 
 import "leaflet/dist/leaflet.css";
-import { LuMenu } from "react-icons/lu";
 // import ClusteredPoints from "./ClusteredPoints";
 import { data } from "../data/dataframe";
 import { monumentData } from "../data/m_dataframe";
 
 import Bar from "./ActionBar/ActionBar";
 import FilterCard from "./FilterBar/FilterCard";
+import CollectionsCard from "./Collections/CollectionsCard";
 import EasyButtons from "./FilterBar/EasyButtons";
 
 import SingleMarkerCard from "./MarkerCards/SingleMarkerCard";
@@ -107,7 +107,11 @@ const MapLayer = () => {
   const [markersCard, toggleMarkersCard] = useState("");
   const [areFiltersOpen, toggleFilters] = useState(false);
   const [userCardOpen, setUserCardOpen] = useState(NONE);
-  const [shapesBar, toggleShapesBar] = useState(false);
+
+  const [savedCollections, setSavedCollections] = useState([]);
+  const isSavedInCollection = useRef(-1);
+
+  const cidRef = useRef(0);
 
   const ZoomTracker = () => {
     useMapEvents({
@@ -153,9 +157,9 @@ const MapLayer = () => {
 
   useEffect(() => {
     console.log("Markers in bound:", markersInBounds);
-    
+
+    toggleMarkersCard("multi");
     if (globalMIBRef.current != null && globalMIBRef.current.length != 0) {
-      toggleMarkersCard("multi");
       const selectedMarkersNames = markersInBounds.map(
         (m) => m.properties.Name
       );
@@ -196,16 +200,28 @@ const MapLayer = () => {
     setActiveData(newActiveData);
   }, [filters, bounds]);
 
+  function clickShape() {
+    toggleMarkersCard("multi");
+    setMarkersInBounds(globalMIBRef.current);
+  }
+
   useEffect(() => {
     if (!mapRef.current) return;
     const map = mapRef.current;
 
     map.on("pm:create", (e) => {
       currentShape.current = e;
-
-      toggleShapesBar(OPEN);
-      onShapeCreated(e, activeData, setMarkersInBounds);
+      isSavedInCollection.current = -1;
+      toggleMarkersCard("multi");
+      onShapeCreated(e, activeData, setMarkersInBounds, clickShape);
       setTool("Edit");
+
+      // temp0.marker._path.setAttribute("fill", "#fff")
+    });
+
+    map.on("click", (e) => {
+      console.log("Map clicked", e);
+      setOpacityOfDOMMarkers(1);
     });
 
     return () => {
@@ -218,22 +234,90 @@ const MapLayer = () => {
     toggleMarkersCard("single");
   }
 
-  function finishShapeCreation() {
+  function saveCollection(c) {
     setTool("Select");
-    toggleMarkersCard("");
+    const newCollection = {
+      id: cidRef.current,
+      name: c.name,
+      description: c.description,
+      markers: markersInBounds,
+      shape: currentShape.current,
+      date: new Date().toLocaleDateString(),
+    };
+
+    
+    const newSavedCollection = [...savedCollections, newCollection];
+    console.log(newSavedCollection);
+    setSavedCollections(newSavedCollection);
+    isSavedInCollection.current = cidRef.current;
+    cidRef.current = cidRef.current + 1;
   }
 
-  function cancelShapeCreation() {
+  function discardCollection() {
     setTool("Select");
-    toggleShapesBar(CLOSE);
 
-    toggleMarkersCard("");
     globalMIBRef.current = [];
     setOpacityOfDOMMarkers(1);
+    toggleMarkersCard("");
 
     currentShape.current.layer.remove();
     currentShape.current = null;
   }
+
+  function viewCollection(c) {
+    currentShape.current = c.shape;
+    globalMIBRef.current = c.markers;
+    isSavedInCollection.current = c.id;
+    setMarkersInBounds([...c.markers]);
+    // Draw the shape on the map
+    if (c.shape && c.shape.layer) {
+      c.shape.layer.addTo(mapRef.current);
+    }
+    // setOpacityOfDOMMarkers(0.2);
+  }
+
+  function hideCollection(c) {
+    if (currentShape.current && currentShape.current.layer) {
+      currentShape.current.layer.remove();
+    }
+    currentShape.current = null;
+    globalMIBRef.current = [];
+    toggleMarkersCard("");
+    isSavedInCollection.current = -1;
+    setOpacityOfDOMMarkers(1);
+
+  }
+
+  function deleteCollection(c) {
+    globalMIBRef.current = [];
+    setOpacityOfDOMMarkers(1);
+    console.log("Here it is");
+    c.shape.layer.remove();
+    currentShape.current = null;
+    setMarkersInBounds([]);
+
+    const newSavedCollections = savedCollections.filter(
+      (col) => col.id !== c.id
+    );
+    setSavedCollections(newSavedCollections);
+  }
+
+
+  function updateCollection() {
+    console.log("Update Collection", isSavedInCollection.current);
+    const updatedCollections = savedCollections.map((col) =>
+      col.id === isSavedInCollection.current
+        ? {
+            ...col,
+            markers: markersInBounds,
+            shape: currentShape.current,
+            date: new Date().toLocaleDateString(),
+          }
+        : col
+    );
+    setSavedCollections(updatedCollections);
+  }
+
 
   function setTool(tool) {
     setActiveTool(tool);
@@ -314,6 +398,7 @@ const MapLayer = () => {
         <MarkerClusterLayer
           data={activeData}
           onMarkerClick={displayMarkerCard}
+          selectedMarkers={markersInBounds}
         />
 
         <ZoomTracker />
@@ -332,8 +417,10 @@ const MapLayer = () => {
       ) : markersCard == "multi" ? (
         <MultipleMarkersCard
           markers={markersInBounds}
-          finishShape={finishShapeCreation}
-          cancelShape={cancelShapeCreation}
+          saveCollection={saveCollection}
+          discardCollection={discardCollection}
+          isSavedInCollection={isSavedInCollection.current}
+          updateCollection={updateCollection}
         />
       ) : null}
 
@@ -353,16 +440,19 @@ const MapLayer = () => {
           ></EasyButtons>
 
           {/* The User Cards*/}
-          {userCardOpen == FILTER_CARD ? (
-            <FilterCard
-              areFiltersOpen={userCardOpen == FILTER_CARD}
-              setFilters={setFilters}
-            />
-          ) : userCardOpen == COLLECTIONS_CARD ? (
-            <CollectionsCard
-              areCollectionsOpen={userCardOpen == COLLECTIONS_CARD}
-            />
-          ) : null}
+
+          <CollectionsCard
+            areCollectionsOpen={userCardOpen == COLLECTIONS_CARD}
+            savedCollections={savedCollections}
+            viewCollection={viewCollection}
+            hideCollection={hideCollection}
+            deleteCollection={deleteCollection}
+          />
+
+          <FilterCard
+            areFiltersOpen={userCardOpen == FILTER_CARD}
+            setFilters={setFilters}
+          />
         </VStack>
 
         <Drawer.Root
