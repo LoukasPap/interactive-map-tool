@@ -128,6 +128,11 @@ const SingleMarkerCard = ({ marker, toggleCard }) => {
     );
   }
 
+  function isMonumentType(type) {
+    if (type == "monument") return true;
+    return false;
+  }
+
   const Header = () => {
     return (
       <DataList.Root w="100%">
@@ -138,7 +143,9 @@ const SingleMarkerCard = ({ marker, toggleCard }) => {
               <Group>
                 <Card.Title h="fit" overflow="visible">
                   <Text fontSize="2xl">
-                    {(marker && pointDetails.inventory) || "-"}
+                    {(marker && isMonumentType(pointDetails.type)
+                      ? "-"
+                      : pointDetails.inventory) || "-"}
                   </Text>
                 </Card.Title>
 
@@ -232,7 +239,10 @@ const SingleMarkerCard = ({ marker, toggleCard }) => {
                   {prop.charAt(0).toUpperCase() + prop.slice(1)}
                 </DataList.ItemLabel>
                 <DataList.ItemValue fontSize={"lg"}>
-                  {pointDetails[prop]}
+                  {prop === "title" && isMonumentType(pointDetails["type"])
+                    ? pointDetails["inventory"]
+                    : pointDetails[prop]}
+
                   {prop === "period" && ` (${pointDetails.era})`}
                 </DataList.ItemValue>
               </DataList.Item>
