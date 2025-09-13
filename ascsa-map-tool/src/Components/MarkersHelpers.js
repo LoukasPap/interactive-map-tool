@@ -75,6 +75,7 @@ export function getMarkerIcon(props) {
       backgroundHtml: markerBackground,
       backgroundHtmlSize: [32, 40],
       backgroundHtmlAnchor: [16, 20],
+      id: props.Name
     });
   } else {
     markerContent = getItemIcon(props.MaterialCategory[0]);
@@ -82,6 +83,7 @@ export function getMarkerIcon(props) {
       contentHtml: markerContent,
       contentHtmlSize: [16, 16],
       iconFill: eraToColor[props.Era],
+      id: props.Name
     });
   }
 
