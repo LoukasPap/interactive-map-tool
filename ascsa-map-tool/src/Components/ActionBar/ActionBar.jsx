@@ -9,6 +9,14 @@ import {
 } from "@chakra-ui/react";
 
 import { PiPolygonThin, PiCircleThin, PiSquareThin } from "react-icons/pi";
+import {
+  BiPointer,
+  BiEdit,
+  BiShapeCircle,
+  BiShapeSquare,
+  BiShapePolygon,
+} from "react-icons/bi";
+
 import { LuCheck, LuMousePointer2, LuX } from "react-icons/lu";
 
 import { handleDrawShape, deactivateHandlers } from "../Handlers";
@@ -21,7 +29,7 @@ const OPEN = true;
 
 const Bar = ({ activeTool, setTool, mapRef }) => {
   const customStyle = { width: "2.5em", height: "2.5em" };
-  const customStroke = "5px";
+  const customStroke = "1px";
 
   const ShapeDrawingActionBar = () => {
     return (
@@ -45,7 +53,7 @@ const Bar = ({ activeTool, setTool, mapRef }) => {
     return (
       <>
         <ActionButton
-          icon={<LuMousePointer2 style={customStyle} strokeWidth={"1.5px"} />}
+          icon={<BiPointer style={customStyle} />}
           event={() => {
             if (activeTool != "Select") {
               setTool("Select");
@@ -57,7 +65,17 @@ const Bar = ({ activeTool, setTool, mapRef }) => {
         />
 
         <ActionButton
-          icon={<PiSquareThin style={customStyle} strokeWidth={customStroke} />}
+          icon={<BiShapeCircle style={customStyle} />}
+          event={() => {
+            setTool("Circle");
+            handleDrawShape(mapRef, "Circle");
+          }}
+          isActive={activeTool === "Circle"}
+          id="circle-action"
+        />
+        
+        <ActionButton
+          icon={<BiShapeSquare style={customStyle} />}
           event={() => {
             setTool("Rectangle");
             handleDrawShape(mapRef, "Rectangle");
@@ -67,19 +85,7 @@ const Bar = ({ activeTool, setTool, mapRef }) => {
         />
 
         <ActionButton
-          icon={<PiCircleThin style={customStyle} strokeWidth={customStroke} />}
-          event={() => {
-            setTool("Circle");
-            handleDrawShape(mapRef, "Circle");
-          }}
-          isActive={activeTool === "Circle"}
-          id="circle-action"
-        />
-
-        <ActionButton
-          icon={
-            <PiPolygonThin style={customStyle} strokeWidth={customStroke} />
-          }
+          icon={<BiShapePolygon style={customStyle} />}
           event={() => {
             setTool("Polygons");
             handleDrawShape(mapRef, "Polygons");

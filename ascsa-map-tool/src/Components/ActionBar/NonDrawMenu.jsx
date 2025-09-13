@@ -1,4 +1,5 @@
 import { LuChevronDown, LuTrash2, LuSquarePen, LuCheck } from "react-icons/lu";
+import { BiTrash, BiEdit } from "react-icons/bi";
 
 import {
   IconButton,
@@ -22,12 +23,12 @@ const ndActions = createListCollection({
     {
       label: "Edit",
       value: "Edit",
-      icon: <LuSquarePen style={customStyle} strokeWidth={"1.25px"} />,
+      icon: <BiEdit style={customStyle}/>,
     },
     {
       label: "Remove",
       value: "Remove",
-      icon: <LuTrash2 style={customStyle} strokeWidth={"1.25px"} />,
+      icon: <BiTrash style={customStyle}/>,
     },
   ],
 });
