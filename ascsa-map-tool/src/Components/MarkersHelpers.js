@@ -44,7 +44,7 @@ export function attachEvents(marker, onMarkerClick, feature) {
     },
   });
 
-  marker.bindPopup(feature.properties.Title || feature.properties.Name || "-");
+  marker.bindPopup(feature.Title || feature.Name || "-");
 }
 
 export function isMonument(type) {

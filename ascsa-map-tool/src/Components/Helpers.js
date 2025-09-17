@@ -34,7 +34,7 @@ export function getSectionFilter(section) {
 
 export function applyPeriodFilter(newActiveData, filters) {
   return newActiveData.filter((f) =>
-    filters.periods.includes(f.properties.Era)
+    filters.periods.includes(f.Era)
   );
 }
 
@@ -45,7 +45,7 @@ export function applyMonumentFilter(newActiveData, monumentData, monumentsVisibi
 
     if (!isArrayEmpty(conditions)) {
       mData = monumentData.features.filter((f) =>
-        conditions.includes(f.properties.CleanCondition)
+        conditions.includes(f.CleanCondition)
       );
     } else {
       mData = monumentData.features;
@@ -58,7 +58,7 @@ export function applyMonumentFilter(newActiveData, monumentData, monumentsVisibi
 export function applyMaterialFilter(newActiveData, filters) {
   return newActiveData.filter((f) =>
     filters.materials.some((material) =>
-      f.properties.MaterialCategory.includes(material)
+      f.MaterialCategory.includes(material)
     )
   );
 }

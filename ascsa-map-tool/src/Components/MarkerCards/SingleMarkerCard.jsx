@@ -57,30 +57,30 @@ const SingleMarkerCard = ({ marker, toggleCard }) => {
       setPointDetails({
         ...pointDetails,
 
-        inventory: marker.properties.Name,
-        title: marker.properties.Title || "N/A",
-        period: marker.properties.Period || "N/A", // goes with Chronology
-        era: marker.properties.Era || "N/A",
-        chronology: marker.properties.Chronology || "N/A",
+        inventory: marker.Name,
+        title: marker.Title || "N/A",
+        period: marker.Period || "N/A", // goes with Chronology
+        era: marker.Era || "N/A",
+        chronology: marker.Chronology || "N/A",
 
-        section: marker.properties.SectionNumber || "N/A",
-        date: marker.properties.Date || "N/A",
+        section: marker.SectionNumber || "N/A",
+        date: marker.Date || "N/A",
 
-        material: marker.properties.ListedMaterial.join(", ") || "N/A",
-        materialCategory: marker.properties.MaterialCategory || "N/A",
+        material: marker.ListedMaterial.join(", ") || "N/A",
+        materialCategory: marker.MaterialCategory || "N/A",
 
-        description: marker.properties.Description || "N/A",
+        description: marker.Description || "N/A",
         coords: marker.geometry.coordinates,
 
-        dimensions: marker.properties.FormattedDimensions || [],
-        type: marker.properties.Type || "N/A",
-        category: marker.properties.Category || "N/A",
+        dimensions: marker.FormattedDimensions || [],
+        type: marker.Type || "N/A",
+        category: marker.Category || "N/A",
 
-        link: `https://ascsa-net.gr/id/agora/${marker.properties.Type}/${marker.properties.Name}`, // https://ascsa-net.gr/id/agora/coin/n 205887
-        images: marker.properties.Parent || [],
+        link: `https://ascsa-net.gr/id/agora/${marker.Type}/${marker.Name}`, // https://ascsa-net.gr/id/agora/coin/n 205887
+        images: marker.Parent || [],
 
-        lot: marker.properties.Lot || "N/A",
-        deposit: marker.properties.Deposit || "N/A",
+        lot: marker.Lot || "N/A",
+        deposit: marker.Deposit || "N/A",
       });
     }
   }, [marker]);

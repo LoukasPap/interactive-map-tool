@@ -73,7 +73,7 @@ const MultipleMarkersCard = ({
         <Box
           w="100%"
           h="10px"
-          bg={eraToColorMapping[info.properties.Era]}
+          bg={eraToColorMapping[info.Era]}
           pos="absolute"
           bottom="0"
           zIndex={-1}
@@ -81,10 +81,10 @@ const MultipleMarkersCard = ({
         <HStack w="100%" gap={4} pl="5px" pr="5px" justifyContent="start">
           <Image
             src={
-              info.properties.Parent != null &&
-              (info.properties.Parent[2] ||
-                info.properties.Parent[1] ||
-                info.properties.Parent[0])
+              info.Parent != null &&
+              (info.Parent[2] ||
+                info.Parent[1] ||
+                info.Parent[0])
             }
             w="70px"
             h="70px"
@@ -97,11 +97,11 @@ const MultipleMarkersCard = ({
               fontSize="xl"
               whiteSpace="normal"
             >
-              {info.properties.Title || info.properties.Name}
+              {info.Title || info.Name}
             </Text>
-            {info.properties.Title && (
+            {info.Title && (
               <Text fontSize="lg" color="gray">
-                {info.properties.Name}
+                {info.Name}
               </Text>
             )}
           </VStack>

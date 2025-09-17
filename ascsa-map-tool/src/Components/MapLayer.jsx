@@ -161,7 +161,7 @@ const MapLayer = () => {
     toggleMarkersCard("multi");
     if (globalMIBRef.current != null && globalMIBRef.current.length != 0) {
       const selectedMarkersNames = markersInBounds.map(
-        (m) => m.properties.Name
+        (m) => m.Name
       );
       const domIconElements = document.querySelectorAll(iconExClass);
 
