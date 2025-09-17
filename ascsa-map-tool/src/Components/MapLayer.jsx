@@ -55,7 +55,6 @@ import { deactivateHandlers, handleDrawShape, handleEvent } from "./Handlers";
 
 import { useQuery } from "@tanstack/react-query";
 
-import { createRef } from "react";
 export const globalMIBRef = createRef([]); // MIB: MarkersInBound
 
 const initialBounds = [
