@@ -78,7 +78,10 @@ const emptyFiltersState = {
     SectionNumberLetter: "",
     SectionNumberNumber: "",
   },
-  monument: "Yes",
+  monument: {
+    ShowMonuments: "No",
+    Condition: [],
+  },
 };
 
 const iconExClass = ".leaflet-iconex";
