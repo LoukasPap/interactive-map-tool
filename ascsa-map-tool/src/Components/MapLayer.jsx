@@ -16,8 +16,8 @@ import {
 
 import "leaflet/dist/leaflet.css";
 // import ClusteredPoints from "./ClusteredPoints";
-import { data } from "../data/dataframe";
-import { monumentData } from "../data/m_dataframe";
+// import { data } from "../data/dataframe";
+// import { monumentData } from "../data/m_dataframe";
 
 import Bar from "./ActionBar/ActionBar";
 import FilterCard from "./FilterBar/FilterCard";
@@ -52,8 +52,8 @@ import {
 
 import { onShapeCreated } from "./GeometryOperations";
 import { deactivateHandlers, handleDrawShape, handleEvent } from "./Handlers";
-import MultipleMarkersCard from "./PointsDisplay/MultipleMarkersCard";
-import CollectionsCard from "./Collections/CollectionsCard";
+
+import { useQuery } from "@tanstack/react-query";
 
 import { createRef } from "react";
 export const globalMIBRef = createRef([]); // MIB: MarkersInBound
@@ -111,7 +111,38 @@ const MapLayer = () => {
   const [savedCollections, setSavedCollections] = useState([]);
   const isSavedInCollection = useRef(-1);
 
+  // const [data, setData] = useState([]);
+  // const [monumentData, setMonumentData] = useState([]);
+
   const cidRef = useRef(0);
+  
+  const BASE_URL = import.meta.env.VITE_BASE_URL
+
+  async function fetchPoints() {
+    const res = await fetch(`${BASE_URL}/objects`);
+    if (!res.ok) throw new Error("Failed to fetch points");
+    const dt = await res.json();
+    console.log("Fetched points data:", dt);
+    return dt;
+  }
+
+  async function fetchMonuments() {
+    const res = await fetch(`${BASE_URL}/monuments`);
+    if (!res.ok) throw new Error("Failed to fetch points");
+    const dt2 = await res.json();
+    console.log("Fetched monuments data:", dt2);
+    return dt2;
+  }
+
+  const { data } = useQuery({
+    queryKey: ["objects_points"], // unique key for caching
+    queryFn: fetchPoints,
+  });
+
+  const { data: monumentData } = useQuery({
+    queryKey: ["monuments_points"], // unique key for caching
+    queryFn: fetchMonuments,
+  });
 
   const ZoomTracker = () => {
     useMapEvents({
@@ -178,6 +209,7 @@ const MapLayer = () => {
 
   useEffect(() => {
     console.log("[FILTERS] trigger", filters);
+    if (data == undefined || monumentData == undefined) return;
 
     let bbox = initialBounds;
     if (bounds != null) bbox = calculateBounds(bounds);
@@ -198,7 +230,7 @@ const MapLayer = () => {
     newActiveData = applySectionFilter(newActiveData, filters);
 
     setActiveData(newActiveData);
-  }, [filters, bounds]);
+  }, [filters, bounds, data, monumentData]);
 
   function clickShape() {
     toggleMarkersCard("multi");
