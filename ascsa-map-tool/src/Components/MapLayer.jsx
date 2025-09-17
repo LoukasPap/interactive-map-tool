@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, createRef } from "react";
 
-import L from "leaflet";
+import * as L from "leaflet";
 import "leaflet-draw";
 
 import "@geoman-io/leaflet-geoman-free";
