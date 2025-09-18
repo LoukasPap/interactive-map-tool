@@ -13,7 +13,7 @@ const MarkerClusterLayer = ({ data, onMarkerClick }) => {
   const map = useMap();
 
   useEffect(() => {
-    console.log("[LOG] - Rendering MarkerCluster");
+    console.log("[LOG] Data in MarkerClusterLayer:", data);
     if (!map || !data) return;
 
     const markerClusterGroup = L.markerClusterGroup({

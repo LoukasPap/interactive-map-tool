@@ -12,6 +12,7 @@ const eraToColor = {
 };
 
 export function createMarker(point) {
+  console.log("[LOG] Point:", point);
   const coordinates = getCoordinates(point.geometry);
   const icon = getMarkerIcon(point);
 

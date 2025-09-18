@@ -203,6 +203,7 @@ const MapLayer = () => {
 
   useEffect(() => {
     console.log("[FILTERS] trigger", filters);
+    console.log("[LOG] Objects data", data, "Monument data", monumentData);
     if (data == undefined || monumentData == undefined) return;
 
     let bbox = initialBounds;
