@@ -34,7 +34,6 @@ import {
 import MarkerClusterLayer from "./MarkerClusterLayer";
 
 // for spatial operations
-import { booleanPointInPolygon } from "@turf/boolean-point-in-polygon";
 import { bboxPolygon } from "@turf/bbox-polygon";
 
 import {
@@ -78,7 +77,6 @@ const emptyFiltersState = {
     Condition: [],
   },
 };
-
 const iconExClass = ".leaflet-iconex";
 
 const MapLayer = () => {
@@ -103,7 +101,6 @@ const MapLayer = () => {
   const [zoom, setZoom] = useState(13);
 
   const [markersCard, toggleMarkersCard] = useState("");
-  const [areFiltersOpen, toggleFilters] = useState(false);
   const [userCardOpen, setUserCardOpen] = useState(NONE);
 
   const [savedCollections, setSavedCollections] = useState([]);
@@ -154,13 +151,12 @@ const MapLayer = () => {
   };
 
   const MoveTracker = () => {
-    useMapEvents({
-      moveend: (e) => {
-        setBounds(mapRef.current.getBounds());
-        console.log("New bounds:", bounds);
-        
-      },
-    });
+    // useMapEvents({
+    //   moveend: (e) => {
+    //     setBounds(mapRef.current.getBounds());
+    //     console.log("New bounds:", bounds);
+    //   },
+    // });
     return null;
   };
 
@@ -275,7 +271,6 @@ const MapLayer = () => {
       date: new Date().toLocaleDateString(),
     };
 
-    
     const newSavedCollection = [...savedCollections, newCollection];
     console.log(newSavedCollection);
     setSavedCollections(newSavedCollection);
@@ -315,7 +310,6 @@ const MapLayer = () => {
     toggleMarkersCard("");
     isSavedInCollection.current = -1;
     setOpacityOfDOMMarkers(1);
-
   }
 
   function deleteCollection(c) {
@@ -332,7 +326,6 @@ const MapLayer = () => {
     setSavedCollections(newSavedCollections);
   }
 
-
   function updateCollection() {
     console.log("Update Collection", isSavedInCollection.current);
     const updatedCollections = savedCollections.map((col) =>
@@ -348,10 +341,9 @@ const MapLayer = () => {
     setSavedCollections(updatedCollections);
   }
 
-
   function setTool(tool) {
     setActiveTool(tool);
-    
+
     switch (tool) {
       case "Select":
         deactivateHandlers(mapRef.current);
@@ -394,7 +386,7 @@ const MapLayer = () => {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
-        {zoom >= 18 && (
+        {/* {zoom >= 18 && (
           <ImageOverlay
             url="balloon.jpg"
             bounds={[
@@ -413,7 +405,7 @@ const MapLayer = () => {
             ]}
             opacity={0.95}
           />
-        )}
+        )} */}
 
         {/* {mapReady && (
           <CanvasMarkersLayer
@@ -430,6 +422,11 @@ const MapLayer = () => {
           onMarkerClick={displayMarkerCard}
           selectedMarkers={markersInBounds}
         />
+
+        {/* <CanvasMarkersLayer
+          geodata={activeData}
+          setSelectedProperty={setSelectedMarker}
+        /> */}
 
         <ZoomTracker />
         <MoveTracker />
