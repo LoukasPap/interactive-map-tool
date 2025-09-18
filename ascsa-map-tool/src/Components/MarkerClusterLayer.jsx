@@ -4,7 +4,6 @@ import { useMap } from "react-leaflet";
 import "leaflet.markercluster";
 import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 
-import "leaflet-markers-canvas";
 import "../leaflet-iconex";
 import "../demo.css";
 

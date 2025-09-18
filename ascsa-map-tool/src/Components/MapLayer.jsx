@@ -1,7 +1,5 @@
 import { useState, useRef, useEffect, createRef } from "react";
 
-import "leaflet/dist/leaflet-src.esm.js";
-
 import "@geoman-io/leaflet-geoman-free";
 import "@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css";
 
@@ -13,7 +11,6 @@ import {
   ZoomControl,
 } from "react-leaflet";
 
-import "leaflet/dist/leaflet.css";
 // import ClusteredPoints from "./ClusteredPoints";
 // import { data } from "../data/dataframe";
 // import { monumentData } from "../data/m_dataframe";
