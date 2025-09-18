@@ -1,4 +1,3 @@
-import "../leaflet-iconex";
 import { getItemIcon, getMonumentIcon } from "./IconHelpers";
 
 const eraToColor = {

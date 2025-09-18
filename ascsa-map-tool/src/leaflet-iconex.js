@@ -18,9 +18,11 @@
         // AMD module
         define(["leaflet"], factory);
 
-    } else if (typeof exports === "object") {
-        // CommonJS module
-        module.exports = factory(require("leaflet"));
+
+    // } else if (typeof exports === "object" && typeof require === "function") {
+    //     // CommonJS module (only if require exists)
+    //     module.exports = factory(require("leaflet"));
+
 
     } else if (typeof window !== "undefined") {
         // Browser globals
@@ -39,6 +41,7 @@
     const IconEx = L.DivIcon.extend({
         /**
          * @property {Object} options - Default options for the icon.
+         * @property {string} options.className - Default options for the className.
          * @property {number} options.iconScale - Scale factor for the icon.
          * @property {string} options.iconHtml - SVG or HTML content for the main icon.
          * @property {Array<number>} options.iconHtmlSize - Size of the main icon [width, height].
@@ -60,6 +63,7 @@
          * @property {number} options.contentFontSize - Font size of the content.
          */
         options: {
+            id: "iconClass",
             iconScale: 1,
 
             iconHtml: `
@@ -99,6 +103,7 @@
         initialize: function (options) {
             L.Util.setOptions(this, options);
 
+            const id = this.options.id ? this.options.id : "iconClass"
             const iconScale = this.options.iconScale ? this.options.iconScale : 1;
             const divs = [];
 
@@ -168,7 +173,7 @@
             divsStyles.push(`position: relative`);
             divsStyles.push(`line-height: 0`);
 
-            this.options.html = `<div class="leaflet-iconex" style="${divsStyles.join("; ")};">${divs.join("")}</div>`;
+            this.options.html = `<div class="leaflet-iconex" id="${id}" style="${divsStyles.join("; ")};">${divs.join("")}</div>`;
         },
     });
 
