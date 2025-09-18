@@ -12,7 +12,7 @@ export function applySectionFilter(data, f) {
   if (!isSectionEmpty(f.section)) {
     const sectionFilter = getSectionFilter(f.section);
     return data.filter(
-      (d) => d.properties[sectionFilter] == f.section[sectionFilter]
+      (d) => d[sectionFilter] == f.section[sectionFilter]
     );
   }
 
