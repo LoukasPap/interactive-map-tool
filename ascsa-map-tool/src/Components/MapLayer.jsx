@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect, createRef } from "react";
 
-import * as L from "leaflet";
-import "leaflet-draw";
+import "leaflet/dist/leaflet-src.esm.js";
 
 import "@geoman-io/leaflet-geoman-free";
 import "@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css";

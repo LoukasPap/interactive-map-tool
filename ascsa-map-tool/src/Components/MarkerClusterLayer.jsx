@@ -1,8 +1,8 @@
 import { useEffect } from "react";
-import L from "leaflet";
+import { useMap } from "react-leaflet";
+
 import "leaflet.markercluster";
 import "leaflet.markercluster/dist/MarkerCluster.Default.css";
-import { useMap } from "react-leaflet";
 
 import "leaflet-markers-canvas";
 import "../leaflet-iconex";

@@ -1,4 +1,3 @@
-import L from "leaflet";
 import "../leaflet-iconex";
 import { getItemIcon, getMonumentIcon } from "./IconHelpers";
 
