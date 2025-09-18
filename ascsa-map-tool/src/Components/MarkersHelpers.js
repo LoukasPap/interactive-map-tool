@@ -13,7 +13,7 @@ const eraToColor = {
 
 export function createMarker(point) {
   const coordinates = getCoordinates(point.geometry);
-  const icon = getMarkerIcon(point.properties);
+  const icon = getMarkerIcon(point);
 
   const marker = L.marker(
     coordinates, {
