@@ -110,8 +110,8 @@ const MapLayer = () => {
   // const [monumentData, setMonumentData] = useState([]);
 
   const cidRef = useRef(0);
-  
-  const BASE_URL = import.meta.env.VITE_BASE_URL
+
+  const BASE_URL = import.meta.env.VITE_BASE_URL;
 
   async function fetchPoints() {
     const res = await fetch(`${BASE_URL}/objects`);
@@ -185,9 +185,7 @@ const MapLayer = () => {
 
     toggleMarkersCard("multi");
     if (globalMIBRef.current != null && globalMIBRef.current.length != 0) {
-      const selectedMarkersNames = markersInBounds.map(
-        (m) => m.Name
-      );
+      const selectedMarkersNames = markersInBounds.map((m) => m.Name);
       const domIconElements = document.querySelectorAll(iconExClass);
 
       domIconElements.forEach((icon) => {
@@ -203,6 +201,7 @@ const MapLayer = () => {
 
   useEffect(() => {
     console.log("[FILTERS] trigger", filters);
+    console.log("[LOG] Objects data", data, "Monument data", monumentData);
     if (data == undefined || monumentData == undefined) return;
 
     let bbox = initialBounds;
@@ -219,7 +218,12 @@ const MapLayer = () => {
     }
 
     // We push the monuments_data second to be more efficient (they are just ~50 allocations)
-    newActiveData = applyMonumentFilter(newActiveData, monumentData, monumentsVisibility, filters);
+    newActiveData = applyMonumentFilter(
+      newActiveData,
+      monumentData,
+      monumentsVisibility,
+      filters
+    );
     newActiveData = applyMaterialFilter(newActiveData, filters);
     newActiveData = applySectionFilter(newActiveData, filters);
 
@@ -406,7 +410,6 @@ const MapLayer = () => {
             opacity={0.95}
           />
         )} */}
-
         {/* {mapReady && (
           <CanvasMarkersLayer
             map={mapRef.current}
@@ -414,20 +417,16 @@ const MapLayer = () => {
             setSelectedProperty={setSelectedProperty}
           />
         )} */}
-
         {/* <ClusteredPoints geojson={data} /> */}
 
         <MarkerClusterLayer
           data={activeData}
           onMarkerClick={displayMarkerCard}
-          selectedMarkers={markersInBounds}
         />
-
         {/* <CanvasMarkersLayer
           geodata={activeData}
           setSelectedProperty={setSelectedMarker}
         /> */}
-
         <ZoomTracker />
         <MoveTracker />
         <ScaleControl position="bottomleft" />

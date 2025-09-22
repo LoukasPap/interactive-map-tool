@@ -19,9 +19,9 @@
         define(["leaflet"], factory);
 
 
-    // } else if (typeof exports === "object" && typeof require === "function") {
-    //     // CommonJS module (only if require exists)
-    //     module.exports = factory(require("leaflet"));
+    } else if (typeof exports === "object" && typeof require === "function") {
+        // CommonJS module (only if require exists)
+        module.exports = factory(require("leaflet"));
 
 
     } else if (typeof window !== "undefined") {
