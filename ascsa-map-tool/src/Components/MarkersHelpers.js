@@ -15,23 +15,23 @@ export function createMarker(point) {
   const coordinates = getCoordinates(point.geometry);
   const icon = getMarkerIcon(point);
 
-  // const marker = L.marker(
-  //   coordinates, {
-  //     title: point.Name,
-  //     opacity: 1,
-  //     icon: icon,
-  //   },
-  // );
-
-    const marker = L.circleMarker(
+  const marker = L.marker(
     coordinates, {
+      title: point.Name,
       opacity: 1,
-      radius: 10,
-      color: eraToColor[point.Era] || "#000",
-      fillColor: eraToColor[point.Era] || "#000",
-      fillOpacity: 0.8,
-    }
+      icon: icon,
+    },
   );
+
+  //   const marker = L.circleMarker(
+  //   coordinates, {
+  //     opacity: 1,
+  //     radius: 10,
+  //     color: eraToColor[point.Era] || "#000",
+  //     fillColor: eraToColor[point.Era] || "#000",
+  //     fillOpacity: 0.8,
+  //   }
+  // );
 
   return marker;
 }
