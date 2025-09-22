@@ -200,7 +200,6 @@ const MapLayer = () => {
   }, [markersInBounds, zoom]);
 
   useEffect(() => {
-    L.marker([37.976115, 23.721269]).addTo(mapRef.current);
     console.log("[FILTERS] trigger", filters);
     console.log("[LOG] Objects data", data, "Monument data", monumentData);
     if (data == undefined || monumentData == undefined) return;

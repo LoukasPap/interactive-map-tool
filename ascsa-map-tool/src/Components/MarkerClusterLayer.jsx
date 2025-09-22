@@ -19,6 +19,7 @@ const MarkerClusterLayer = ({ data, onMarkerClick }) => {
     const markerClusterGroup = L.markerClusterGroup({
       showCoverageOnHover: true,
       zoomToBoundsOnClick: false,
+      spiderfyOnEveryZoom: true,
       removeOutsideVisibleBounds: true,
       disableClusteringAtZoom: 22,
       animate: true,
