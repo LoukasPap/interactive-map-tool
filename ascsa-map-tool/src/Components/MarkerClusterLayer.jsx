@@ -20,24 +20,28 @@ const MarkerClusterLayer = ({ data, onMarkerClick }) => {
       showCoverageOnHover: true,
       zoomToBoundsOnClick: false,
       removeOutsideVisibleBounds: true,
-      disableClusteringAtZoom: 21,
+      disableClusteringAtZoom: 22,
       animate: true,
       chunkedLoading: true,
     });
 
+    let markers = [];
+
     data.forEach((feature) => {
       const marker = createMarker(feature);
-
       attachEvents(marker, onMarkerClick, feature);
 
       marker.options.pmIgnore = true;
+      markers.push(marker);
     });
 
+    markerClusterGroup.addLayers(markers);
     map.addLayer(markerClusterGroup);
     markerClusterGroup.options.pmIgnore = true;
 
     // Cleanup on unmount
     return () => {
+      markerClusterGroup.clearLayers();
       map.removeLayer(markerClusterGroup);
     };
   }, [map, data]);
