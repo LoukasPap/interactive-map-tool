@@ -155,7 +155,7 @@ const ArtifactsFilters = ({ setArtifactsFilters }) => {
         </Accordion.ItemTrigger>
 
         <Accordion.ItemContent>
-          <SimpleGrid mb="5" gap="2" columns={{sm:1, md:1, lg:1, xl:1, "2xl":2}} h="fit">
+          <SimpleGrid mb="5" gap="2" columns={{smToXl:1, "2xl":2}} h="fit">
             <For each={materialsList}>
               {(m) => (
                 <MaterialButton
