@@ -34,7 +34,7 @@ const initialObject = {
   section: "section",
   date: "date",
   material: "material",
-  materialCategory: "materialCategory",
+  // materialCategory: "materialCategory",
   description: "description",
   coords: [23.722605, 37.976641],
   dimensions: [],
@@ -66,8 +66,8 @@ const SingleMarkerCard = ({ marker, toggleCard }) => {
         section: marker.SectionNumber || "N/A",
         date: marker.Date || "N/A",
 
-        material: marker.ListedMaterial.join(", ") || "N/A",
-        materialCategory: marker.MaterialCategory || "N/A",
+        material: marker.Material.join(", ") || "N/A",
+        // materialCategory: marker.MaterialCategory || "N/A",
 
         description: marker.Description || "N/A",
         coords: marker.geometry.coordinates,

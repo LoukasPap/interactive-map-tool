@@ -42,7 +42,7 @@ import {
   applyBoundFilter,
   applyMonumentFilter,
   applyPeriodFilter,
-  applyMaterialFilter,
+  applyInventoryFilter,
 } from "./Helpers";
 
 import { onShapeCreated } from "./GeometryOperations";
@@ -66,7 +66,7 @@ const NONE = "";
 
 const emptyFiltersState = {
   periods: [],
-  materials: [],
+  inventory: [],
   section: {
     SectionNumber: "",
     SectionNumberLetter: "",
@@ -224,9 +224,12 @@ const MapLayer = () => {
       monumentsVisibility,
       filters
     );
-    newActiveData = applyMaterialFilter(newActiveData, filters);
+
+    newActiveData = applyInventoryFilter(newActiveData, filters);
     newActiveData = applySectionFilter(newActiveData, filters);
 
+    newActiveData = newActiveData.filter(x=>x.geometry!=null); // Remove points with no geometry for now
+    
     setActiveData(newActiveData);
   }, [filters, bounds, data, monumentData]);
 

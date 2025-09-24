@@ -87,7 +87,7 @@ export function getMarkerIcon(props) {
       id: props.Name
     });
   } else {
-    markerContent = getItemIcon(props.MaterialCategory[0]);
+    markerContent = props.InventoryNumberLetter || "?";
     icon = new L.IconEx({
       contentHtml: markerContent,
       contentHtmlSize: [16, 16],

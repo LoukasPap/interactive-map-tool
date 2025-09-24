@@ -19,7 +19,6 @@ const MaterialButton = ({ materialObject, onClick }) => {
         _hover={{ bg: "gray.200" }}
         onClick={onClick}
       >
-        {getMaterialIconSVG(materialObject.value, materialObject.color)}
         <Text
           fontSize={{smToXl:"md", "2xl":"lg"}}
           fontWeight={"sem"}

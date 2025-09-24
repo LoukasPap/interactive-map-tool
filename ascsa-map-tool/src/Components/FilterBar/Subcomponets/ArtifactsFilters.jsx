@@ -16,43 +16,23 @@ import Monument from "./MonumentsFilters";
 import { Tooltip } from "../../ui/tooltip";
 import { LuInfo } from "react-icons/lu";
 
-const initialMaterialList = [
-  {
-    title: "Ceramics",
-    value: "Ceramics",
-    color: "#C66F23",
-    checked: false,
-  },
-  {
-    title: "Metals",
-    value: "Metals and Minerals",
-    color: "#C6B623",
-    checked: false,
-  },
-  {
-    title: "Organics",
-    value: "Organics",
-    color: "#7DC623",
-    checked: false,
-  },
-  {
-    title: "Stones",
-    value: "Stones",
-    color: "#7F7F7F",
-    checked: false,
-  },
-  {
-    title: "Glass and Gems",
-    value: "Glass and Gems",
-    color: "#23C698",
-    checked: false,
-  },
-  {
-    title: "Miscellaneous",
-    value: "Miscellaneous",
-    color: "#000",
-    checked: false,
-  },
+const initialInventoryList = [
+  { title: "A",  value: "A",  fullTitle: "Architecture", color: "#000", checked: false },
+  { title: "B",  value: "B",  fullTitle: "Bronze", color: "#000", checked: false },
+  { title: "BI", value: "BI", fullTitle: " Bone & Ivory", color: "#000", checked: false },
+  { title: "G",  value: "G",  fullTitle: "Glass", color: "#000", checked: false },
+  { title: "I",  value: "I",  fullTitle: "Inscriptions", color: "#000", checked: false },
+  { title: "IL", value: "IL", fullTitle: " Iron & Lead", color: "#000", checked: false },
+  { title: "J",  value: "J",  fullTitle: "Jewelry & Gems", color: "#000", checked: false },
+  { title: "L",  value: "L",  fullTitle: "Lamps", color: "#000", checked: false },
+  { title: "MC", value: "MC", fullTitle: " Miscellaneous Clay", color: "#000", checked: false },
+  { title: "N",  value: "N",  fullTitle: "Coin", color: "#000", checked: false },
+  { title: "P",  value: "P",  fullTitle: "Pottery", color: "#000", checked: false },
+  { title: "S",  value: "S",  fullTitle: "Sculpture", color: "#000", checked: false },
+  { title: "SS", value: "SS", fullTitle: " Stamps & Seals", color: "#000", checked: false },
+  { title: "ST", value: "ST", fullTitle: " Stone", color: "#000", checked: false },
+  { title: "T",  value: "T",  fullTitle: "Terracotta", color: "#000", checked: false },
+  { title: "W",  value: "W",  fullTitle: "Wood", color: "#000", checked: false },
 ];
 
 const initialSectionState = {
@@ -62,7 +42,7 @@ const initialSectionState = {
 };
 
 const ArtifactsFilters = ({ setArtifactsFilters }) => {
-  const [materialsList, setMaterialsList] = useState(initialMaterialList);
+  const [inventoryLetterList, setInventoryLetterList] = useState(initialInventoryList);
   const [section, setSection] = useState(initialSectionState);
   const [monument, setMonument] = useState({
     ShowMonuments: "Yes",
@@ -76,8 +56,8 @@ const ArtifactsFilters = ({ setArtifactsFilters }) => {
   ]);
 
   const handleSelectAll = () => {
-    setMaterialsList(
-      materialsList.map((material) => ({
+    setInventoryLetterList(
+      inventoryLetterList.map((material) => ({
         ...material,
         checked: true,
       }))
@@ -87,8 +67,8 @@ const ArtifactsFilters = ({ setArtifactsFilters }) => {
   };
 
   const handleClearAll = () => {
-    setMaterialsList(
-      materialsList.map((material) => ({
+    setInventoryLetterList(
+      inventoryLetterList.map((material) => ({
         ...material,
         checked: false,
       }))
@@ -98,8 +78,8 @@ const ArtifactsFilters = ({ setArtifactsFilters }) => {
   };
 
   const selectMaterial = (value) => {
-    setMaterialsList(
-      materialsList.map((material) =>
+    setInventoryLetterList(
+      inventoryLetterList.map((material) =>
         material.value == value
           ? { ...material, checked: !material.checked }
           : material
@@ -120,11 +100,11 @@ const ArtifactsFilters = ({ setArtifactsFilters }) => {
 
   useEffect(() => {
     setArtifactsFilters({
-      materials: materialsList.filter((m) => m.checked).map((m) => m.value),
+      inventory: inventoryLetterList.filter((m) => m.checked).map((m) => m.value),
       section: section,
       monument: monument,
     });
-  }, [materialsList, section, monument]);
+  }, [inventoryLetterList, section, monument]);
 
   return (
     <Accordion.Root
@@ -143,7 +123,7 @@ const ArtifactsFilters = ({ setArtifactsFilters }) => {
       <Accordion.Item value="material-filter" bg="gray.100">
         <Accordion.ItemTrigger justifyContent="space-between">
           <Heading fontWeight={"normal"} fontSize="md">
-            MATERIALS
+            INVENTORY LETTERS
           </Heading>
           <Group>
             <QuickSelectionButtons
@@ -155,8 +135,8 @@ const ArtifactsFilters = ({ setArtifactsFilters }) => {
         </Accordion.ItemTrigger>
 
         <Accordion.ItemContent>
-          <SimpleGrid mb="5" gap="2" columns={{smToXl:1, "2xl":2}} h="fit">
-            <For each={materialsList}>
+          <SimpleGrid mb="5" gap="2" columns={{ smToXl: 2, md:2, "2xl": 4 }} h="fit">
+            <For each={inventoryLetterList}>
               {(m) => (
                 <MaterialButton
                   materialObject={m}

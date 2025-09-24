@@ -55,6 +55,12 @@ export function applyMonumentFilter(newActiveData, monumentData, monumentsVisibi
   return newActiveData;
 }
 
+export function applyInventoryFilter(newActiveData, filters) {
+  return newActiveData.filter((f) =>
+      filters.inventory.includes(f.InventoryNumberLetter)
+  );
+}
+
 export function applyMaterialFilter(newActiveData, filters) {
   return newActiveData.filter((f) =>
     filters.materials.some((material) =>
