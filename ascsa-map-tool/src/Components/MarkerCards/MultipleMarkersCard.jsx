@@ -81,10 +81,10 @@ const MultipleMarkersCard = ({
         <HStack w="100%" gap={4} pl="5px" pr="5px" justifyContent="start">
           <Image
             src={
-              info.Parent != null &&
-              (info.Parent[2] ||
-                info.Parent[1] ||
-                info.Parent[0])
+              info.Images != null &&
+              (info.Images[2] ||
+                info.Images[1] ||
+                info.Images[0])
             }
             w="70px"
             h="70px"

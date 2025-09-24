@@ -77,7 +77,7 @@ const SingleMarkerCard = ({ marker, toggleCard }) => {
         category: marker.Category || "N/A",
 
         link: `https://ascsa-net.gr/id/agora/${marker.Type}/${marker.Name}`, // https://ascsa-net.gr/id/agora/coin/n 205887
-        images: marker.Parent || [],
+        images: marker.Images || [],
 
         lot: marker.Lot || "N/A",
         deposit: marker.Deposit || "N/A",
