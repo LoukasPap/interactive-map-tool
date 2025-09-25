@@ -1,27 +1,32 @@
 import { getItemIcon, getMonumentIcon } from "./IconHelpers";
 
 const eraToColor = {
-  Prehistoric: "#71717A",
-  Greek: "#3B82F6",
-  Roman: "#EF4444",
-  Byzantine: "#F97316",
-  Medieval: "#22C55E",
-  Turkish: "#EAB308",
-  Modern: "#EC4899",
-  No: "#000000",
+  Neolithic: "#3f3f46",
+  "Bronze Age": "#92310a",
+  Geometric: "#facc15",
+  Protoattic: "#fef08a",
+  Archaic: "#14204a",
+  Classical: "#173da6",
+  "Late Classical": "#3b82f6",
+  Hellenistic: "#a3cfff",
+  Roman: "#ef4444",
+  "Late Roman": "#f87171",
+  Byzantine: "#f97316",
+  Frankish: "#22c55e",
+  Ottoman: "#ca8a04",
+  Modern: "#ec4899",
+  Unknown: "#111111",
 };
 
 export function createMarker(point) {
   const coordinates = getCoordinates(point.geometry);
   const icon = getMarkerIcon(point);
 
-  const marker = L.marker(
-    coordinates, {
-      title: point.Name,
-      opacity: 1,
-      icon: icon,
-    },
-  );
+  const marker = L.marker(coordinates, {
+    title: point.Name,
+    opacity: 1,
+    icon: icon,
+  });
 
   //   const marker = L.circleMarker(
   //   coordinates, {

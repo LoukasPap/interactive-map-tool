@@ -15,6 +15,7 @@ import Section from "./SectionFilters";
 import Monument from "./MonumentsFilters";
 import { Tooltip } from "../../ui/tooltip";
 import { LuInfo } from "react-icons/lu";
+import PeriodFilterButton from "./PeriodFilterButton";
 
 const initialInventoryList = [
   { title: "A",  value: "A",  fullTitle: "Architecture", color: "#000", checked: false },
@@ -41,40 +42,85 @@ const initialSectionState = {
   SectionNumber: "",
 };
 
+const initialPeriodsList = [
+  { title: "Neolithic",      value: "ne", filterKey: "Neolithic",      date: "7000-3200 BCE", color: "gray.700",   checked: false },
+  { title: "Bronze Age",     value: "ba", filterKey: "Bronze Age",     date: "2500-1050 BCE", color: "orange.700",   checked: false },
+  { title: "Geometric",      value: "ge", filterKey: "Geometric",      date: "1050-700 BCE",  color: "yellow.400",    checked: false },
+  { title: "Protoattic",     value: "pr", filterKey: "Protoattic",     date: "710-600 BCE",   color: "yellow.200", checked: false },
+  { title: "Archaic",        value: "ar", filterKey: "Archaic",        date: "600-480 BCE",   color: "blue.900",  checked: false },
+  { title: "Classical",      value: "cl", filterKey: "Classical",      date: "480-320 BCE",   color: "blue.700", checked: false },
+  { title: "Late Classical", value: "lc", filterKey: "Late Classical", date: "400-320 BCE",   color: "blue.500",   checked: false },
+  { title: "Hellenistic",    value: "he", filterKey: "Hellenistic",    date: "320-31 BCE",    color: "blue.300",   checked: false },
+  { title: "Roman",          value: "ro", filterKey: "Roman",          date: "31 BCE-267 CE", color: "red.500",   checked: false },
+  { title: "Late Roman ",    value: "lr", filterKey: "Late Roman",     date: "267-700 CE",    color: "red.400",   checked: false },
+  { title: "Byzantine",      value: "by", filterKey: "Byzantine",      date: "300-1453",      color: "orange.500",   checked: false },
+  { title: "Frankish",       value: "fr", filterKey: "Frankish",       date: "1204-1458",     color: "green.500",   checked: false },
+  { title: "Ottoman",        value: "ot", filterKey: "Ottoman",        date: "1453-1821",     color: "yellow.600",   checked: false },
+  { title: "Modern",         value: "mo", filterKey: "Modern",         date: "1821-2025",     color: "pink.500",   checked: false },
+  { title: "Unknown",        value: "un", filterKey: "Unknown",        date: "-",             color: "gray.950",   checked: false },
+];
+
 const ArtifactsFilters = ({ setArtifactsFilters }) => {
+  const [periodList, setPeriodList] = useState(initialPeriodsList);
   const [inventoryLetterList, setInventoryLetterList] = useState(initialInventoryList);
   const [section, setSection] = useState(initialSectionState);
-  const [monument, setMonument] = useState({
-    ShowMonuments: "Yes",
-    Condition: [],
-  });
+  const [monument, setMonument] = useState({ShowMonuments: "Yes", Condition: []});
 
   const [openItems, setOpenItems] = useState([
+    "period-filter",
     "inventory-filter",
     "section-filter",
     "monument-filter",
   ]);
 
-  const handleSelectAll = () => {
-    setInventoryLetterList(
-      inventoryLetterList.map((material) => ({
-        ...material,
-        checked: true,
-      }))
-    );
+  const handleSelectAll = (filter) => {
+    if (filter === "period-filter") {
+      setPeriodList(
+        periodList.map((period) => ({
+          ...period,
+          checked: true,
+        }))
+      );
+    } else {
+      setInventoryLetterList(
+        inventoryLetterList.map((material) => ({
+          ...material,
+          checked: true,
+        }))
+      );
+    }
 
-    controlAccordionState("inventory-filter");
+    controlAccordionState(filter);
   };
 
-  const handleClearAll = () => {
-    setInventoryLetterList(
-      inventoryLetterList.map((material) => ({
-        ...material,
-        checked: false,
-      }))
-    );
+  const handleClearAll = (filter) => {
+    if (filter === "period-filter") {
+      setPeriodList(
+        periodList.map((period) => ({
+          ...period,
+          checked: false,
+        }))
+      );
+    } else {
+      setInventoryLetterList(
+        inventoryLetterList.map((material) => ({
+          ...material,
+          checked: false,
+        }))
+      );
+    }
 
-    controlAccordionState("inventory-filter");
+    controlAccordionState(filter);
+  };
+
+  const selectPeriod = (value) => {
+    setPeriodList(
+      periodList.map((period) =>
+        period.value === value
+          ? { ...period, checked: !period.checked }
+          : period
+      )
+    );
   };
 
   const selectInventoryLetter = (value) => {
@@ -100,13 +146,14 @@ const ArtifactsFilters = ({ setArtifactsFilters }) => {
 
   useEffect(() => {
     setArtifactsFilters({
+      periods: periodList.filter((p) => p.checked).map((p) => p.filterKey),
       inventory: inventoryLetterList
         .filter((m) => m.checked)
         .map((m) => m.value),
       section: section,
       monument: monument,
     });
-  }, [inventoryLetterList, section, monument]);
+  }, [periodList, inventoryLetterList, section, monument]);
 
   return (
     <Accordion.Root
@@ -121,23 +168,60 @@ const ArtifactsFilters = ({ setArtifactsFilters }) => {
         setOpenItems(e.value);
       }}
       value={openItems}
+      overflow={"auto"}
     >
-      <Accordion.Item value="inventory-filter" bg="gray.100">
+      <Accordion.Item value="period-filter" bg="white">
+        <Accordion.ItemTrigger justifyContent="space-between">
+          <Heading fontWeight={"normal"} fontSize="md">
+            PERIODS
+          </Heading>
+          <Group>
+            <QuickSelectionButtons
+              handleSelectAll={() => handleSelectAll("period-filter")}
+              handleClearAll={() => handleClearAll("period-filter")}
+            />
+            <Accordion.ItemIndicator color={"gray.400"} />
+          </Group>
+        </Accordion.ItemTrigger>
+        <Accordion.ItemContent>
+          <SimpleGrid gap="2" columns={{ "2xlDown": 1, "2xl": 3 }} h="fit" mb="5">
+            <For each={periodList}>
+              {(period) => (
+                <PeriodFilterButton
+                  key={period.value}
+                  title={period.title}
+                  date={period.date}
+                  color={period.color}
+                  checked={period.checked}
+                  onClick={() => selectPeriod(period.value)}
+                />
+              )}
+            </For>
+          </SimpleGrid>
+        </Accordion.ItemContent>
+      </Accordion.Item>
+
+      <Accordion.Item value="inventory-filter" bg="white">
         <Accordion.ItemTrigger justifyContent="space-between">
           <Heading fontWeight={"normal"} fontSize="md">
             INVENTORY LETTERS
           </Heading>
           <Group>
             <QuickSelectionButtons
-              handleSelectAll={handleSelectAll}
-              handleClearAll={handleClearAll}
+              handleSelectAll={() => handleSelectAll("inventory-filter")}
+              handleClearAll={() => handleClearAll("inventory-filter")}
             />
             <Accordion.ItemIndicator color={"gray.400"} />
           </Group>
         </Accordion.ItemTrigger>
 
         <Accordion.ItemContent>
-          <SimpleGrid mb="5" gap="2" columns={{ smToXl: 2, md:2, "2xl": 4 }} h="fit">
+          <SimpleGrid
+            mb="5"
+            gap="2"
+            columns={{ smToXl: 4, md: 2, "2xl": 4 }}
+            h="fit"
+          >
             <For each={inventoryLetterList}>
               {(m) => (
                 <InventoryFilterButton
@@ -150,7 +234,7 @@ const ArtifactsFilters = ({ setArtifactsFilters }) => {
         </Accordion.ItemContent>
       </Accordion.Item>
 
-      <Accordion.Item value="section-filter" bg="gray.100">
+      <Accordion.Item value="section-filter" bg="white">
         <Accordion.ItemTrigger justifyContent="space-between">
           <Heading fontWeight={"normal"} fontSize="md">
             SECTION
@@ -166,14 +250,14 @@ const ArtifactsFilters = ({ setArtifactsFilters }) => {
         </Accordion.ItemContent>
       </Accordion.Item>
 
-      <Accordion.Item value="monument-filter" bg="gray.100">
+      <Accordion.Item value="monument-filter" bg="white">
         <Accordion.ItemTrigger justifyContent="space-between">
           <Group>
             <Heading fontWeight={"normal"} fontSize="md">
               MONUMENTS
             </Heading>
             <Tooltip
-              content="Monuments are not affected by Period filters"
+              content="Monuments are not affected by Period and Inventory filters"
               contentProps={{ fontSize: "md", p: "2" }}
               positioning={{ placement: "right-center" }}
               openDelay={200}

@@ -1,11 +1,8 @@
 import { Tabs, Text, Separator, Button, Card } from "@chakra-ui/react";
 import { useRef, useState } from "react";
-import PeriodBar from "../PeriodBar/Bar";
 import ArtifactsFilters from "./Subcomponets/ArtifactsFilters";
 
 const FilterCard = ({ areFiltersOpen = false, setFilters }) => {
-  const [value, setValue] = useState("artifacts");
-
   const filtersState = useRef({});
 
   function updateFilterState(props) {
@@ -41,43 +38,7 @@ const FilterCard = ({ areFiltersOpen = false, setFilters }) => {
       </Card.Header>
 
       <Card.Body overflow="auto">
-        <Tabs.Root
-          h="inherit"
-          justifyContent="space-between"
-          defaultValue="artifacts"
-          fitted
-          variant="plain"
-          value={value}
-          onValueChange={(e) => setValue(e.value)}
-        >
-          <Tabs.List bg="white" position="sticky" gap={2}>
-            <Tabs.Trigger
-              value="artifacts"
-              bg={value == "artifacts" ? "#C6C6C6" : "white"}
-              border="1px solid #c6c6c6"
-            >
-              Artifacts
-            </Tabs.Trigger>
-            <Tabs.Trigger
-              value="periods"
-              bg={value == "periods" ? "#C6C6C6" : "white"}
-              border="1px solid #c6c6c6"
-            >
-              Periods
-            </Tabs.Trigger>
-            <Tabs.Indicator rounded="l2" />
-          </Tabs.List>
-
-          <Separator size="sm" mt={4} borderColor={"gray.300"} />
-
-          <Tabs.Content value="artifacts">
-            <ArtifactsFilters setArtifactsFilters={updateFilterState} />
-          </Tabs.Content>
-
-          <Tabs.Content value="periods">
-            <PeriodBar setPeriodFilters={updateFilterState} />
-          </Tabs.Content>
-        </Tabs.Root>
+        <ArtifactsFilters setArtifactsFilters={updateFilterState} />
       </Card.Body>
 
       <Card.Footer justifyContent="flex-end">
