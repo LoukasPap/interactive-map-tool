@@ -217,6 +217,9 @@ const MapLayer = () => {
       // newActiveData = applyBoundFilter(newActiveData, bbox);
     }
 
+    newActiveData = applyInventoryFilter(newActiveData, filters);
+
+    
     // We push the monuments_data second to be more efficient (they are just ~50 allocations)
     newActiveData = applyMonumentFilter(
       newActiveData,
@@ -225,9 +228,7 @@ const MapLayer = () => {
       filters
     );
 
-    newActiveData = applyInventoryFilter(newActiveData, filters);
     newActiveData = applySectionFilter(newActiveData, filters);
-
     newActiveData = newActiveData.filter(x=>x.geometry!=null); // Remove points with no geometry for now
     
     setActiveData(newActiveData);
