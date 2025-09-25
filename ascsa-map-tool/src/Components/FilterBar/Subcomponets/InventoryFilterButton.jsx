@@ -6,9 +6,8 @@ const InventoryFilterButton = ({ inventoryObject, onClick }) => {
     <>
       <Button
         key={inventoryObject.key}
-        h="40px"
-        size="xl"
-        justifyContent={"start"}
+        h="30px"
+        justifyContent={"center"}
         variant={"subtle"}
         overflow="hidden"
         border="1px solid"
@@ -19,7 +18,6 @@ const InventoryFilterButton = ({ inventoryObject, onClick }) => {
         <Text
           fontSize={{smToXl:"md", "2xl":"lg"}}
           fontWeight={"sem"}
-          // color={materialObject.checked ? "#fff" : "#000"}
           transition="color 0.3s ease"
         >
           {inventoryObject.title}
