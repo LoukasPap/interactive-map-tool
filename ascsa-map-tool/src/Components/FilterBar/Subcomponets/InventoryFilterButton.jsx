@@ -1,14 +1,11 @@
-import { Box, Button, createIcon, HStack, Text } from "@chakra-ui/react";
-import { Icon } from "lucide-react";
-import { getMaterialIconSVG } from "./MaterialIcons";
-import { useState } from "react";
+import { Box, Button, Text } from "@chakra-ui/react";;
 
-const MaterialButton = ({ materialObject, onClick }) => {
+const InventoryFilterButton = ({ inventoryObject, onClick }) => {
                   
   return (
     <>
       <Button
-        key={materialObject.key}
+        key={inventoryObject.key}
         h="40px"
         size="xl"
         justifyContent={"start"}
@@ -25,13 +22,13 @@ const MaterialButton = ({ materialObject, onClick }) => {
           // color={materialObject.checked ? "#fff" : "#000"}
           transition="color 0.3s ease"
         >
-          {materialObject.title}
+          {inventoryObject.title}
         </Text>
 
         <Box
           bg="gray.300"
           w="100%"
-          h={materialObject.checked ? "100%" : "0"}
+          h={inventoryObject.checked ? "100%" : "0"}
           bottom="0"
           left="0"
           pos="absolute"
@@ -43,4 +40,4 @@ const MaterialButton = ({ materialObject, onClick }) => {
   );
 };
 
-export default MaterialButton;
+export default InventoryFilterButton;

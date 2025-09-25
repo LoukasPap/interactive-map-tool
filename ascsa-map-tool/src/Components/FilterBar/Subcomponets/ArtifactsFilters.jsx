@@ -9,7 +9,7 @@ import {
 import QuickSelectionButtons, {
   QuickClearButton,
 } from "../QuickSelectionButtons";
-import MaterialButton from "./MaterialButton";
+import InventoryFilterButton from "./InventoryFilterButton";
 import { useState, useEffect, useRef } from "react";
 import Section from "./SectionFilters";
 import Monument from "./MonumentsFilters";
@@ -50,7 +50,7 @@ const ArtifactsFilters = ({ setArtifactsFilters }) => {
   });
 
   const [openItems, setOpenItems] = useState([
-    "material-filter",
+    "inventory-filter",
     "section-filter",
     "monument-filter",
   ]);
@@ -63,7 +63,7 @@ const ArtifactsFilters = ({ setArtifactsFilters }) => {
       }))
     );
 
-    controlAccordionState("material-filter");
+    controlAccordionState("inventory-filter");
   };
 
   const handleClearAll = () => {
@@ -74,10 +74,10 @@ const ArtifactsFilters = ({ setArtifactsFilters }) => {
       }))
     );
 
-    controlAccordionState("material-filter");
+    controlAccordionState("inventory-filter");
   };
 
-  const selectMaterial = (value) => {
+  const selectInventoryLetter = (value) => {
     setInventoryLetterList(
       inventoryLetterList.map((material) =>
         material.value == value
@@ -120,7 +120,7 @@ const ArtifactsFilters = ({ setArtifactsFilters }) => {
       }}
       value={openItems}
     >
-      <Accordion.Item value="material-filter" bg="gray.100">
+      <Accordion.Item value="inventory-filter" bg="gray.100">
         <Accordion.ItemTrigger justifyContent="space-between">
           <Heading fontWeight={"normal"} fontSize="md">
             INVENTORY LETTERS
@@ -138,9 +138,9 @@ const ArtifactsFilters = ({ setArtifactsFilters }) => {
           <SimpleGrid mb="5" gap="2" columns={{ smToXl: 2, md:2, "2xl": 4 }} h="fit">
             <For each={inventoryLetterList}>
               {(m) => (
-                <MaterialButton
-                  materialObject={m}
-                  onClick={() => selectMaterial(m.value)}
+                <InventoryFilterButton
+                  inventoryObject={m}
+                  onClick={() => selectInventoryLetter(m.value)}
                 />
               )}
             </For>
