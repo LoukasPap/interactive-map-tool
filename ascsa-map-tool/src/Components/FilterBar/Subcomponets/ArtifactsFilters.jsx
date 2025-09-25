@@ -100,7 +100,9 @@ const ArtifactsFilters = ({ setArtifactsFilters }) => {
 
   useEffect(() => {
     setArtifactsFilters({
-      inventory: inventoryLetterList.filter((m) => m.checked).map((m) => m.value),
+      inventory: inventoryLetterList
+        .filter((m) => m.checked)
+        .map((m) => m.value),
       section: section,
       monument: monument,
     });
