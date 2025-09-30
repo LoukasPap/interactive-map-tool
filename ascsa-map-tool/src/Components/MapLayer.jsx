@@ -11,10 +11,6 @@ import {
   ZoomControl,
 } from "react-leaflet";
 
-// import ClusteredPoints from "./ClusteredPoints";
-// import { data } from "../data/dataframe";
-// import { monumentData } from "../data/m_dataframe";
-
 import Bar from "./ActionBar/ActionBar";
 import FilterCard from "./FilterBar/FilterCard";
 import CollectionsCard from "./Collections/CollectionsCard";
@@ -37,7 +33,6 @@ import MarkerClusterLayer from "./MarkerClusterLayer";
 import { bboxPolygon } from "@turf/bbox-polygon";
 
 import {
-  isArrayEmpty,
   applySectionFilter,
   applyBoundFilter,
   applyMonumentFilter,
@@ -105,11 +100,6 @@ const MapLayer = () => {
 
   const [savedCollections, setSavedCollections] = useState([]);
   const isSavedInCollection = useRef(-1);
-
-  // const [data, setData] = useState([]);
-  // const [monumentData, setMonumentData] = useState([]);
-
-  const cidRef = useRef(0);
 
   const BASE_URL = import.meta.env.VITE_BASE_URL;
 

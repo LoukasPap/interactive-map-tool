@@ -1,4 +1,4 @@
-import { Tabs, Text, Separator, Button, Card } from "@chakra-ui/react";
+import { Text, Button, Card, Spinner } from "@chakra-ui/react";
 import { useRef, useState } from "react";
 import ArtifactsFilters from "./Subcomponets/ArtifactsFilters";
 
