@@ -2,7 +2,7 @@ import { Text, Button, Card, Spinner } from "@chakra-ui/react";
 import { useRef, useState } from "react";
 import ArtifactsFilters from "./Subcomponets/ArtifactsFilters";
 
-const FilterCard = ({ areFiltersOpen = false, setFilters }) => {
+const FilterCard = ({ areFiltersOpen = false, setFilters, filterLoading }) => {
   const filtersState = useRef({});
 
   function updateFilterState(props) {
@@ -11,7 +11,7 @@ const FilterCard = ({ areFiltersOpen = false, setFilters }) => {
 
   const applyFilters = () => {
     console.log("changed,", filtersState.current);
-
+    
     setFilters(filtersState.current);
   };
 
@@ -42,8 +42,8 @@ const FilterCard = ({ areFiltersOpen = false, setFilters }) => {
       </Card.Body>
 
       <Card.Footer justifyContent="flex-end">
-        <Button size="md" w="100%" fontSize="lg" mt={2} onClick={applyFilters}>
-          Apply
+        <Button size="md" w="100%" fontSize="lg" mt={2} onClick={applyFilters} disabled={filterLoading}>
+          {filterLoading ? <><Spinner size="sm"/>Loading data</> : "Apply"}
         </Button>
       </Card.Footer>
     </Card.Root>

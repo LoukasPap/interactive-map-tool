@@ -34,16 +34,18 @@ import { bboxPolygon } from "@turf/bbox-polygon";
 
 import {
   applySectionFilter,
-  applyBoundFilter,
   applyMonumentFilter,
   applyPeriodFilter,
   applyInventoryFilter,
+  hasTextSearchFilterChanged,
+  isTextSearchFilterEmpty
 } from "./Helpers";
 
 import { onShapeCreated } from "./GeometryOperations";
 import { deactivateHandlers, handleDrawShape, handleEvent } from "./Handlers";
 
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import usePrevious from "./CustomHooks/usePrevious";
 
 export const globalMIBRef = createRef([]); // MIB: MarkersInBound
 
@@ -85,6 +87,7 @@ const MapLayer = () => {
   const currentShape = useRef(null);
 
   const [filters, setFilters] = useState(emptyFiltersState);
+  const prevFilter = usePrevious(filters);
 
   const [bounds, setBounds] = useState(null);
 
@@ -107,6 +110,36 @@ const MapLayer = () => {
   const isSavedInCollection = useRef(-1);
 
   const BASE_URL = import.meta.env.VITE_BASE_URL;
+  const cidRef = useRef(0);
+  const qc = useQueryClient();
+
+
+  async function fetchFromTextSearch() {
+    return fetch(`${BASE_URL}/search-text?${new URLSearchParams(filters.textSearch).toString()}`)
+      .then((res) => {
+        if (!res.ok) throw new Error("Searching text request failed");
+        return res.json();
+      });
+  }
+
+  const mutation = useMutation({
+    mutationFn: fetchFromTextSearch,
+      onMutate: (variables) => {
+        // A mutation is about to happen!
+        console.log("LOG] Starting to mutate!");
+
+        return { id: 1 };
+      },
+      onSuccess: (data, variables, context) => {
+        console.log("[LOG] Success!");
+        qc.setQueryData(["data"], data);
+        console.log("[LOG] Changed Query data", qc.getQueryData(["data"]));
+      },
+      onError: (error, variables, context) => {
+        // An error happened!
+        console.log(`[LOG] Error! --> ${error}`);
+      },
+  });
 
   async function fetchPoints() {
     const res = await fetch(`${BASE_URL}/objects`);
@@ -116,22 +149,12 @@ const MapLayer = () => {
     return dt;
   }
 
-  async function fetchMonuments() {
-    const res = await fetch(`${BASE_URL}/monuments`);
-    if (!res.ok) throw new Error("Failed to fetch points");
-    const dt2 = await res.json();
-    console.log("Fetched monuments data:", dt2);
-    return dt2;
-  }
-
-  const { data } = useQuery({
-    queryKey: ["objects_points"], // unique key for caching
+  let { isLoading, isError, data, error } = useQuery({
+    queryKey: ["data"], // unique key for caching
     queryFn: fetchPoints,
-  });
-
-  const { data: monumentData } = useQuery({
-    queryKey: ["monuments_points"], // unique key for caching
-    queryFn: fetchMonuments,
+    refetchOnWindowFocus: false,
+    staleTime: Infinity,
+    
   });
 
   const ZoomTracker = () => {
@@ -193,27 +216,64 @@ const MapLayer = () => {
     }
   }, [markersInBounds, zoom]);
 
+  async function runTextSearchMutation() {
+    if (hasTextSearchFilterChanged(filters.textSearch, prevFilter.textSearch)) {
+
+      if (isTextSearchFilterEmpty(filters.textSearch)) {
+        console.log("[LOG] REFETCHING");
+        await qc.refetchQueries({ queryKey: ["data"]});
+      } else {
+        await mutation.mutateAsync();
+      }
+      
+      console.log("[LOG] Done fetching text!");
+      return qc.getQueryData(["data"]);
+    }
+
+    return null;
+  }
+
   useEffect(() => {
-    console.log("[FILTERS] trigger", filters);
-    console.log("[LOG] Objects data", data, "Monument data", monumentData);
-    if (data == undefined || monumentData == undefined) return;
+    console.log("[LOG] Filters applied:", filters);
+    console.log("[LOG] Points fetched:", data);
+
+    (async () => {
+      let updated = await runTextSearchMutation();
+      
+      if (updated) {
+        console.log("[LOG] Updated --> ", updated);
+        applyClientSideFilters(updated);
+
+      } else {
+        let current = qc.getQueryData(["data"]) || data;
+        applyClientSideFilters(current);
+      }
+
+      console.log("[LOG] Finished updated markers in map.");
+    })();
+
+    
+    
+  }, [filters]);
+
+
+  function applyClientSideFilters(newActiveData) {
+    console.log("[LOG] Applying client side filters, with data", newActiveData);
+
+    let monumentData = newActiveData.features.filter((m) => m.Type == "monument" && m.geometry != null);
+    newActiveData = newActiveData.features.filter((m) => m.geometry != null && m.Type != "monument");
 
     let bbox = initialBounds;
     if (bounds != null) bbox = calculateBounds(bounds);
 
-    let newActiveData = [];
     const monumentsVisibility = filters.monument.ShowMonuments;
 
     if (monumentsVisibility != "Only") {
-      newActiveData = data.features;
-
       newActiveData = applyPeriodFilter(newActiveData, filters);
       // newActiveData = applyBoundFilter(newActiveData, bbox);
     }
 
     newActiveData = applyInventoryFilter(newActiveData, filters);
-
-    
     // We push the monuments_data second to be more efficient (they are just ~50 allocations)
     newActiveData = applyMonumentFilter(
       newActiveData,
@@ -223,10 +283,12 @@ const MapLayer = () => {
     );
 
     newActiveData = applySectionFilter(newActiveData, filters);
-    newActiveData = newActiveData.filter(x=>x.geometry!=null); // Remove points with no geometry for now
-    
+    newActiveData = newActiveData.filter((x) => x.geometry != null); // Remove points with no geometry for now
+
+    console.log("[LOG] new newActiveData", newActiveData);
     setActiveData(newActiveData);
-  }, [filters, bounds, data, monumentData]);
+  }
+
 
   function clickShape() {
     toggleMarkersCard("multi");
@@ -476,6 +538,7 @@ const MapLayer = () => {
           <FilterCard
             areFiltersOpen={userCardOpen == FILTER_CARD}
             setFilters={setFilters}
+            filterLoading={(qc.isMutating() + qc.isFetching()) > 0}
           />
         </VStack>
 

@@ -11,9 +11,7 @@ export function applyBoundFilter(data, bbox) {
 export function applySectionFilter(data, f) {
   if (!isSectionEmpty(f.section)) {
     const sectionFilter = getSectionFilter(f.section);
-    return data.filter(
-      (d) => d[sectionFilter] == f.section[sectionFilter]
-    );
+    return data.filter((d) => d[sectionFilter] == f.section[sectionFilter]);
   }
 
   return data;
@@ -33,9 +31,7 @@ export function getSectionFilter(section) {
 }
 
 export function applyPeriodFilter(newActiveData, filters) {
-  return newActiveData.filter((f) =>
-    filters.periods.includes(f.Era)
-  );
+  return newActiveData.filter((f) => filters.periods.includes(f.Era));
 }
 
 export function applyMonumentFilter(newActiveData, monumentData, monumentsVisibility, filters) {
@@ -44,28 +40,26 @@ export function applyMonumentFilter(newActiveData, monumentData, monumentsVisibi
     const conditions = filters.monument.Condition || [];
 
     if (!isArrayEmpty(conditions)) {
-      mData = monumentData.features.filter((f) =>
-        conditions.includes(f.CleanCondition)
-      );
+      mData = monumentData.filter((f) => conditions.includes(f.CleanCondition));
     } else {
-      mData = monumentData.features;
+      mData = monumentData;
     }
+
+    newActiveData.push(...mData);
   }
-  newActiveData.push(...mData);
+
   return newActiveData;
 }
 
 export function applyInventoryFilter(newActiveData, filters) {
   return newActiveData.filter((f) =>
-      filters.inventory.includes(f.InventoryNumberLetter)
+    filters.inventory.includes(f.InventoryNumberLetter)
   );
 }
 
 export function applyMaterialFilter(newActiveData, filters) {
   return newActiveData.filter((f) =>
-    filters.materials.some((material) =>
-      f.MaterialCategory.includes(material)
-    )
+    filters.materials.some((material) => f.MaterialCategory.includes(material))
   );
 }
 
@@ -75,4 +69,21 @@ export function isSectionEmpty(section) {
 
 export function isArrayEmpty(arr) {
   return arr.length == 0 ? true : false;
+}
+
+export function isTextSearchFilterEmpty(filter) {
+  return filter.includeInput == "" && filter.excludeInput == "";
+}
+
+export function hasTextSearchFilterChanged(currentFilter, prevFilter) {
+  const textHasChanged =
+    currentFilter.includeInput != prevFilter.includeInput ||
+    currentFilter.excludeInput != prevFilter.excludeInput;
+
+  if (textHasChanged) return true;
+
+  const limitHasChanged = currentFilter.limit != prevFilter.limit;
+  if (limitHasChanged) return true;
+
+  return false;
 }
