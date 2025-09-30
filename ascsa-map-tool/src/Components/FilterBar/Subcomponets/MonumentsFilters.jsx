@@ -34,25 +34,21 @@ const viewOptionsMappingReverse = {
   Only: "Show only",
 };
 
-const initialFilterState = {
+const initialState = {
   ShowMonuments: "Yes",
   Condition: [],
 };
 
-const Monument = ({ setMonumentObj }) => {
-  const [monuments, setMonuments] = useState(initialFilterState);
+const Monument = ({ setMonumentObj, clear }) => {
+  const [monuments, setMonuments] = useState(initialState);
 
   useEffect(() => {
     setMonumentObj(monuments);
   }, [monuments]);
 
-  // <Checkbox.Root variant={"outline"} size="md" w="100%">
-  //   <Checkbox.HiddenInput />
-  //   <Checkbox.Control border="1px solid" borderColor="gray.300">
-  //     <Checkbox.Indicator />
-  //   </Checkbox.Control>
-  //   <Checkbox.Label />
-  // </Checkbox.Root>;
+  useEffect(() => {
+    setMonuments(initialState);
+  }, [clear]);
 
   return (
     <Stack mb="5" w="100%">

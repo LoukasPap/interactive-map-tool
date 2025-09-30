@@ -68,14 +68,18 @@ const initialSearchText = {
   excludeInput: "",
   limit: "",
 };
-const ArtifactsFilters = ({ setArtifactsFilters }) => {
+
+
+const initialMonumentsState = {ShowMonuments: "Yes", Condition: [],}
+
+const ArtifactsFilters = ({ setArtifactsFilters, cleanFilters }) => {
 
   const [searchTextFilter, setSearchTextFilter] = useState(initialSearchText);
 
   const [inventoryLetterList, setInventoryLetterList] = useState(initialInventoryList);
   const [periodList, setPeriodList] = useState(initialPeriodsList);
   const [section, setSection] = useState(initialSectionState);
-  const [monument, setMonument] = useState({ShowMonuments: "Yes", Condition: [],});
+  const [monument, setMonument] = useState(initialMonumentsState);
 
   const [openItems, setOpenItems] = useState([
     "text-search-filter",
@@ -84,6 +88,16 @@ const ArtifactsFilters = ({ setArtifactsFilters }) => {
     "section-filter",
     "monument-filter",
   ]);
+
+  useEffect(() => {
+    handleClearAll("period-filter");
+    handleClearAll("inventory-filter");
+    handleClearAll("section-filter");
+    setSection(initialSectionState);
+    setMonument(initialMonumentsState);
+  }, [cleanFilters]);
+
+
 
   const handleSelectAll = (filter) => {
     if (filter === "period-filter") {
@@ -308,7 +322,7 @@ const ArtifactsFilters = ({ setArtifactsFilters }) => {
         </Accordion.ItemTrigger>
 
         <Accordion.ItemContent>
-          <Monument setMonumentObj={setMonument} />
+          <Monument setMonumentObj={setMonument} clear={cleanFilters}/>
         </Accordion.ItemContent>
       </Accordion.Item>
     </Accordion.Root>

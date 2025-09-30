@@ -1,8 +1,11 @@
-import { Text, Button, Card, Spinner } from "@chakra-ui/react";
+import { Text, Button, Card, Spinner, Box, Icon } from "@chakra-ui/react";
 import { useRef, useState } from "react";
 import ArtifactsFilters from "./Subcomponets/ArtifactsFilters";
+import { Tooltip } from "../ui/tooltip";
+import { LuInfo } from "react-icons/lu";
 
 const FilterCard = ({ areFiltersOpen = false, setFilters, filterLoading }) => {
+  const [cleanFilters, setCleanFilters] = useState(false);
   const filtersState = useRef({});
 
   function updateFilterState(props) {
@@ -11,9 +14,26 @@ const FilterCard = ({ areFiltersOpen = false, setFilters, filterLoading }) => {
 
   const applyFilters = () => {
     console.log("changed,", filtersState.current);
-    
     setFilters(filtersState.current);
   };
+
+  let timer = null;
+  const HOLD_MS = 600; // threshold
+
+  function onLongClick(e) {
+    setCleanFilters((state) => !state);
+  }
+
+  function startHold(e) {
+    if (e.button && e.button !== 0) return; // ignore right-click
+    e.preventDefault();
+    timer = setTimeout(() => onLongClick(e), HOLD_MS);
+  }
+
+  function cancelHold() {
+    clearTimeout(timer);
+    timer = null;
+  }
 
   return (
     <Card.Root
@@ -38,11 +58,28 @@ const FilterCard = ({ areFiltersOpen = false, setFilters, filterLoading }) => {
       </Card.Header>
 
       <Card.Body overflow="auto">
-        <ArtifactsFilters setArtifactsFilters={updateFilterState} />
+        <ArtifactsFilters setArtifactsFilters={updateFilterState} cleanFilters={cleanFilters}/>
       </Card.Body>
 
-      <Card.Footer justifyContent="flex-end">
-        <Button size="md" w="100%" fontSize="lg" mt={2} onClick={applyFilters} disabled={filterLoading}>
+      <Card.Footer flexDir="row" justifyContent="flex-end">
+        <Button size="md" flexGrow={1} fontSize="lg" mt={2} variant="outline" onPointerDown={startHold} onPointerUp={cancelHold} _={() => {console.log("hello");}}>
+        <Box pos={"absolute"} bg="red.100" w="0" left={0} h="100%" transition={"all 600ms"}/>
+          <Tooltip
+            showArrow
+            content="Long press to clear"
+            contentProps={{ fontSize: "md", p: "2" }}
+            positioning={{ placement: "top-center" }}
+            
+            openDelay={600}
+            closeDelay={200}
+          >
+            <Icon size="md">
+              <LuInfo />
+            </Icon>
+          </Tooltip>
+          Clear
+        </Button>
+        <Button size="md" flexGrow={1} fontSize="lg" mt={2} onClick={applyFilters} disabled={filterLoading}>
           {filterLoading ? <><Spinner size="sm"/>Loading data</> : "Apply"}
         </Button>
       </Card.Footer>
