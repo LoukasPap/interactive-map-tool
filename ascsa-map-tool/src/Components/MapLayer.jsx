@@ -60,6 +60,11 @@ const COLLECTIONS_CARD = "collections";
 const NONE = "";
 
 const emptyFiltersState = {
+  textSearch: {  
+    includeInput: "",
+    excludeInput: "",
+    limit: ""
+  },
   periods: [],
   inventory: [],
   section: {

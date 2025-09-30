@@ -16,6 +16,9 @@ import Monument from "./MonumentsFilters";
 import { Tooltip } from "../../ui/tooltip";
 import { LuInfo } from "react-icons/lu";
 import PeriodFilterButton from "./PeriodFilterButton";
+import SearchTextFilter from "./SearchTextFilter";
+
+import usePrevious from "../../CustomHooks/usePrevious"
 
 const initialInventoryList = [
   { title: "A",  value: "A",  fullTitle: "Architecture", color: "#000", checked: false },
@@ -60,13 +63,22 @@ const initialPeriodsList = [
   { title: "Unknown",        value: "un", filterKey: "Unknown",        date: "-",             color: "gray.950",   checked: false },
 ];
 
+const initialSearchText = {
+  includeInput: "",
+  excludeInput: "",
+  limit: "",
+};
 const ArtifactsFilters = ({ setArtifactsFilters }) => {
-  const [periodList, setPeriodList] = useState(initialPeriodsList);
+
+  const [searchTextFilter, setSearchTextFilter] = useState(initialSearchText);
+
   const [inventoryLetterList, setInventoryLetterList] = useState(initialInventoryList);
+  const [periodList, setPeriodList] = useState(initialPeriodsList);
   const [section, setSection] = useState(initialSectionState);
-  const [monument, setMonument] = useState({ShowMonuments: "Yes", Condition: []});
+  const [monument, setMonument] = useState({ShowMonuments: "Yes", Condition: [],});
 
   const [openItems, setOpenItems] = useState([
+    "text-search-filter",
     "period-filter",
     "inventory-filter",
     "section-filter",
@@ -101,13 +113,15 @@ const ArtifactsFilters = ({ setArtifactsFilters }) => {
           checked: false,
         }))
       );
-    } else {
+    } else if (filter == "inventory-filter") {
       setInventoryLetterList(
         inventoryLetterList.map((material) => ({
           ...material,
           checked: false,
         }))
       );
+    } else {
+      setSearchTextFilter(initialSearchText);
     }
 
     controlAccordionState(filter);
@@ -146,6 +160,7 @@ const ArtifactsFilters = ({ setArtifactsFilters }) => {
 
   useEffect(() => {
     setArtifactsFilters({
+      textSearch: searchTextFilter,
       periods: periodList.filter((p) => p.checked).map((p) => p.filterKey),
       inventory: inventoryLetterList
         .filter((m) => m.checked)
@@ -153,7 +168,7 @@ const ArtifactsFilters = ({ setArtifactsFilters }) => {
       section: section,
       monument: monument,
     });
-  }, [periodList, inventoryLetterList, section, monument]);
+  }, [searchTextFilter, periodList, inventoryLetterList, section, monument]);
 
   return (
     <Accordion.Root
@@ -170,6 +185,22 @@ const ArtifactsFilters = ({ setArtifactsFilters }) => {
       value={openItems}
       overflow={"auto"}
     >
+      <Accordion.Item value="text-search-filter" bg="white">
+        <Accordion.ItemTrigger justifyContent="space-between">
+          <Heading fontWeight={"normal"} fontSize="md">
+            TEXT SEARCH
+          </Heading>
+          <Group>
+            <QuickClearButton onClick={() => handleClearAll("text-search-filter")} />
+            <Accordion.ItemIndicator color={"gray.400"} />
+          </Group>
+        </Accordion.ItemTrigger>
+
+        <Accordion.ItemContent>
+          <SearchTextFilter searchTextObj={searchTextFilter} setSearchText={setSearchTextFilter} />
+        </Accordion.ItemContent>
+      </Accordion.Item>
+
       <Accordion.Item value="period-filter" bg="white">
         <Accordion.ItemTrigger justifyContent="space-between">
           <Heading fontWeight={"normal"} fontSize="md">
@@ -184,7 +215,12 @@ const ArtifactsFilters = ({ setArtifactsFilters }) => {
           </Group>
         </Accordion.ItemTrigger>
         <Accordion.ItemContent>
-          <SimpleGrid gap="2" columns={{ "2xlDown": 1, "2xl": 3 }} h="fit" mb="5">
+          <SimpleGrid
+            gap="2"
+            columns={{ "2xlDown": 1, "2xl": 2 }}
+            h="fit"
+            mb="5"
+          >
             <For each={periodList}>
               {(period) => (
                 <PeriodFilterButton
