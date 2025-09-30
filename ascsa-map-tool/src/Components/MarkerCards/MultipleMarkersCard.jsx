@@ -29,12 +29,19 @@ import {
 import { MarkerButton } from "./SingleMarkerCardFooter";
 
 const eraToColorMapping = {
-  Prehistoric: "gray.500",
-  Greek: "blue.500",
+  Neolithic: "gray.700",
+  "Bronze Age": "orange.700",
+  Geometric: "yellow.400",
+  Protoattic: "yellow.200",
+  Archaic: "blue.900",
+  Classical: "blue.700",
+  "Late Classical": "blue.500",
+  Hellenistic: "blue.300",
   Roman: "red.500",
+  "Late Roman": "red.400",
   Byzantine: "orange.500",
-  Turkish: "yellow.500",
-  Medieval: "green.500",
+  Frankish: "green.500",
+  Ottoman: "yellow.600",
   Modern: "pink.500",
   Unknown: "gray.950",
 };
