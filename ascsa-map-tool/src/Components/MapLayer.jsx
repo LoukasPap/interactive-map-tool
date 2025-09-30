@@ -183,7 +183,6 @@ const MapLayer = () => {
   useEffect(() => {
     console.log("Markers in bound:", markersInBounds);
 
-    toggleMarkersCard("multi");
     if (globalMIBRef.current != null && globalMIBRef.current.length != 0) {
       const selectedMarkersNames = markersInBounds.map((m) => m.Name);
       const domIconElements = document.querySelectorAll(iconExClass);
