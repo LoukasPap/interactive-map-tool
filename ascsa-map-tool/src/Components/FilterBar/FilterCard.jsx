@@ -40,7 +40,7 @@ const FilterCard = ({ areFiltersOpen = false, setFilters, filterLoading }) => {
       style={{
         opacity: areFiltersOpen ? 1 : 0,
         pointerEvents: areFiltersOpen ? "auto" : "none",
-        transition: "opacity 0.4s cubic-bezier(.4,0,.2,1)",
+        transition: "opacity 0.5s",
       }}
       w={{ sm: "30vw", md: "25vw", lg: "22.5vw" }}
       bg="white"

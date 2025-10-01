@@ -15,6 +15,8 @@ import {
   Dialog,
   Portal,
   Stack,
+  Group,
+  ColorSwatch,
 } from "@chakra-ui/react";
 
 import { useState, useRef } from "react";
@@ -24,6 +26,9 @@ import {
   LuChevronRight,
   LuCircleX,
   LuSave,
+  LuEye,
+  LuArrowBigRight,
+  LuArrowRight,
 } from "react-icons/lu";
 
 import { MarkerButton } from "./SingleMarkerCardFooter";
@@ -54,6 +59,8 @@ const MultipleMarkersCard = ({
   discardCollection,
   updateCollection,
   isSavedInCollection = -1,
+  isVisible,
+  viewMarker,
 }) => {
   console.log("markers in MultipleMarkersCard: ", markers);
 
@@ -64,54 +71,85 @@ const MultipleMarkersCard = ({
 
   const visibleMarkers = markers.slice(startRange, endRange);
 
+  const lastSelected = useRef("-1");
+
   const Marker = ({ info }) => {
     return (
       <Button
         alignContent="center"
-        h="80px"
-        minH="80px"
+        h="60px"
+        minH="60px"
         w="100%"
         rounded="md"
-        bg="gray.300"
+        bg="gray.100"
+        _hover={{ bg: "gray.200" }}
         overflow="hidden"
         p={0}
-        variant="plain"
+        variant="outline"
+        border={lastSelected.current==info._id ? "1px solid black" : "none"}
+        
       >
-        <Box
+        {/* <Box
           w="100%"
-          h="10px"
+          h="5px"
           bg={eraToColorMapping[info.Era]}
           pos="absolute"
           bottom="0"
           zIndex={-1}
-        />
-        <HStack w="100%" gap={4} pl="5px" pr="5px" justifyContent="start">
+        /> */}
+
+        <HStack
+          w="100%"
+          gap={4}
+          pl="5px"
+          pr="5px"
+          justifyContent="start"
+        >
           <Image
             src={
               info.Images != null &&
-              (info.Images[2] ||
-                info.Images[1] ||
-                info.Images[0])
+              (info.Images[2] || info.Images[1] || info.Images[0])
             }
-            w="70px"
-            h="70px"
+            w="50px"
+            maxW="50px"
+            h="50px"
             rounded="sm"
           />
-          <VStack alignItems="self-start" maxW="190px" w="190px" gap={1}>
-            <Text
-              textAlign="start"
-              fontWeight="semibold"
-              fontSize="xl"
-              whiteSpace="normal"
-            >
-              {info.Title || info.Name}
-            </Text>
-            {info.Title && (
-              <Text fontSize="lg" color="gray">
-                {info.Name}
+          <Group flexGrow={1} gap={3}>
+            <Box
+              bg={eraToColorMapping[info.Era]}
+              border="1px solid"
+              borderColor={eraToColorMapping[info.Era]}
+              w="10px"
+              h="30px"
+              rounded="sm"
+              transition="all 0.25s ease-out"
+            />
+            <VStack alignItems="self-start" maxW="180px" w="fit" gap={1}>
+              <Text
+                textAlign="start"
+                fontWeight="regular"
+                fontSize="lg"
+                whiteSpace="normal"              >
+                {info.Title || info.Name}
               </Text>
-            )}
-          </VStack>
+              {info.Title && (
+                <Text fontSize="md" color="gray">
+                  {info.Name}
+                </Text>
+              )}
+            </VStack>
+          </Group>
+
+          <IconButton
+            mr={2}
+            onClick={() => {
+              lastSelected.current = info._id;
+              viewMarker(info);
+            }}
+          >
+            <LuArrowRight />
+          </IconButton>
         </HStack>
       </Button>
     );
@@ -271,6 +309,11 @@ const MultipleMarkersCard = ({
 
   return (
     <Card.Root
+      style={{
+        opacity: isVisible ? 1 : 0,
+        pointerEvents: isVisible ? "auto" : "none",
+        transition: "opacity 0.5s",
+      }}
       w="20vw"
       position="fixed"
       top="12px"

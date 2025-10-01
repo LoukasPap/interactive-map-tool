@@ -295,6 +295,11 @@ const MapLayer = () => {
     setMarkersInBounds(globalMIBRef.current);
   }
 
+  function viewMarker(e) {    
+    setSelectedMarker({feature: e});
+    toggleMarkersCard("single");
+  }
+
   useEffect(() => {
     if (!mapRef.current) return;
     const map = mapRef.current;
@@ -493,22 +498,25 @@ const MapLayer = () => {
         <ZoomControl position="bottomright" />
       </MapContainer>
 
-      {markersCard == "single" ? (
-        <SingleMarkerCard
-          marker={
-            selectedMarker != null ? selectedMarker.feature : selectedMarker
-          }
-          toggleCard={toggleMarkersCard}
-        />
-      ) : markersCard == "multi" ? (
-        <MultipleMarkersCard
-          markers={markersInBounds}
-          saveCollection={saveCollection}
-          discardCollection={discardCollection}
-          isSavedInCollection={isSavedInCollection.current}
-          updateCollection={updateCollection}
-        />
-      ) : null}
+
+      <SingleMarkerCard
+        marker={
+          selectedMarker != null ? selectedMarker.feature : selectedMarker
+        }
+        toggleCard={toggleMarkersCard}
+        isVisible={markersCard == "single"}
+      />
+
+      <MultipleMarkersCard
+        markers={markersInBounds}
+        saveCollection={saveCollection}
+        discardCollection={discardCollection}
+        isSavedInCollection={isSavedInCollection.current}
+        updateCollection={updateCollection}
+        isVisible={markersCard == "multi"}
+        viewMarker={viewMarker}
+      />
+
 
       {mapReady && (
         <Bar

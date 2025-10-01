@@ -48,7 +48,7 @@ const initialObject = {
 
 const propList = ["title", "section", "period", "material"];
 
-const SingleMarkerCard = ({ marker, toggleCard }) => {
+const SingleMarkerCard = ({ marker, toggleCard, isVisible }) => {
   const [pointDetails, setPointDetails] = useState(initialObject);
 
   useEffect(() => {
@@ -190,6 +190,11 @@ const SingleMarkerCard = ({ marker, toggleCard }) => {
 
   return (
     <Card.Root
+      style={{
+        opacity: isVisible ? 1 : 0,
+        pointerEvents: isVisible ? "auto" : "none",
+        transition: "opacity 0.5s",
+      }}
       w="20vw"
       position="fixed"
       top="12px"
