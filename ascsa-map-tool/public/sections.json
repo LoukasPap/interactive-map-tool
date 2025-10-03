@@ -1,0 +1,375 @@
+[
+  {
+    "Order": 2,
+    "Name": "2002.02.0001",
+    "Title": "Balloon Photograph (1975)",
+    "Path": "Agora Site/",
+    "WGS84Bounds": [
+      [37.972834, 23.721197],
+      [37.977221, 23.724362]
+    ],
+    "Date": "1 May 1975",
+    "Checked": false
+  },
+  {
+    "Order": 1,
+    "Name": "2002.02.0116",
+    "Path": "Agora Site/",
+    "Title": "State Plan",
+    "WGS84Bounds": [
+      [37.97141, 23.720401],
+      [37.976815, 23.726092]
+    ],
+    "Date": "1 Jan 1973",
+    "Checked": false
+  },
+  {
+    "Order": 3,
+    "Name": "2002.02.0125",
+    "Title": "Section ΒΓ (1980)",
+    "Path": "ΒΓ/",
+    "WGS84Bounds": [
+      [37.97578, 23.721994],
+      [37.97632, 23.723212]
+    ],
+    "Date": "1980",
+    "Checked": false
+  },
+  {
+    "Order": 4,
+    "Name": "2002.02.0126",
+    "Title": "Section ΒΓ (1993)",
+    "Path": "ΒΓ/",
+    "WGS84Bounds": [
+      [37.976005, 23.722245],
+      [37.976266, 23.722723]
+    ],
+    "Date": "1993-1994",
+    "Checked": false
+  },
+  {
+    "Order": 5,
+    "Name": "2002.02.0128",
+    "Title": "Section ΒΓ (2011)",
+    "Path": "ΒΓ/",
+    "WGS84Bounds": [
+      [37.975834, 23.722598],
+      [37.976131, 23.723167]
+    ],
+    "Date": "20 Jul 2011",
+    "Checked": false
+  },
+  {
+    "Order": 6,
+    "Name": "2002.02.0004",
+    "Title": "Section ΒΕ (2002)",
+    "Path": "ΒΕ/",
+    "WGS84Bounds": [
+      [37.97641, 23.722564],
+      [37.97668, 23.722791]
+    ],
+    "Date": "1 Aug 2002",
+    "Checked": false
+  },
+  {
+    "Order": 6,
+    "Name": "2002.02.0003",
+    "Title": "Section ΒΖ (2002)",
+    "Path": "ΒΖ/",
+    "WGS84Bounds": [
+      [37.976545, 23.72245],
+      [37.976726, 23.722677]
+    ],
+    "Date": "1 Aug 2002",
+    "Checked": false
+  },
+  {
+    "Order": 7,
+    "Name": "2002.02.0112",
+    "Title": "Section ΒΖ (2006)",
+    "Path": "ΒΖ/",
+    "WGS84Bounds": [
+      [37.97641, 23.722507],
+      [37.976816, 23.722791]
+    ],
+    "Date": "10 Aug 2006",
+    "Checked": false
+  },
+  {
+    "Order": 8,
+    "Name": "2002.02.0113",
+    "Title": "Section ΒΖ (2007)",
+    "Path": "ΒΖ/",
+    "WGS84Bounds": [
+      [37.976419, 23.72245],
+      [37.97678, 23.722734]
+    ],
+    "Date": "6 Aug 2007",
+    "Checked": false
+  },
+  {
+    "Order": 9,
+    "Name": "2002.02.0105",
+    "Title": "Section ΒΖ North (2006)",
+    "Path": "ΒΖ/",
+    "Date": "1 May 2006",
+    "WGS84Bounds": [
+      [37.9765, 23.72245],
+      [37.976816, 23.722734]
+    ],
+    "Checked": false
+  },
+  {
+    "Order": 10,
+    "Name": "2002.02.0106",
+    "Title": "Section ΒΖ South (2006)",
+    "Path": "ΒΖ/",
+    "WGS84Bounds": [
+      [37.976455, 23.722393],
+      [37.97668, 23.72262]
+    ],
+    "Date": "1 May 2006",
+    "Checked": false
+  },
+  {
+    "Order": 11,
+    "Name": "2002.02.0109",
+    "Title": "Section ΒΖ South (2006) Delimited",
+    "Path": "ΒΖ/",
+    "WGS84Bounds": [
+      [37.976455, 23.722393],
+      [37.976689, 23.722586]
+    ],
+    "Date": "10 Aug 2006",
+    "Checked": false
+  },
+  {
+    "Order": 12,
+    "Name": "2002.02.0121",
+    "Title": "Section ΒΖ Νorth (2010)",
+    "Path": "ΒΖ/",
+    "WGS84Bounds": [
+      [37.976635, 23.722529],
+      [37.976798, 23.722689]
+    ],
+    "Date": "1 Jul 2010",
+    "Checked": false
+  },
+  {
+    "Order": 13,
+    "Name": "2002.02.0119",
+    "Title": "Section ΒΖ Νorth Rooms (2009)",
+    "Path": "ΒΖ/",
+    "WGS84Bounds": [
+      [37.976437, 23.722495],
+      [37.97678, 23.722803]
+    ],
+    "Date": "1 Aug 2009",
+    "Checked": false
+  },
+  {
+    "Order": 14,
+    "Name": "2002.02.0120",
+    "Title": "Section ΒΖ Νorth Walls (2009)",
+    "Path": "ΒΖ/",
+    "WGS84Bounds": [
+      [37.976437, 23.722495],
+      [37.97678, 23.722803]
+    ],
+    "Date": "1 Aug 2009",
+    "Checked": false
+  },
+  {
+    "Order": 15,
+    "Name": "2002.02.0104",
+    "Title": "Section ΒΗ (2003)",
+    "Path": "ΒΗ/",
+    "WGS84Bounds": [
+      [37.976491, 23.722894],
+      [37.976617, 23.723133]
+    ],
+    "Date": "1 Aug 2003",
+    "Checked": false
+  },
+  {
+    "Order": 16,
+    "Name": "2002.02.0117",
+    "Title": "Section ΒΗ (2010)",
+    "Path": "ΒΗ/",
+    "WGS84Bounds": [
+      [37.97641, 23.722905],
+      [37.976599, 23.723178]
+    ],
+    "Date": "1 Jul 2010",
+    "Checked": false
+  },
+  {
+    "Order": 17,
+    "Name": "2002.02.0122",
+    "Title": "Section ΒΗ (2010)",
+    "Path": "ΒΗ/",
+    "WGS84Bounds": [
+      [37.97641, 23.722905],
+      [37.976608, 23.72319]
+    ],
+    "Date": "8 Jul 2010",
+    "Checked": false
+  },
+  {
+    "Order": 18,
+    "Name": "2002.02.0129",
+    "Title": "Section ΒΗ (2011)",
+    "Path": "ΒΗ/",
+    "WGS84Bounds": [
+      [37.97641, 23.722905],
+      [37.976626, 23.723201]
+    ],
+    "Date": "11 Jul 2011",
+    "Checked": false
+  },
+  {
+    "Order": 19,
+    "Name": "2002.02.0131",
+    "Title": "Section ΒΗ (2011)",
+    "Path": "ΒΗ/",
+    "WGS84Bounds": [
+      [37.97641, 23.722905],
+      [37.976626, 23.723201]
+    ],
+    "Date": "28 Jul 2011",
+    "Checked": false
+  },
+  {
+    "Order": 20,
+    "Name": "2002.02.0111",
+    "Title": "Section ΒΗ North (2006)",
+    "Path": "ΒΗ/",
+    "WGS84Bounds": [
+      [37.97641, 23.722905],
+      [37.976635, 23.72319]
+    ],
+    "Date": "10 Aug 2006",
+    "Checked": false
+  },
+  {
+    "Order": 21,
+    "Name": "2002.02.0123",
+    "Title": "Section ΒΘ (2010)",
+    "Path": "ΒΘ/",
+    "WGS84Bounds": [
+      [37.976248, 23.722632],
+      [37.976473, 23.723087]
+    ],
+    "Date": "7 Jul 2010",
+    "Checked": false
+  },
+  {
+    "Order": 22,
+    "Name": "2002.02.0127",
+    "Title": "Section ΒΘ (2011)",
+    "Path": "ΒΘ/",
+    "WGS84Bounds": [
+      [37.97623, 23.722632],
+      [37.976482, 23.723087]
+    ],
+    "Date": "20 Jul 2011",
+    "Checked": false
+  },
+  {
+    "Order": 23,
+    "Name": "2002.02.0130",
+    "Title": "Section ΒΘ (2011) Walls",
+    "Path": "ΒΘ/",
+    "Date": "20 Jul 2011",
+    "WGS84Bounds": [
+      [37.97623, 23.722632],
+      [37.976482, 23.723087]
+    ],
+    "Checked": false
+  },
+  {
+    "Order": 24,
+    "Name": "2002.02.0132",
+    "Title": "Section ΒΘ (2011)",
+    "Path": "ΒΘ/",
+    "WGS84Bounds": [
+      [37.97623, 23.722632],
+      [37.976482, 23.723087]
+    ],
+    "Date": "28 Jul 2011",
+    "Checked": false
+  },
+  {
+    "Order": 25,
+    "Name": "2002.02.0110",
+    "Title": "Section Γ, Strategeion Area (2006)",
+    "Path": "Γ/",
+    "WGS84Bounds": [
+      [37.974383, 23.721437],
+      [37.974771, 23.721824]
+    ],
+    "Date": "10 Aug 2006",
+    "Checked": false
+  },
+  {
+    "Order": 26,
+    "Name": "2002.02.0124",
+    "Title": "Section Δ (2010)",
+    "Path": "Δ/",
+    "WGS84Bounds": [
+      [37.97439, 23.721843],
+      [37.974514, 23.722057]
+    ],
+    "Date": "8 Jul 2010",
+    "Checked": false
+  },
+  {
+    "Order": 27,
+    "Name": "2002.02.0098",
+    "Title": "Section ΕΛ (2002)",
+    "Path": "ΕΛ/",
+    "WGS84Bounds": [
+      [37.972707, 23.724498],
+      [37.973302, 23.725226]
+    ],
+    "Date": "1 Aug 2002",
+    "Checked": false
+  },
+  {
+    "Order": 28,
+    "Name": "2002.02.0115",
+    "Title": "Sections ΒΕ, ΒΖ, ΒΗ, and ΒΘ (2008)",
+    "Path": "Combined/",
+    "WGS84Bounds": [
+      [37.97614, 23.722279],
+      [37.976725, 23.723246]
+    ],
+    "Date": "1 Jun 2008",
+    "Checked": false
+  },
+  {
+    "Order": 29,
+    "Name": "2002.02.0118",
+    "Title": "Sections ΒΕ, ΒΗ and ΒΘ (2009)",
+    "Path": "Combined/",
+    "WGS84Bounds": [
+      [37.976248, 23.722552],
+      [37.976608, 23.723178]
+    ],
+    "Date": "1 Jul 2009",
+    "Checked": false
+  },
+
+  {
+    "Order": 30,
+    "Name": "2002.02.0101",
+    "Title": "Sections ΒΖ and ΒΕ (2002)",
+    "Path": "Combined/",
+    "WGS84Bounds": [
+      [37.976383, 23.722364],
+      [37.976816, 23.722842]
+    ],
+    "Date": "Summer 2002",
+    "Checked": false
+  }
+]
