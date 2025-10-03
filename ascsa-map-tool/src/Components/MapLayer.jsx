@@ -65,10 +65,10 @@ const LAYERS_CARD = "layers";
 const NONE = "";
 
 const emptyFiltersState = {
-  textSearch: {  
+  textSearch: {
     includeInput: "",
     excludeInput: "",
-    limit: ""
+    limit: "",
   },
   periods: [],
   inventory: [],
@@ -119,7 +119,6 @@ const MapLayer = () => {
   const cidRef = useRef(0);
   const qc = useQueryClient();
 
-
   async function fetchFromTextSearch() {
     return fetch(`${BASE_URL}/search-text?${new URLSearchParams(filters.textSearch).toString()}`)
       .then((res) => {
@@ -130,21 +129,21 @@ const MapLayer = () => {
 
   const mutation = useMutation({
     mutationFn: fetchFromTextSearch,
-      onMutate: (variables) => {
-        // A mutation is about to happen!
-        console.log("LOG] Starting to mutate!");
+    onMutate: (variables) => {
+      // A mutation is about to happen!
+      console.log("LOG] Starting to mutate!");
 
-        return { id: 1 };
-      },
-      onSuccess: (data, variables, context) => {
-        console.log("[LOG] Success!");
-        qc.setQueryData(["data"], data);
-        console.log("[LOG] Changed Query data", qc.getQueryData(["data"]));
-      },
-      onError: (error, variables, context) => {
-        // An error happened!
-        console.log(`[LOG] Error! --> ${error}`);
-      },
+      return { id: 1 };
+    },
+    onSuccess: (data, variables, context) => {
+      console.log("[LOG] Success!");
+      qc.setQueryData(["data"], data);
+      console.log("[LOG] Changed Query data", qc.getQueryData(["data"]));
+    },
+    onError: (error, variables, context) => {
+      // An error happened!
+      console.log(`[LOG] Error! --> ${error}`);
+    },
   });
 
   async function fetchPoints() {
@@ -160,7 +159,6 @@ const MapLayer = () => {
     queryFn: fetchPoints,
     refetchOnWindowFocus: false,
     staleTime: Infinity,
-    
   });
 
   const ZoomTracker = () => {
@@ -224,14 +222,13 @@ const MapLayer = () => {
 
   async function runTextSearchMutation() {
     if (hasTextSearchFilterChanged(filters.textSearch, prevFilter.textSearch)) {
-
       if (isTextSearchFilterEmpty(filters.textSearch)) {
         console.log("[LOG] REFETCHING");
-        await qc.refetchQueries({ queryKey: ["data"]});
+        await qc.refetchQueries({ queryKey: ["data"] });
       } else {
         await mutation.mutateAsync();
       }
-      
+
       console.log("[LOG] Done fetching text!");
       return qc.getQueryData(["data"]);
     }
@@ -245,11 +242,10 @@ const MapLayer = () => {
 
     (async () => {
       let updated = await runTextSearchMutation();
-      
+
       if (updated) {
         console.log("[LOG] Updated --> ", updated);
         applyClientSideFilters(updated);
-
       } else {
         let current = qc.getQueryData(["data"]) || data;
         applyClientSideFilters(current);
@@ -257,11 +253,7 @@ const MapLayer = () => {
 
       console.log("[LOG] Finished updated markers in map.");
     })();
-
-    
-    
   }, [filters]);
-
 
   function applyClientSideFilters(newActiveData) {
     console.log("[LOG] Applying client side filters, with data", newActiveData);
@@ -294,7 +286,6 @@ const MapLayer = () => {
     console.log("[LOG] new newActiveData", newActiveData);
     setActiveData(newActiveData);
   }
-
 
   function clickShape() {
     toggleMarkersCard("multi");
@@ -476,7 +467,6 @@ const MapLayer = () => {
         <SectionsLayer sectionImages={sectionImages} areTitlesEnabled={titlesVisibility}/>
       </MapContainer>
 
-
       <SingleMarkerCard
         marker={
           selectedMarker != null ? selectedMarker.feature : selectedMarker
@@ -494,7 +484,6 @@ const MapLayer = () => {
         isVisible={markersCard == "multi"}
         viewMarker={viewMarker}
       />
-
 
       {mapReady && (
         <Bar
@@ -524,7 +513,7 @@ const MapLayer = () => {
           <FilterCard
             areFiltersOpen={userCardOpen == FILTER_CARD}
             setFilters={setFilters}
-            filterLoading={(qc.isMutating() + qc.isFetching()) > 0}
+            filterLoading={qc.isMutating() + qc.isFetching() > 0}
           />
 
           <SectionsLayerCard
