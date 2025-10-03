@@ -301,8 +301,8 @@ const MapLayer = () => {
     setMarkersInBounds(globalMIBRef.current);
   }
 
-  function viewMarker(e) {    
-    setSelectedMarker({feature: e});
+  function viewMarker(e) {
+    setSelectedMarker({ feature: e });
     toggleMarkersCard("single");
   }
 

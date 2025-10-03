@@ -1,10 +1,10 @@
 import { Button, Text, VStack, Box, HStack } from "@chakra-ui/react";
 
 const PeriodFilterButton = ({
-  title = "Ancient Greece",
-  value = "gr",
-  date = "800 - 146 BC",
-  color = "black",
+  title = "Title",
+  value = "value",
+  date = "-",
+  color = "gray.900",
   checked = false,
   onClick,
 }) => {
@@ -13,7 +13,7 @@ const PeriodFilterButton = ({
     <Button
       key={value}
       variant="subtle"
-      h={{ lg: "45px", md: "40px" }}
+      h="fit"
       overflow="hidden"
       border="1px solid"
       borderColor="gray.300"
