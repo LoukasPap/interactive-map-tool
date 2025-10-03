@@ -15,3 +15,8 @@
   position: fixed;
   overflow: hidden;
 }
+
+.pm-textarea.pm-disabled {
+  border: 1px solid black !important;
+  background: whitesmoke !important;
+}

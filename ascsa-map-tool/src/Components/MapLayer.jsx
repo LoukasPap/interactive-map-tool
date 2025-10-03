@@ -38,7 +38,7 @@ import {
   applyPeriodFilter,
   applyInventoryFilter,
   hasTextSearchFilterChanged,
-  isTextSearchFilterEmpty
+  isTextSearchFilterEmpty,
 } from "./Helpers";
 
 import { onShapeCreated } from "./GeometryOperations";
@@ -46,6 +46,8 @@ import { deactivateHandlers, handleDrawShape, handleEvent } from "./Handlers";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import usePrevious from "./CustomHooks/usePrevious";
+import SectionsLayer from "./LayerSelector/SectionsLayer";
+import SectionsLayerCard from "./LayerSelector/SectionsLayerCard";
 
 export const globalMIBRef = createRef([]); // MIB: MarkersInBound
 
@@ -59,6 +61,7 @@ const OPEN = true;
 
 const FILTER_CARD = "filters";
 const COLLECTIONS_CARD = "collections";
+const LAYERS_CARD = "layers";
 const NONE = "";
 
 const emptyFiltersState = {
@@ -108,6 +111,9 @@ const MapLayer = () => {
 
   const [savedCollections, setSavedCollections] = useState([]);
   const isSavedInCollection = useRef(-1);
+
+  const [sectionImages, setSectionImages] = useState([]);
+  const [titlesVisibility, setTitlesVisibility] = useState(true);
 
   const BASE_URL = import.meta.env.VITE_BASE_URL;
   const cidRef = useRef(0);
@@ -455,47 +461,19 @@ const MapLayer = () => {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
-        {/* {zoom >= 18 && (
-          <ImageOverlay
-            url="balloon.jpg"
-            bounds={[
-              [37.972834, 23.721197], // Southwest corner
-              [37.976726, 23.724362], // Northeast corner
-            ]}
-            opacity={1}
-          />
-        )}
-        {zoom >= 18 && (
-          <ImageOverlay
-            url="SectionBZ_BE-2002.jpg"
-            bounds={[
-              [37.976383, 23.722364], // Southwest corner
-              [37.976816, 23.722842], // Northeast corner
-            ]}
-            opacity={0.95}
-          />
-        )} */}
-        {/* {mapReady && (
-          <CanvasMarkersLayer
-            map={mapRef.current}
-            geodata={data}
-            setSelectedProperty={setSelectedProperty}
-          />
-        )} */}
-        {/* <ClusteredPoints geojson={data} /> */}
+        <SectionsLayer />
 
         <MarkerClusterLayer
           data={activeData}
           onMarkerClick={displayMarkerCard}
         />
-        {/* <CanvasMarkersLayer
-          geodata={activeData}
-          setSelectedProperty={setSelectedMarker}
-        /> */}
+
         <ZoomTracker />
         <MoveTracker />
         <ScaleControl position="bottomleft" />
         <ZoomControl position="bottomright" />
+
+        <SectionsLayer sectionImages={sectionImages} areTitlesEnabled={titlesVisibility}/>
       </MapContainer>
 
 
@@ -548,6 +526,13 @@ const MapLayer = () => {
             setFilters={setFilters}
             filterLoading={(qc.isMutating() + qc.isFetching()) > 0}
           />
+
+          <SectionsLayerCard
+            areLayersOpen={userCardOpen == LAYERS_CARD}
+            setImages={setSectionImages}
+            toggleTitles={setTitlesVisibility}
+          />
+
         </VStack>
 
         <Drawer.Root

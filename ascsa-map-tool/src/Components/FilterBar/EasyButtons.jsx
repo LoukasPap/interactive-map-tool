@@ -1,14 +1,16 @@
 import { Checkbox, HStack, Box, Icon, Center } from "@chakra-ui/react";
 import { useRef, useState } from "react";
-import { LuFilter, LuLibraryBig, LuMenu } from "react-icons/lu";
+import { LuFilter, LuLibraryBig, LuMap, LuMapPinHouse, LuMapPinX, LuMenu } from "react-icons/lu";
 
 const FILTERS_CARD = "filters";
 const COLLECTIONS_CARD = "collections";
+const LAYERS_CARD = "layers";
 const NONE = "";
 
 const EasyButtons = ({ toggleDrawer, openUserCard }) => {
   const [filterClosed, setFilterClosed] = useState(true);
   const [collectionsClosed, setCollectionsClosed] = useState(true);
+  const [layersClosed, setLayersClosed] = useState(true);
   const curOpenCardRef = useRef(NONE);
 
   const customStyle = { height: "1.5em" };
@@ -45,7 +47,7 @@ const EasyButtons = ({ toggleDrawer, openUserCard }) => {
         asChild
       >
         <Checkbox.Root
-          id="fil"
+          id="filters"
           cursor="pointer"
           w="fit"
           minW="6.5em"
@@ -53,6 +55,7 @@ const EasyButtons = ({ toggleDrawer, openUserCard }) => {
           onCheckedChange={(e) => {
             setFilterClosed(!!e.checked);
             setCollectionsClosed(true);
+            setLayersClosed(true);
 
             const checkedCard = !!e.checked ? NONE : FILTERS_CARD;
             curOpenCardRef.current = checkedCard;
@@ -93,13 +96,14 @@ const EasyButtons = ({ toggleDrawer, openUserCard }) => {
         asChild
       >
         <Checkbox.Root
-          id="col"
+          id="collection"
           w="fit"
           minW="6.5em"
           checked={collectionsClosed}
           onCheckedChange={(e) => {
             setCollectionsClosed(!!e.checked);
             setFilterClosed(true);
+            setLayersClosed(true);
 
             const checkedCard = !!e.checked ? NONE : COLLECTIONS_CARD;
             curOpenCardRef.current = checkedCard;
@@ -129,6 +133,60 @@ const EasyButtons = ({ toggleDrawer, openUserCard }) => {
             pe="1"
           >
             Collections
+          </Checkbox.Label>
+        </Checkbox.Root>
+      </Box>
+
+      {/* Layers button */}
+      <Box
+        flexGrow={1}
+        bg={layersClosed ? "white" : "gray.900"}
+        color={layersClosed ? "black" : "white"}
+        p={2}
+        h="100%"
+        rounded="md"
+        border="1px solid"
+        borderColor="gray.300"
+        asChild
+      >
+        <Checkbox.Root
+          id="layers"
+          w="fit"
+          minW="6.5em"
+          checked={layersClosed}
+          onCheckedChange={(e) => {
+            setLayersClosed(!!e.checked);
+            setCollectionsClosed(true);
+            setFilterClosed(true);
+
+            const checkedCard = !!e.checked ? NONE : LAYERS_CARD;
+            curOpenCardRef.current = checkedCard;
+            openUserCard(checkedCard);
+          }}
+        >
+          <Checkbox.HiddenInput />
+          <Checkbox.Control
+            cursor="pointer"
+            border="none"
+            bg={layersClosed ? "white" : "gray.900"}
+            w="fit"
+            h="fit"
+            p={0}
+          >
+            <LuMap
+              color={layersClosed ? "black" : "white"}
+              strokeWidth="1.5px"
+              style={customStyle}
+            />
+          </Checkbox.Control>
+          <Checkbox.Label
+            cursor="pointer"
+            w="full"
+            textAlign="center"
+            fontSize={"lg"}
+            pe="1"
+          >
+            Layers
           </Checkbox.Label>
         </Checkbox.Root>
       </Box>
