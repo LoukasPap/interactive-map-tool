@@ -16,8 +16,13 @@ import {
   Box,
   Tag,
   Center,
+  Tabs,
 } from "@chakra-ui/react";
-import { LuCopy, LuX, LuGlobe } from "react-icons/lu";
+import {
+  LuCopy,
+  LuX,
+  LuGlobe,
+} from "react-icons/lu";
 
 import { Tooltip } from "../ui/tooltip";
 
@@ -34,7 +39,9 @@ const initialObject = {
   section: "section",
   date: "date",
   material: "material",
-  // materialCategory: "materialCategory",
+  reverse: "reverse",
+  obverse: "obverse",
+  context: "context",
   description: "description",
   coords: [23.722605, 37.976641],
   dimensions: [],
@@ -47,6 +54,32 @@ const initialObject = {
 };
 
 const propList = ["title", "section", "period", "material"];
+
+const CoinsExtraDetails = ({ obverse, reverse }) => {
+  return (
+    <Tabs.Root defaultValue="obverse" variant="plain" pl="0px" fitted>
+      <Tabs.List bg="bg.muted" rounded="l3" p="1">
+        <Tabs.Trigger
+          value="obverse"
+          _selected={{ bg: "gray.300" }}
+          fontSize="lg"
+        >
+          Obverse
+        </Tabs.Trigger>
+        <Tabs.Trigger
+          value="reverse"
+          _selected={{ bg: "gray.300" }}
+          fontSize="lg"
+        >
+          Reverse
+        </Tabs.Trigger>
+        <Tabs.Indicator rounded="l2" />
+      </Tabs.List>
+      <Tabs.Content value="obverse">{obverse}</Tabs.Content>
+      <Tabs.Content value="reverse">{reverse}</Tabs.Content>
+    </Tabs.Root>
+  );
+};
 
 const SingleMarkerCard = ({ marker, toggleCard, isVisible }) => {
   const [pointDetails, setPointDetails] = useState(initialObject);
@@ -67,7 +100,9 @@ const SingleMarkerCard = ({ marker, toggleCard, isVisible }) => {
         date: marker.Date || "N/A",
 
         material: marker.Material.join(", ") || "N/A",
-        // materialCategory: marker.MaterialCategory || "N/A",
+        reverse: marker.Reverse || "N/A",
+        obverse: marker.Obverse || "N/A",
+        context: marker.Context || "N/A",
 
         description: marker.Description || "N/A",
         coords: marker.geometry.coordinates,
@@ -252,6 +287,15 @@ const SingleMarkerCard = ({ marker, toggleCard, isVisible }) => {
                 </DataList.ItemValue>
               </DataList.Item>
             ))}
+
+            {pointDetails.category == "Coin" && (
+              <Box gridColumn="span 2">
+                <CoinsExtraDetails
+                  obverse={pointDetails.obverse}
+                  reverse={pointDetails.reverse}
+                />
+              </Box>
+            )}
 
             <Box gridColumn="span 3">
               <Heading mb="1">Dimensions</Heading>

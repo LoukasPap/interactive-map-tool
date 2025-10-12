@@ -23,7 +23,7 @@ import usePrevious from "../../CustomHooks/usePrevious"
 const initialInventoryList = [
   { title: "A",  value: "A",  fullTitle: "Architecture", color: "#000", checked: false },
   { title: "B",  value: "B",  fullTitle: "Bronze", color: "#000", checked: false },
-  { title: "BI", value: "BI", fullTitle: " Bone & Ivory", color: "#000", checked: false },
+  { title: "BI", value: "BI", fullTitle: "Bone & Ivory", color: "#000", checked: false },
   { title: "G",  value: "G",  fullTitle: "Glass", color: "#000", checked: false },
   { title: "I",  value: "I",  fullTitle: "Inscriptions", color: "#000", checked: false },
   { title: "IL", value: "IL", fullTitle: " Iron & Lead", color: "#000", checked: false },
@@ -33,8 +33,8 @@ const initialInventoryList = [
   { title: "N",  value: "N",  fullTitle: "Coin", color: "#000", checked: false },
   { title: "P",  value: "P",  fullTitle: "Pottery", color: "#000", checked: false },
   { title: "S",  value: "S",  fullTitle: "Sculpture", color: "#000", checked: false },
-  { title: "SS", value: "SS", fullTitle: " Stamps & Seals", color: "#000", checked: false },
-  { title: "ST", value: "ST", fullTitle: " Stone", color: "#000", checked: false },
+  { title: "SS", value: "SS", fullTitle: "Stamps & Seals", color: "#000", checked: false },
+  { title: "ST", value: "ST", fullTitle: "Stone", color: "#000", checked: false },
   { title: "T",  value: "T",  fullTitle: "Terracotta", color: "#000", checked: false },
   { title: "W",  value: "W",  fullTitle: "Wood", color: "#000", checked: false },
 ];
