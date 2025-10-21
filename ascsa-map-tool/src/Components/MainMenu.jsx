@@ -48,7 +48,7 @@ const MainMenu = () => {
   }
 
   const menuActions = [
-    { label: "Settings", color: "gray", icon: <LuSettings />, action: null },
+    // { label: "Settings", color: "gray", icon: <LuSettings />, action: null },
     { label: "Logout", color: "red", icon: <LuLogOut />, action: logout },
   ];
 
