@@ -8,9 +8,11 @@ import "../leaflet-iconex";
 import "../demo.css";
 
 import { createMarker, attachEvents } from "./MarkersHelpers";
+import { useQueryClient } from "@tanstack/react-query";
 
 const MarkerClusterLayer = ({ data, onMarkerClick }) => {
   const map = useMap();
+  const qc = useQueryClient();
 
   useEffect(() => {
     console.log("[LOG] Data in MarkerClusterLayer:", data);
@@ -30,7 +32,7 @@ const MarkerClusterLayer = ({ data, onMarkerClick }) => {
 
     data.forEach((feature) => {
       const marker = createMarker(feature);
-      attachEvents(marker, onMarkerClick, feature);
+      attachEvents(marker, onMarkerClick, feature, qc);
 
       marker.options.pmIgnore = true;
       markers.push(marker);

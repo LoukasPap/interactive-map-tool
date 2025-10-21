@@ -1,4 +1,5 @@
-import { getItemIcon, getMonumentIcon } from "./IconHelpers";
+import { getMonumentIcon } from "./IconHelpers";
+import { fetchPointData, pointQueryKey } from "../Queries";
 
 const eraToColor = {
   Neolithic: "#3f3f46",
@@ -18,6 +19,10 @@ const eraToColor = {
   Unknown: "#111111",
 };
 
+
+
+
+
 export function createMarker(point) {
   const coordinates = getCoordinates(point.geometry);
   const icon = getMarkerIcon(point);
@@ -28,29 +33,24 @@ export function createMarker(point) {
     icon: icon,
   });
 
-  //   const marker = L.circleMarker(
-  //   coordinates, {
-  //     opacity: 1,
-  //     radius: 10,
-  //     color: eraToColor[point.Era] || "#000",
-  //     fillColor: eraToColor[point.Era] || "#000",
-  //     fillOpacity: 0.8,
-  //   }
-  // );
-
   return marker;
 }
 
-export function attachEvents(marker, onMarkerClick, feature) {
+export function attachEvents(marker, onMarkerClick, feature, qc) {
+
   function setStroke(e, color, width) {
     e.sourceTarget._icon.children[0].children[0].children[0].style.stroke = color;
     e.sourceTarget._icon.children[0].children[0].children[0].style.strokeWidth = width;
   }
 
   marker.on({
-    click: (e) => {
-      onMarkerClick({ feature });
+    click: async (e) => {
       console.log("Clicked marker:", feature);
+
+      const res = await qc.fetchQuery({queryKey: pointQueryKey(feature.Name), queryFn: () => fetchPointData(feature.Name)});
+      const point = res.point;
+      onMarkerClick({point})
+
       setStroke(e, "red", 1);
     },
     popupclose: (e) => {
