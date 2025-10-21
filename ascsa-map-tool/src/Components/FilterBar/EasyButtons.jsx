@@ -1,6 +1,11 @@
 import { Checkbox, HStack, Box, Icon, Center } from "@chakra-ui/react";
 import { useRef, useState } from "react";
-import { LuFilter, LuLibraryBig, LuMap, LuMapPinHouse, LuMapPinX, LuMenu } from "react-icons/lu";
+import {
+  LuFilter,
+  LuLibraryBig,
+  LuMap,
+} from "react-icons/lu";
+import MainMenu from "../MainMenu";
 
 const FILTERS_CARD = "filters";
 const COLLECTIONS_CARD = "collections";
@@ -17,22 +22,8 @@ const EasyButtons = ({ toggleDrawer, openUserCard }) => {
 
   return (
     <HStack w="100%" h="3.5vh" gap="5px" pointerEvents="auto" display="flex">
-      <Center
-        w="40px"
-        h="100%"
-        rounded="7.5px"
-        bg="white"
-        border="1px solid #C6C6C6"
-      >
-        <Icon
-          justifySelf="center"
-          variant="plain"
-          _hover={{ bg: "gray.300" }}
-          onClick={() => toggleDrawer(true)}
-        >
-          <LuMenu size="20" cursor="pointer" />
-        </Icon>
-      </Center>
+      
+      <MainMenu />
 
       {/* Filters button */}
       <Box

@@ -521,39 +521,10 @@ const MapLayer = () => {
             setImages={setSectionImages}
             toggleTitles={setTitlesVisibility}
           />
-
         </VStack>
-
-        <Drawer.Root
-          open={isDrawerOpen}
-          size="sm"
-          placement="start"
-          onOpenChange={(e) => toggleDrawer(e.open)}
-        >
-          <Portal>
-            <Drawer.Backdrop />
-            <Drawer.Positioner>
-              <Drawer.Content>
-                <Drawer.Header>
-                  <Avatar.Root size="2xl">
-                    <Avatar.Fallback name="Dummy Name" />
-                    <Avatar.Image src="./coin-img.png" />
-                  </Avatar.Root>
-                  <Drawer.Title fontSize="3xl">John Brook</Drawer.Title>
-                </Drawer.Header>
-                <Drawer.Body>
-                  <p>Drawer Body</p>
-                </Drawer.Body>
-                <Drawer.Footer></Drawer.Footer>
-                <Drawer.CloseTrigger asChild>
-                  <CloseButton size="sm" />
-                </Drawer.CloseTrigger>
-              </Drawer.Content>
-            </Drawer.Positioner>
-          </Portal>
-        </Drawer.Root>
       </Box>
     </>
   );
 };
+
 export default MapLayer;
