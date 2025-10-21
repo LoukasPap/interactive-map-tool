@@ -324,13 +324,13 @@ const SingleMarkerCard = ({ marker, toggleCard, isVisible }) => {
             }}
           >
             <For
-              each={pointDetails["images"].slice(0, 10)}
+              each={pointDetails["images"].slice(0, 8)}
               fallback={<Text color="gray">No images</Text>}
             >
               {(item, index) => <CustomImage key={index} src={item} />}
             </For>
 
-            {+pointDetails["images"].length > 10 ? ( // prefixing "+" transforms str to int
+            {+pointDetails["images"].length > 8 ? ( // prefixing "+" transforms str to int
               <Button
                 w="100px"
                 h="100px"
