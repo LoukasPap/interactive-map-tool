@@ -126,20 +126,13 @@ const MapLayer = () => {
   const [sectionImages, setSectionImages] = useState([]);
   const [titlesVisibility, setTitlesVisibility] = useState(true);
 
-  const BASE_URL = import.meta.env.VITE_BASE_URL;
   const cidRef = useRef(0);
   const qc = useQueryClient();
 
-  async function fetchFromTextSearch() {
-    return fetch(`${BASE_URL}/search-text?${new URLSearchParams(filters.textSearch).toString()}`)
-      .then((res) => {
-        if (!res.ok) throw new Error("Searching text request failed");
-        return res.json();
-      });
-  }
+  const token = localStorage.getItem("token");
+  const cachedUser = qc.getQueryData(["verifyToken", token]); // may be undefined
+  const currentUser = cachedUser;
 
-  const mutation = useMutation({
-    mutationFn: fetchFromTextSearch,
     onMutate: (variables) => {
       // A mutation is about to happen!
       console.log("LOG] Starting to mutate!");
