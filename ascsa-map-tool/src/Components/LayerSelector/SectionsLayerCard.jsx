@@ -36,7 +36,7 @@ const agoraImagesFolders = [
 const SectionsLayerCard = ({ areLayersOpen, setImages, toggleTitles }) => {
   const [openItems, setOpenItems] = useState([]);
   const [sectionImages, setSectionImages] = useState([]);
-  const [checked, setChecked] = useState(false);
+  const [checked, setChecked] = useState(true);
 
   useEffect(() => {
     fetch("/sections.json")
