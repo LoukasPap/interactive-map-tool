@@ -102,6 +102,7 @@ const MapLayer = () => {
   const [activeData, setActiveData] = useState([]);
 
   const [markersInBounds, setMarkersInBounds] = useState([]);
+  const [selectedCollection, setSelectedCollection] = useState({});
 
   const [activeTool, setActiveTool] = useState("select");
 
@@ -114,7 +115,13 @@ const MapLayer = () => {
   const [userCardOpen, setUserCardOpen] = useState(NONE);
 
   const [savedCollections, setSavedCollections] = useState([]);
-  const isSavedInCollection = useRef(-1);
+  const allCollectionsRef = useRef([]);
+  const isSavedInCollection = useRef(false);
+
+  const savedIDS = useRef([]);
+  const tempIDS = useRef([]);
+
+  const [visibleCollections, setVisibleCollections] = useState([]);
 
   const [sectionImages, setSectionImages] = useState([]);
   const [titlesVisibility, setTitlesVisibility] = useState(true);
@@ -229,6 +236,33 @@ const MapLayer = () => {
     })();
   }, [filters]);
 
+  // on create shape
+  useEffect(() => {
+    if (!mapRef.current) return;
+    const map = mapRef.current;
+
+    map.on("pm:create", (e) => {
+      console.log("[DEBUG] - [ON CREATE SHAPE] - ENTER");
+      currentShape.current = e;
+      e.layer._path.style.strokeDasharray = "10px";
+      onShapeCreated(e, activeData, onEditEvents);
+
+      createCollection({
+        name: `Temporary #${cidRef.current}`,
+        description: "-",
+        type: e.shape,
+      });
+
+      toggleMarkersCard("multi");
+      setTool("Edit");
+      console.log("[DEBUG] - [ON CREATE SHAPE] - EXIT");
+    });
+
+    return () => {
+      map.off("pm:create");
+    };
+  }, [mapReady, activeData]);
+
   function applyClientSideFilters(newActiveData) {
     console.log("[LOG] Applying client side filters, with data", newActiveData);
 
@@ -261,61 +295,104 @@ const MapLayer = () => {
     setActiveData(newActiveData);
   }
 
-  function clickShape() {
+  function onShapeClick(c) {
+    isSavedInCollection.current = isCollectionSaved(c.id);
+
+    setSelectedCollection(
+      allCollectionsRef.current.find((col) => col.id === c.id)
+    );
     toggleMarkersCard("multi");
-    setMarkersInBounds(globalMIBRef.current);
   }
 
-  function viewMarker(e) {
-    setSelectedMarker({ feature: e });
-    toggleMarkersCard("single");
+  async function onShapeEdit(collection) {
+    console.log("[DEBUG] - START EDIT SHAPE:", collection);
+
+    const currentCollectionState = allCollectionsRef.current.find(
+      (c) => c.id == collection.id
+    );
+
+    if (currentCollectionState.isSaved) {
+      await updateCollection({
+        ...currentCollectionState,
+        shape: collection.shape,
+      });
+    }
+
+    setSelectedCollection((prev) => ({
+      ...prev,
+      markers: globalMIBRef.current,
+    }));
+
+    allCollectionsRef.current = allCollectionsRef.current.map((col) =>
+      col.id === collection.id
+        ? {
+            ...col,
+            markers: globalMIBRef.current,
+            date: getCurrentDateTime(),
+          }
+        : col
+    );
+
+    setSavedCollections((prev) => {
+      const next = prev.map((col) =>
+        col.id === collection.id
+          ? {
+              ...col,
+              markers: globalMIBRef.current,
+              date: getCurrentDateTime(),
+            }
+          : col
+      );
+      return next;
+    });
+
+    console.log("[DEBUG] - FINISH EDIT SHAPE:", collection.id);
   }
 
-  useEffect(() => {
-    if (!mapRef.current) return;
-    const map = mapRef.current;
-
-    map.on("pm:create", (e) => {
-      currentShape.current = e;
-      isSavedInCollection.current = -1;
-      toggleMarkersCard("multi");
-      onShapeCreated(e, activeData, setMarkersInBounds, clickShape);
-      setTool("Edit");
-
-      // temp0.marker._path.setAttribute("fill", "#fff")
-    });
-
-    map.on("click", (e) => {
-      console.log("Map clicked", e);
-      setOpacityOfDOMMarkers(1);
-    });
-
-    return () => {
-      map.off("pm:create");
-    };
-  }, [mapReady, activeData]);
+  function onEditEvents(e) {
+    setMarkersInBounds(e);
+  }
 
   function displayMarkerCard(e) {
     setSelectedMarker(e);
     toggleMarkersCard("single");
   }
 
-  function saveCollection(c) {
-    setTool("Select");
+  function createCollection(c) {
+    console.log("[DEBUG] - [CREATE COLLECTION] - ENTER", c);
+
+    const rid = generateRandomIdUrlSafe();
     const newCollection = {
-      id: cidRef.current,
+      id: rid,
       name: c.name,
       description: c.description,
-      markers: markersInBounds,
+      markers: globalMIBRef.current,
       shape: currentShape.current,
-      date: new Date().toLocaleDateString(),
+      date: getCurrentDateTime(),
+      isSaved: false,
+      type: currentShape.current.shape,
     };
+    console.log("[DEBUG] - [CREATE COLLECTION] - newCollection", newCollection);
 
-    const newSavedCollection = [...savedCollections, newCollection];
-    console.log(newSavedCollection);
-    setSavedCollections(newSavedCollection);
-    isSavedInCollection.current = cidRef.current;
-    cidRef.current = cidRef.current + 1;
+    allCollectionsRef.current = [...allCollectionsRef.current, newCollection];
+    setSavedCollections((prev) => [...prev, newCollection]);
+
+    if (newCollection.shape) {
+      newCollection.shape.layer.on("click", () => onShapeClick(newCollection));
+      newCollection.shape.layer.on(
+        "pm:edit",
+        async () => await onShapeEdit(newCollection)
+      );
+    }
+
+    setSelectedCollection(newCollection);
+    setVisibleCollections((prev) =>
+      prev.includes(newCollection.id) ? prev : [...prev, newCollection.id]
+    );
+
+    pushAndIncreaseTempsId(rid);
+
+    console.log("[DEBUG] - [CREATE COLLECTION] - EXIT");
   }
 
   function discardCollection() {
@@ -402,7 +479,20 @@ const MapLayer = () => {
     }
   }
 
-  const [isDrawerOpen, toggleDrawer] = useState(CLOSE);
+  function isCollectionSaved(id) {
+    return savedIDS.current.find((cid) => cid == id) != undefined;
+  }
+
+  function pushAndIncreaseTempsId(id) {
+    tempIDS.current.push(id);
+    cidRef.current = cidRef.current + 1; // increase id
+  }
+
+  function removeTempId(id) {
+    const tempId = tempIDS.current.indexOf(id);
+    tempIDS.current = tempIDS.current.filter((cid) => cid != tempId);
+  }
+
   return (
     <>
       <MapContainer

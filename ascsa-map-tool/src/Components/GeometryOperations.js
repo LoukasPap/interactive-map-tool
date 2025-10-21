@@ -50,17 +50,16 @@ export const onShapeCreated = (
   e,
   activeData,
   setMarkersInBounds,
-  clickShape
 ) => {
   switch (e.shape) {
     case "Circle":
-      onCircleCreated(e, activeData, setMarkersInBounds, clickShape);
+      onCircleCreated(e, activeData, setMarkersInBounds);
       break;
     case "Rectangle":
-      onRectangleCreated(e, activeData, setMarkersInBounds, clickShape);
+      onRectangleCreated(e, activeData, setMarkersInBounds);
       break;
     case "Polygon":
-      onPolygonCreated(e, activeData, setMarkersInBounds, clickShape);
+      onPolygonCreated(e, activeData, setMarkersInBounds);
       break;
     default:
       console.log("Problem with e.shape=[", e.shape, "]");
@@ -71,7 +70,6 @@ export const onCircleCreated = (
   e,
   activeData,
   setMarkersInBounds,
-  clickShape
 ) => {
   if (e.shape === "Circle") {
     const circleLayer = e.layer;
@@ -85,12 +83,7 @@ export const onCircleCreated = (
       );
       console.log("This circle was updated!");
     });
-
-    circleLayer.on("click", (e) => {
-      console.log("Clicked the circle e!", e);
-      clickShape();
-      // e.target._path.style.stroke = "white";
-    });
+    
 
     checkIntersectingMarkers(
       "Circle",
@@ -120,11 +113,6 @@ export const onRectangleCreated = (
       console.log("This rectangle was updated!");
     });
 
-    rectangleLayer.on("click", (e) => {
-      console.log("Clicked the rectangle e!", e);
-      clickShape();
-    });
-
     checkIntersectingMarkers(
       "Rectangle",
       rectangleLayer,
@@ -151,11 +139,6 @@ export const onPolygonCreated = (
         setMarkersInBounds
       );
       console.log("This polygon was updated!");
-    });
-
-    polygonLayer.on("click", (e) => {
-      console.log("Clicked the polygon e!", e);
-      clickShape();
     });
 
     checkIntersectingMarkers(
