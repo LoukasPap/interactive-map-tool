@@ -16,7 +16,7 @@ import {
   Portal,
   Stack,
   Group,
-  ColorSwatch,
+  Center,
 } from "@chakra-ui/react";
 
 import { useState, useRef } from "react";
@@ -26,12 +26,14 @@ import {
   LuChevronRight,
   LuCircleX,
   LuSave,
-  LuEye,
-  LuArrowBigRight,
   LuArrowRight,
 } from "react-icons/lu";
 
 import { MarkerButton } from "./SingleMarkerCardFooter";
+
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { addCollectionDB, fetchPointData, pointQueryKey } from "../../Queries";
+import { getShapeProperties } from "../ShapeHelpers";
 
 const eraToColorMapping = {
   Neolithic: "gray.700",
@@ -54,24 +56,58 @@ const eraToColorMapping = {
 const pageSize = 25;
 
 const MultipleMarkersCard = ({
+  collection = {},
   markers,
   saveCollection,
-  discardCollection,
-  updateCollection,
-  isSavedInCollection = -1,
+  isSavedInCollection,
   isVisible,
-  viewMarker,
+  onMarkerClick,
 }) => {
-  console.log("markers in MultipleMarkersCard: ", markers);
+  console.log("markers in MultipleMarkersCard: ", collection);
 
   const [page, setPage] = useState(1);
 
   const startRange = (page - 1) * pageSize;
   const endRange = startRange + pageSize;
 
-  const visibleMarkers = markers.slice(startRange, endRange);
+  const visibleMarkers =
+    collection.markers != undefined
+      ? collection.markers.slice(startRange, endRange)
+      : markers;
 
   const lastSelected = useRef("-1");
+
+  const qc = useQueryClient();
+  const token = localStorage.getItem("token");
+  const currentUser = qc.getQueryData(["verifyToken", token]);
+
+  const addCollectionMutation = useMutation({
+    mutationFn: (data) => addCollectionDB(data),
+    onError: (error, variables, context) => {
+      console.log(`[LOG] Error storing collection! --> ${error}`);
+    },
+  });
+
+  async function save(c) {
+    const savedCollectionDB = {
+      ...collection,
+      id: collection.id,
+      username: currentUser.user?.username,
+      name: c.name,
+      description: c.description,
+      shape: getShapeProperties(collection.type, collection.shape),
+      isSaved: true,
+    };
+
+    await addCollectionMutation.mutateAsync(savedCollectionDB);
+
+    const savedCollection = {
+      ...savedCollectionDB,
+      shape: collection.shape
+    };
+
+    saveCollection(savedCollection);
+  }
 
   const Marker = ({ info }) => {
     return (
@@ -86,25 +122,9 @@ const MultipleMarkersCard = ({
         overflow="hidden"
         p={0}
         variant="outline"
-        border={lastSelected.current==info._id ? "1px solid black" : "none"}
-        
+        border={lastSelected.current == info.Name ? "1px solid black" : "none"}
       >
-        {/* <Box
-          w="100%"
-          h="5px"
-          bg={eraToColorMapping[info.Era]}
-          pos="absolute"
-          bottom="0"
-          zIndex={-1}
-        /> */}
-
-        <HStack
-          w="100%"
-          gap={4}
-          pl="5px"
-          pr="5px"
-          justifyContent="start"
-        >
+        <HStack w="100%" gap={4} pl="5px" pr="5px" justifyContent="start">
           <Image
             src={
               info.Images != null &&
@@ -130,7 +150,8 @@ const MultipleMarkersCard = ({
                 textAlign="start"
                 fontWeight="regular"
                 fontSize="lg"
-                whiteSpace="normal"              >
+                whiteSpace="normal"
+              >
                 {info.Title || info.Name}
               </Text>
               {info.Title && (
@@ -143,9 +164,15 @@ const MultipleMarkersCard = ({
 
           <IconButton
             mr={2}
-            onClick={() => {
-              lastSelected.current = info._id;
-              viewMarker(info);
+            onClick={async () => {
+              const res = await qc.fetchQuery({
+                queryKey: pointQueryKey(info.Name),
+                queryFn: () => fetchPointData(info.Name),
+              });
+              const point = res.point;
+              onMarkerClick({ point });
+
+              lastSelected.current = info.Name;
             }}
           >
             <LuArrowRight />
@@ -172,34 +199,10 @@ const MultipleMarkersCard = ({
         w="100%"
         justifyContent="center"
         p={0}
-        pl="5"
         flexDir="row"
         bg="black"
       >
-        {/* <Field.Root fontSize="lg" w="fit-content" color="white" size="xl">
-          <Field.Label>Collection name</Field.Label>
-          <Input
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-            placeholder="e.g. Bag of coins"
-            variant="flushed"
-
-            // w="100px"
-          />{" "}
-        </Field.Root> */}
-
-        {/* <MarkerButton
-          id="save-group"
-          label="Save"
-          icon={
-            <LuSave
-              style={{ width: "2.25em", height: "2.25em" }}
-              strokeWidth="1.5px"
-            />
-          }
-          onClick={() => save("here")}/> */}
-
-        {isSavedInCollection == -1 ? (
+        {!isSavedInCollection ? (
           <>
             <Dialog.Root initialFocusEl={() => ref.current}>
               <Dialog.Trigger asChild>
@@ -266,6 +269,7 @@ const MultipleMarkersCard = ({
                             save({
                               name: nameValue,
                               description: descriptionValue,
+                              saved: true,
                             });
                           }
                         }}
@@ -277,31 +281,11 @@ const MultipleMarkersCard = ({
                 </Dialog.Positioner>
               </Portal>
             </Dialog.Root>
-
-            <MarkerButton
-              id="discard-group"
-              label="Discard"
-              icon={
-                <LuCircleX
-                  style={{ width: "2.25em", height: "2.25em" }}
-                  strokeWidth="1.5px"
-                />
-              }
-              onClick={discardCollection}
-            />
           </>
         ) : (
-          <MarkerButton
-            id="update"
-            label="Update"
-            icon={
-              <LuSaveAll
-                style={{ width: "2.25em", height: "2.25em" }}
-                strokeWidth="1.5px"
-              />
-            }
-            onClick={updateCollection}
-          />
+          <Center fontSize="xl" color="white" h="75px">
+            {collection.name}
+          </Center>
         )}
       </Card.Footer>
     );
@@ -327,7 +311,10 @@ const MultipleMarkersCard = ({
     >
       <Card.Header>
         <Text>
-          selection: <b>{markers.length}</b>
+          selection:{" "}
+          <b>
+            {collection.markers != undefined ? collection.markers.length : 0}
+          </b>
         </Text>
 
         <Pagination.Root
@@ -381,7 +368,7 @@ const MultipleMarkersCard = ({
           {(item, index) => <Marker info={item} key={index} />}
         </For>
       </Card.Body>
-      <Footer save={saveCollection} />
+      <Footer save={save} />
     </Card.Root>
   );
 };

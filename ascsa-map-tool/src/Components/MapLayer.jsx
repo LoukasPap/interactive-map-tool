@@ -354,7 +354,7 @@ const MapLayer = () => {
   }
 
   function displayMarkerCard(e) {
-    setSelectedMarker(e);
+    setSelectedMarker({ feature: e.point });
     toggleMarkersCard("single");
   }
 
@@ -395,15 +395,31 @@ const MapLayer = () => {
     console.log("[DEBUG] - [CREATE COLLECTION] - EXIT");
   }
 
-  function discardCollection() {
-    setTool("Select");
+  function saveCollection(c) {
+    console.log("[DEBUG] - [SAVE COLLECTION] - ENTER", c);
 
-    globalMIBRef.current = [];
-    setOpacityOfDOMMarkers(1);
-    toggleMarkersCard("");
+    const savedCollection = {
+      id: c.id,
+      name: c.name,
+      description: c.description,
+      markers: markersInBounds,
+      date: getCurrentDateTime(),
+      shape: c.shape,
+      isSaved: true,
+    };
 
-    currentShape.current.layer.remove();
-    currentShape.current = null;
+    allCollectionsRef.current = allCollectionsRef.current.map((col) =>
+      col.id == c.id ? savedCollection : col
+    );
+
+    setSavedCollections(allCollectionsRef.current);
+    c.shape.layer._path.style.strokeDasharray = "";
+
+    savedIDS.current.push(c.id);
+    removeTempId(c.id);
+    setSelectedCollection(savedCollection);
+
+    console.log("[DEBUG] - [SAVE COLLECTION] - EXIT");
   }
 
   function viewCollection(c) {
@@ -540,13 +556,12 @@ const MapLayer = () => {
       />
 
       <MultipleMarkersCard
+        collection={selectedCollection}
         markers={markersInBounds}
         saveCollection={saveCollection}
-        discardCollection={discardCollection}
         isSavedInCollection={isSavedInCollection.current}
-        updateCollection={updateCollection}
         isVisible={markersCard == "multi"}
-        viewMarker={viewMarker}
+        onMarkerClick={displayMarkerCard}
       />
 
       {mapReady && (
