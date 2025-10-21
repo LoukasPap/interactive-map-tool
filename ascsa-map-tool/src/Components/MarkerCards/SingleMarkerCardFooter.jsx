@@ -5,14 +5,15 @@ import {
   LinkOverlay,
   Clipboard,
   Card,
+  Group,
+  Icon,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import {
-  LuExpand,
-  LuSave,
   LuGlobe,
   LuMapPinCheckInside,
   LuMapPin,
+  LuExternalLink,
 } from "react-icons/lu";
 
 export const MarkerButton = ({ id, label, icon, onClick = null }) => {
@@ -31,9 +32,12 @@ export const MarkerButton = ({ id, label, icon, onClick = null }) => {
       onClick={onClick}
       _target={"blank"}
     >
-      {icon}
+      {icon} 
 
-      <Text textStyle="lg">{label}</Text>
+      <Group gap={1}>
+        <Text textStyle="lg">{label}</Text>
+        {label=="Source" && <Icon size="sm"><LuExternalLink /></Icon>}
+      </Group>
     </Button>
   );
 };
@@ -81,7 +85,7 @@ const SingleMarkerCardFooter = ({ source, coords = "-" }) => {
         label="Source"
         icon={
           <LinkBox>
-            <LinkOverlay href={source}>
+            <LinkOverlay href={source} target="_blank">
               <LuGlobe style={customStyle} strokeWidth="1.5px" />
             </LinkOverlay>
           </LinkBox>
