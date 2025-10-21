@@ -14,11 +14,7 @@ import {
   Flex,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import {
-  LuEye,
-  LuEyeClosed,
-  LuTrash2,
-} from "react-icons/lu";
+import { LuEye, LuEyeClosed, LuTrash2 } from "react-icons/lu";
 
 import { Tooltip } from "../ui/tooltip";
 import { BiShapeCircle, BiShapeSquare, BiShapePolygon } from "react-icons/bi";
@@ -26,10 +22,10 @@ import { BiShapeCircle, BiShapeSquare, BiShapePolygon } from "react-icons/bi";
 const CollectionsCard = ({
   areCollectionsOpen = false,
   savedCollections = [{ name: "a" }, { name: "b" }],
-  savedMarkers = [],
   viewCollection,
   deleteCollection,
   hideCollection,
+  visibleCollections = []
 }) => {
   const [openItems, setOpenItems] = useState([]);
 
@@ -48,16 +44,20 @@ const CollectionsCard = ({
       }
     }
 
+    const highlightColor = "black";
+
     return (
       <Flex
+        key={c.id}
         as="li"
         _last={{ mb: "12vh" }}
         w="100%"
         padding={2}
         paddingInline={3}
-        bg="gray.200"
+        bg={c.isSaved ? "gray.200" : "white"}
         transition={"all 0.2s"}
-        border="1px solid"
+        border={c.isSaved ? "1px solid" : "1px dashed"}
+        borderWidth="2px"
         borderColor="gray.300"
         rounded="sm"
         h="fit"
@@ -65,8 +65,17 @@ const CollectionsCard = ({
         mt={1}
         alignContent={"start"}
         justifyContent={"start"}
+        _hover={{ borderColor: highlightColor }}
+        onMouseEnter={() => {
+          let stroke = c.shape.layer || c.shape;
+          stroke._path.style.stroke = highlightColor;
+        }}
+        onMouseLeave={() => {
+          let stroke = c.shape.layer || c.shape;
+          stroke._path.style.stroke = "";
+        }}
       >
-        <VStack w="100%" mb={2} alignItems={"start"}>
+        <VStack w="100%" mb={2} alignItems={"start"} gap={0}>
           <HStack w="100%" justifyContent={"space-between"}>
             <Text fontSize={"sm"} color="gray.500">
               {c.date}
@@ -77,33 +86,61 @@ const CollectionsCard = ({
             </Text>
           </HStack>
 
-          <HStack alignItems="center" justifyContent={"space-between"} w="100%">
-            <Heading fontSize={"lg"}>{c.name}</Heading>
-            <Tooltip
-              content={c.shape.shape}
-              contentProps={{ fontSize: "lg", p: 2 }}
-              openDelay={200}
-              closeDelay={200}
-            >
-              <Icon>{findShapeType(c.shape.shape)}</Icon>
-            </Tooltip>
-          </HStack>
-          <Text
-            maxH="7rem"
-            maxLines={2}
-            overflow={"auto"}
-            pr={2}
-            _scrollbar={{ display: "thin", color: "black" }}
-          >
-            {c.description || "No description provided."}
-          </Text>
+          <Box m="0.75em 0em" w="full">
+            <HStack alignItems="center" justifyContent="space-between" mb="1">
+              <Heading fontSize="lg">{c.name}</Heading>
+              <Tooltip
+                content={c.type}
+                contentProps={{ fontSize: "lg", p: 2 }}
+                openDelay={200}
+                closeDelay={200}
+              >
+                <Icon>{findShapeType(c.type)}</Icon>
+              </Tooltip>
+            </HStack>
+
+            {c.description != "" ? (
+              <Text
+                maxH="7rem"
+                fontWeight="light"
+                maxLines={2}
+                overflow={"auto"}
+                pr={2}
+                _scrollbar={{ display: "thin", color: "black" }}
+              >
+                {c.description}
+              </Text>
+            ) : (
+              <Text
+                color="gray"
+                fontStyle="italic"
+                maxH="7rem"
+                pr={2}
+              >
+                No description provided.
+              </Text>
+            )}
+          </Box>
+
           <Group w="100%">
-            {viewedCollection === c.name ? (
+            <Button
+              flexGrow={1}
+              variant="outline"
+              colorPalette="red"
+              onClick={() => {
+                deleteCollection(c);
+              }}
+            >
+              Delete
+              <LuTrash2 />
+            </Button>
+
+            {visibleCollections.includes(c.id) ? (
               <Button
                 flexGrow={1}
                 w="fit"
+                variant="solid"
                 onClick={() => {
-                  setViewedCollection(null);
                   hideCollection(c);
                 }}
               >
@@ -112,26 +149,15 @@ const CollectionsCard = ({
             ) : (
               <Button
                 flexGrow={1}
+                variant="solid"
                 w="fit"
                 onClick={() => {
-                  setViewedCollection(c.name);
                   viewCollection(c);
                 }}
               >
                 View <LuEye />
               </Button>
             )}
-
-            <Button
-              flexGrow={1}
-              bg="red.500"
-              onClick={() => {
-                deleteCollection(c);
-              }}
-            >
-              Delete
-              <LuTrash2 />
-            </Button>
           </Group>
         </VStack>
       </Flex>
@@ -191,7 +217,9 @@ const CollectionsCard = ({
               scrollbarColor="black transparent"
               scrollbarWidth="thin"
             >
-              <For each={savedCollections}>{(c) => <Collection c={c} />}</For>
+              <For each={savedCollections}>
+                {(c) => <Collection key={c.id} c={c} />}
+              </For>
             </Accordion.ItemContent>
           </Accordion.Item>
         </Accordion.Root>
