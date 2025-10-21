@@ -32,37 +32,6 @@ const CollectionsCard = ({
   hideCollection,
 }) => {
   const [openItems, setOpenItems] = useState([]);
-  const [viewedCollection, setViewedCollection] = useState(null);
-  const Marker = ({
-    shape,
-    title = "Title",
-    note = "A note from the user.",
-  }) => {
-    return (
-      <Box
-        w="100%"
-        p={3}
-        // justifyContent={"start"}
-        bg={{ base: "gray.100", _hover: "gray.200" }}
-        transition={"all 0.2s"}
-        border="1px solid"
-        borderColor="gray.300"
-        rounded="sm"
-        variant={"surface"}
-        h="5rem"
-        mb={5}
-        mt={1}
-      >
-        <HStack justifyContent="space-between" gap={0}>
-          <VStack alignItems="start" gap={0}>
-            <Heading>{title}</Heading>
-            <Text>{note}</Text>
-          </VStack>
-          <Button>See details</Button>
-        </HStack>
-      </Box>
-    );
-  };
 
   const Collection = ({ c }) => {
     const iconSize = 20;
@@ -204,20 +173,7 @@ const CollectionsCard = ({
           }}
           value={openItems}
         >
-          <Accordion.Item value="markers">
-            <Accordion.ItemTrigger justifyContent="space-between">
-              <Heading fontWeight={"normal"} fontSize="md">
-                SAVED MARKERS
-              </Heading>
-              <Accordion.ItemIndicator color={"gray.400"} />
-            </Accordion.ItemTrigger>
 
-            <Accordion.ItemContent flexGrow={1} maxH="30vh">
-              <Marker />
-
-              <For each={[1, 2, 3, 1, 2, 3]}>{(m) => <Marker />}</For>
-            </Accordion.ItemContent>
-          </Accordion.Item>
 
           <Accordion.Item value="collections" h="100%" bg="white">
             <Accordion.ItemTrigger justifyContent="space-between">

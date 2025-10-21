@@ -19,14 +19,15 @@ export const MarkerButton = ({ id, label, icon, onClick = null }) => {
   return (
     <Button
       flexGrow={1}
-      key={id}
-      variant="plain"
-      rounded="xl"
-      _hover={{ bg: "gray.950" }}
-      color="white"
-      flexDir="column"
       w="1"
       h="75px"
+      key={id}
+      variant="solid"
+      _first={{roundedBottomLeft:"xl"}}
+      _last={{roundedBottomRight:"xl"}}
+      _hover={{ bg: "gray.800" }}
+      color="white"
+      flexDir="column"
       onClick={onClick}
       _target={"blank"}
     >
@@ -49,25 +50,15 @@ const SingleMarkerCardFooter = ({ source, coords = "-" }) => {
   return (
     <Card.Footer
       w="100%"
+      p="0"
       roundedBottom="xl"
       backgroundClip="content-box"
       justifyContent="center"
       flexDir="row"
-      bg="black"
-      p={0}
+      gap={0}
+      bg="gray.900"
     >
-      <MarkerButton
-        id="expand-action"
-        label="Expand"
-        icon={<LuExpand style={customStyle} strokeWidth="1.5px" />}
-      />
-
-      <MarkerButton
-        id="save-action"
-        label="Save"
-        icon={<LuSave style={customStyle} strokeWidth="1.5px" />}
-      />
-
+      
       <MarkerButton
         id="coords-action"
         label="Location"
