@@ -12,7 +12,7 @@ const COLLECTIONS_CARD = "collections";
 const LAYERS_CARD = "layers";
 const NONE = "";
 
-const EasyButtons = ({ toggleDrawer, openUserCard }) => {
+const EasyButtons = ({ openUserCard }) => {
   const [filterClosed, setFilterClosed] = useState(true);
   const [collectionsClosed, setCollectionsClosed] = useState(true);
   const [layersClosed, setLayersClosed] = useState(true);

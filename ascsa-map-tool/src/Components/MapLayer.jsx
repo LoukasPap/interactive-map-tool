@@ -39,6 +39,10 @@ import {
   applyInventoryFilter,
   hasTextSearchFilterChanged,
   isTextSearchFilterEmpty,
+  calculateBounds,
+  getCurrentDateTime,
+  generateRandomIdUrlSafe,
+  setOpacityOfDOMMarkers,
 } from "./Helpers";
 
 import { onShapeCreated } from "./GeometryOperations";
@@ -172,42 +176,12 @@ const MapLayer = () => {
     return null;
   };
 
-  const MoveTracker = () => {
-    // useMapEvents({
-    //   moveend: (e) => {
-    //     setBounds(mapRef.current.getBounds());
-    //     console.log("New bounds:", bounds);
-    //   },
-    // });
-    return null;
-  };
-
-  function calculateBounds(bounds) {
-    const northEast = bounds.getNorthEast();
-    const southWest = bounds.getSouthWest();
-    const bboxList = [
-      southWest.lng, // West
-      southWest.lat, // South
-      northEast.lng, // East
-      northEast.lat, // North
-    ];
-
-    return bboxPolygon(bboxList);
-  }
-
-  function setOpacityOfDOMMarkers(op) {
-    const domIconElements = document.querySelectorAll(iconExClass);
-    domIconElements.forEach((icon) => {
-      icon.style.opacity = op;
-    });
-  }
-
   useEffect(() => {
     console.log("Markers in bound:", markersInBounds);
 
     if (globalMIBRef.current != null && globalMIBRef.current.length != 0) {
       const selectedMarkersNames = markersInBounds.map((m) => m.Name);
-      const domIconElements = document.querySelectorAll(iconExClass);
+      const domIconElements = document.querySelectorAll(iconExHTMLClass);
 
       domIconElements.forEach((icon) => {
         const markerName = icon.id;

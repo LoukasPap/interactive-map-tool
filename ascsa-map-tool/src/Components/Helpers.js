@@ -1,11 +1,25 @@
 import { booleanPointInPolygon } from "@turf/boolean-point-in-polygon";
 import { point } from "@turf/helpers";
+import { bboxPolygon } from "@turf/bbox-polygon";
 
 export function applyBoundFilter(data, bbox) {
   return data.filter((f) => {
     const p = point(f.geometry.coordinates);
     return booleanPointInPolygon(p, bbox);
   });
+}
+
+export function calculateBounds(bounds) {
+  const northEast = bounds.getNorthEast();
+  const southWest = bounds.getSouthWest();
+  const bboxList = [
+    southWest.lng, // West
+    southWest.lat, // South
+    northEast.lng, // East
+    northEast.lat, // North
+  ];
+
+  return bboxPolygon(bboxList);
 }
 
 export function applySectionFilter(data, f) {
