@@ -87,3 +87,31 @@ export function hasTextSearchFilterChanged(currentFilter, prevFilter) {
 
   return false;
 }
+
+export function getCurrentDateTime() {
+  const now = new Date();
+  const date = now.toLocaleDateString();
+  const time = now.toLocaleTimeString([], {
+    hour: "2-digit",
+    second: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+  });
+  return `${date}, ${time}`;
+}
+
+export function generateRandomIdUrlSafe(len = 16) {
+  const bytes = crypto.getRandomValues(new Uint8Array(len));
+  return Array.from(bytes)
+    .map((b) => ("0" + (b & 0xff).toString(36)).slice(-2))
+    .join("")
+    .slice(0, len);
+}
+
+const iconExHTMLClass = ".leaflet-iconex";
+export function setOpacityOfDOMMarkers(op) {
+  const domIconElements = document.querySelectorAll(iconExHTMLClass);
+  domIconElements.forEach((icon) => {
+    icon.style.opacity = op;
+  });
+}
