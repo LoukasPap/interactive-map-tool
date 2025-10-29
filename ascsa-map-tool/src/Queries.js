@@ -37,7 +37,7 @@ export const deleteCollectionDB = async (id) => {
 
 export async function fetchFromTextSearch(searchParams) {
   return fetch(
-    `${BASE_URL}/search-text?${new URLSearchParams(searchParams).toString()}`
+    `${BASE_URL}/findings/search-text?${new URLSearchParams(searchParams).toString()}`
   ).then((res) => {
     if (!res.ok) throw new Error("Searching text request failed");
     return res.json();
