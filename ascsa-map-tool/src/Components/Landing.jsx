@@ -87,10 +87,19 @@ const Landing = () => {
     });
   };
 
+  const onRegister = (data) => {
+    clearRegisterErrors();
+    setRegisterServerError("");
+    registerMut.mutate({
+      username: data.registerUsername,
+      password: data.registerPassword,
+    });
+  };
+
   const registerMut = useMutation({
     mutationFn: registerUser,
     onMutate: () => {
-      console.log("mutating...isLoading", registerMut.isPending);
+      console.log("Processing registration...", registerMut.isPending);
     },
     onSuccess: (data) => {
       if (data.token) {
@@ -130,15 +139,6 @@ const Landing = () => {
   });
 
   const isLoadingRegister = registerMut.isPending;
-
-  const onRegister = (data) => {
-    clearRegisterErrors();
-    setRegisterServerError("");
-    registerMut.mutate({
-      username: data.registerUsername,
-      password: data.registerPassword,
-    });
-  };
 
   const checkPasswordsMatch = (value) => {
     if (value != getRegisterValues("registerPassword")) {
@@ -244,7 +244,6 @@ const Landing = () => {
 
           <VStack justifyContent={"center"} alignItems={"center"} w="100px">
             <Separator
-              // flex="1"
               h="1/3"
               orientation="vertical"
               size="md"
@@ -253,7 +252,6 @@ const Landing = () => {
 
             <Text flexShrink="0">or</Text>
             <Separator
-              // flex="1"
               h="1/3"
               orientation="vertical"
               size="md"
@@ -291,6 +289,7 @@ const Landing = () => {
                   </Field.ErrorText>
                 </Field.Root>
 
+                {/* Password Field */}
                 <Field.Root
                   required
                   invalid={!!registerErrors.registerPassword}
@@ -319,6 +318,7 @@ const Landing = () => {
                   </Field.ErrorText>
                 </Field.Root>
 
+                {/* Password Confirmation Field */}
                 <Field.Root required invalid={!!registerErrors.confirmPassword}>
                   <Field.Label fontSize={"lg"}>
                     Confirm Password

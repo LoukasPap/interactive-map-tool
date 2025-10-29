@@ -1,6 +1,5 @@
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
-// POST collections
 export const addCollectionDB = async (data) => {
   const res = await fetch(`${BASE_URL}/collections`, {
     method: "POST",
@@ -11,7 +10,6 @@ export const addCollectionDB = async (data) => {
   return res.json();
 };
 
-// PUT collection
 export const updateCollectionDB = async (data) => {
   const res = await fetch(`${BASE_URL}/collections/${data.id}`, {
     method: "PUT",
@@ -22,15 +20,12 @@ export const updateCollectionDB = async (data) => {
   return res.json();
 };
 
-// GET collections
 export const getCollectionsDB = async (data) => {
   const res = await fetch(`${BASE_URL}/collections/${data}`);
   if (!res.ok) throw { status: res.status };
   return res.json();
 };
 
-
-// PUT collection
 export const deleteCollectionDB = async (id) => {
   const res = await fetch(`${BASE_URL}/collections/${id}`, {
     method: "DELETE",
@@ -39,7 +34,6 @@ export const deleteCollectionDB = async (id) => {
   if (!res.ok) throw { status: res.status };
   return res.json();
 };
-
 
 export async function fetchFromTextSearch(searchParams) {
   return fetch(
@@ -54,7 +48,6 @@ export async function fetchPoints() {
   const res = await fetch(`${BASE_URL}/findings`);
   if (!res.ok) throw new Error("Failed to fetch points");
   const dt = await res.json();
-  console.log("Fetched points data:", dt);
   return dt;
 }
 
@@ -71,9 +64,7 @@ export async function fetchPointData(name) {
 
 // Authorization calls
 
-async function postJSON(path, body) {
-  console.log(path, "====", body);
-
+async function register(path, body) {
   const res = await fetch(`${BASE_URL}${path}`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -85,7 +76,7 @@ async function postJSON(path, body) {
   return payload;
 }
 
-export const registerUser = (body) => postJSON("/auth/register", body);
+export const registerUser = (body) => register("/auth/register", body);
 
 export const loginUser = async (body) => {
   const params = new URLSearchParams();
@@ -104,7 +95,6 @@ export const loginUser = async (body) => {
   return payload;
 };
 
-// New: verify token by calling server endpoint (adjust path if your API uses /auth/me or /auth/verify)
 export async function verifyToken(token) {
   if (!token) {
     throw { status: 401, payload: { message: "No token" } };
@@ -120,5 +110,5 @@ export async function verifyToken(token) {
   if (!res.ok) throw { status: res.status, payload };
   console.log("User Verification - Payload", payload);
 
-  return payload; // should include user info or { valid: true }
+  return payload;
 }

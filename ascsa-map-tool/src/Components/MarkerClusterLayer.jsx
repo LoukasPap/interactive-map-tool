@@ -7,7 +7,7 @@ import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 import "../leaflet-iconex";
 import "../demo.css";
 
-import { createMarker, attachEvents } from "./MarkersHelpers";
+import { createMarker, attachEvents } from "../Helpers/MarkersHelpers";
 import { useQueryClient } from "@tanstack/react-query";
 
 const MarkerClusterLayer = ({ data, onMarkerClick }) => {
@@ -15,7 +15,6 @@ const MarkerClusterLayer = ({ data, onMarkerClick }) => {
   const qc = useQueryClient();
 
   useEffect(() => {
-    console.log("[LOG] Data in MarkerClusterLayer:", data);
     if (!map || !data) return;
 
     const markerClusterGroup = L.markerClusterGroup({
@@ -34,7 +33,7 @@ const MarkerClusterLayer = ({ data, onMarkerClick }) => {
       const marker = createMarker(feature);
       attachEvents(marker, onMarkerClick, feature, qc);
 
-      marker.options.pmIgnore = true;
+      marker.options.pmIgnore = true; // this is to ignore geoman operations on markers
       markers.push(marker);
     });
 
@@ -53,3 +52,4 @@ const MarkerClusterLayer = ({ data, onMarkerClick }) => {
 };
 
 export default MarkerClusterLayer;
+

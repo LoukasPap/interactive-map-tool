@@ -1,24 +1,10 @@
-import {
-  Text,
-  Card,
-  Accordion,
-  Heading,
-  Box,
-  Button,
-  VStack,
-  HStack,
-  For,
-  Icon,
-  IconButton,
-  Group,
-  Flex,
-} from "@chakra-ui/react";
+import { Text, Card, Accordion, Heading, For, Group } from "@chakra-ui/react";
 
 import { CheckboxCard } from "../ui/checkbox-card";
 import { Switch } from "../ui/switch";
 import { useState, useEffect } from "react";
 import SectionsLayer from "./SectionsLayer";
-import { LuAArrowDown, LuCamera, LuPictureInPicture } from "react-icons/lu";
+import { LuAArrowDown } from "react-icons/lu";
 
 const agoraImagesFolders = [
   "Agora Site",
@@ -74,7 +60,14 @@ const SectionsLayerCard = ({ areLayersOpen, setImages, toggleTitles }) => {
       </Card.Header>
 
       <Card.Body h="inherit" gap={3} overflow="auto">
-        <Group w="100%" border="1px solid" borderColor={"gray.400"} p={2} rounded="lg" variant="raised">
+        <Group
+          w="100%"
+          border="1px solid"
+          borderColor={"gray.400"}
+          p={2}
+          rounded="lg"
+          variant="raised"
+        >
           <Switch
             indicator={<LuAArrowDown />}
             label="Toggle"
@@ -86,8 +79,8 @@ const SectionsLayerCard = ({ areLayersOpen, setImages, toggleTitles }) => {
 
               toggleTitles(e.checked);
             }}
-            />
-            <Text>Titles {checked ? "Enabled" : "Disabled"}</Text>
+          />
+          <Text>Titles {checked ? "Enabled" : "Disabled"}</Text>
         </Group>
 
         <Accordion.Root

@@ -13,7 +13,7 @@ import {
 } from "@chakra-ui/react";
 
 import { useEffect, useRef, useState } from "react";
-import { handleEvent } from "../Handlers";
+import { handleEvent } from "../../Helpers/Handlers";
 
 const customStyle = { width: "2.25em", height: "2.5em" };
 const popoverCustomStyle = { width: "1.3em", height: "2.25em" };

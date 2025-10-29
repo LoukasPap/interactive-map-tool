@@ -18,7 +18,7 @@ import { LuInfo } from "react-icons/lu";
 import PeriodFilterButton from "./PeriodFilterButton";
 import SearchTextFilter from "./SearchTextFilter";
 
-import usePrevious from "../../CustomHooks/usePrevious"
+import usePrevious from "../../../CustomHooks/usePrevious"
 
 const initialInventoryList = [
   { title: "A",  value: "A",  fullTitle: "Architecture", color: "#000", checked: false },

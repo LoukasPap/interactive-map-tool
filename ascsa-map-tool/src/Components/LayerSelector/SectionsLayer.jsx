@@ -1,9 +1,10 @@
-import { Box, Container } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { Box } from "@chakra-ui/react";
 import { ImageOverlay } from "react-leaflet/ImageOverlay";
 import { Marker } from "react-leaflet/Marker";
 
 const SectionsLayer = ({ sectionImages = [], areTitlesEnabled }) => {
+  
+  // Label properties
   const offsetLat = 0.0000115;
   const offsetLon = 0.000005;
   function positionLabel(bound) {
@@ -41,3 +42,5 @@ const SectionsLayer = ({ sectionImages = [], areTitlesEnabled }) => {
 };
 
 export default SectionsLayer;
+
+

@@ -4,23 +4,18 @@ import {
   Drawer,
   Portal,
   Avatar,
-  VStack,
   Image,
   Text,
-  Button,
   IconButton,
   Icon,
   Link,
   Float,
-  Circle,
-  Center,
   For,
   Separator,
-  Stack,
 } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { LuExternalLink, LuLogOut, LuMenu, LuSettings } from "react-icons/lu";
-import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const MainMenu = () => {
   const qc = useQueryClient();

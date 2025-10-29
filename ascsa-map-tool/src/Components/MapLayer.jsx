@@ -33,19 +33,23 @@ import {
   getCurrentDateTime,
   generateRandomIdUrlSafe,
   setOpacityOfDOMMarkers,
-} from "./Helpers";
+} from "../Helpers/Helpers";
 
 import {
   getShapeProperties,
   restoreShape,
   removeShapeLayer,
-} from "./ShapeHelpers";
+} from "../Helpers/ShapeHelpers";
 
-import { onShapeCreated } from "./GeometryOperations";
-import { deactivateHandlers, handleDrawShape, handleEvent } from "./Handlers";
+import { onShapeCreated } from "../Helpers/GeometryOperations";
+import {
+  deactivateHandlers,
+  handleDrawShape,
+  handleEvent,
+} from "../Helpers/ShapeHandlers";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import usePrevious from "./CustomHooks/usePrevious";
+import usePrevious from "../CustomHooks/usePrevious";
 import SectionsLayer from "./LayerSelector/SectionsLayer";
 import SectionsLayerCard from "./LayerSelector/SectionsLayerCard";
 
@@ -140,12 +144,6 @@ const MapLayer = () => {
 
   const textSearchMutation = useMutation({
     mutationFn: () => fetchFromTextSearch(filters.textSearch),
-    onMutate: (variables) => {
-      // A mutation is about to happen!
-      console.log("LOG] Starting to mutate!");
-
-      return { id: 1 };
-    },
     onSuccess: (data, variables, context) => {
       console.log("[LOG] Success!");
       qc.setQueryData(["data"], data);
@@ -173,8 +171,8 @@ const MapLayer = () => {
       console.log(`[LOG] Error deleting collection! --> ${error}`),
   });
 
-  let { isLoading, isError, data, error } = useQuery({
-    queryKey: ["data"], // unique key for caching
+  let { data } = useQuery({
+    queryKey: ["data"],
     queryFn: fetchPoints,
     refetchOnWindowFocus: false,
     staleTime: Infinity,
@@ -183,7 +181,6 @@ const MapLayer = () => {
   let {
     isLoading: collectionLoading,
     data: collectionData,
-    error: collectionError,
     isSuccess,
   } = useQuery({
     queryKey: ["collectionData"],
@@ -196,7 +193,7 @@ const MapLayer = () => {
   useEffect(() => {
     if (isSuccess && collectionData) {
       let dbcollections = collectionData.data.map((collection) => {
-        const restoredShape = restoreShape(mapRef.current, collection.shape);
+        const restoredShape = restoreShape(collection.shape);
 
         return {
           ...collection,
@@ -225,17 +222,17 @@ const MapLayer = () => {
   const ZoomTracker = () => {
     useMapEvents({
       zoomend: (e) => {
-        const newZoom = e.target.getZoom();
-        setZoom(newZoom);
+        setMarkersOpacity();
       },
     });
     return null;
   };
 
-  useEffect(() => {
-    console.log("Markers in bound:", markersInBounds);
-
+  function setMarkersOpacity() {
+    console.log("enters");
     if (globalMIBRef.current != null && globalMIBRef.current.length != 0) {
+      console.log("works");
+      
       const selectedMarkersNames = markersInBounds.map((m) => m.Name);
       const domIconElements = document.querySelectorAll(iconExHTMLClass);
 
@@ -248,18 +245,18 @@ const MapLayer = () => {
         }
       });
     }
-  }, [markersInBounds, zoom]);
+  }
+  useEffect(() => {
+    setMarkersOpacity();
+  }, [markersInBounds]);
 
   async function runTextSearchMutation() {
     if (hasTextSearchFilterChanged(filters.textSearch, prevFilter.textSearch)) {
       if (isTextSearchFilterEmpty(filters.textSearch)) {
-        console.log("[LOG] REFETCHING");
         await qc.refetchQueries({ queryKey: ["data"] });
       } else {
         await textSearchMutation.mutateAsync();
       }
-
-      console.log("[LOG] Done fetching text!");
       return qc.getQueryData(["data"]);
     }
 
@@ -289,7 +286,6 @@ const MapLayer = () => {
     const map = mapRef.current;
 
     map.on("pm:create", (e) => {
-      console.log("[DEBUG] - [ON CREATE SHAPE] - ENTER");
       currentShape.current = e;
       e.layer._path.style.strokeDasharray = "10px";
       onShapeCreated(e, activeData, onEditEvents);
@@ -302,7 +298,6 @@ const MapLayer = () => {
 
       toggleMarkersCard("multi");
       setTool("Edit");
-      console.log("[DEBUG] - [ON CREATE SHAPE] - EXIT");
     });
 
     return () => {
@@ -311,8 +306,9 @@ const MapLayer = () => {
   }, [mapReady, activeData]);
 
   function applyClientSideFilters(newActiveData) {
-    console.log("[LOG] Applying client side filters, with data", newActiveData);
+    console.log("[LOG] Applying client side filters", newActiveData);
 
+    // drop data without coordinates
     let monumentData = newActiveData.features.filter(
       (m) => m.Type == "monument" && m.geometry != null
     );
@@ -320,29 +316,17 @@ const MapLayer = () => {
       (m) => m.geometry != null && m.Type != "monument"
     );
 
-    let bbox = initialBounds;
-    if (bounds != null) bbox = calculateBounds(bounds);
-
     const monumentsVisibility = filters.monument.ShowMonuments;
 
     if (monumentsVisibility != "Only") {
       newActiveData = applyPeriodFilter(newActiveData, filters);
-      // newActiveData = applyBoundFilter(newActiveData, bbox);
     }
 
     newActiveData = applyInventoryFilter(newActiveData, filters);
     // We push the monuments_data second to be more efficient (they are just ~50 allocations)
-    newActiveData = applyMonumentFilter(
-      newActiveData,
-      monumentData,
-      monumentsVisibility,
-      filters
-    );
-
+    newActiveData = applyMonumentFilter(newActiveData, monumentData, monumentsVisibility, filters);
     newActiveData = applySectionFilter(newActiveData, filters);
-    newActiveData = newActiveData.filter((x) => x.geometry != null); // Remove points with no geometry for now
 
-    console.log("[LOG] new newActiveData", newActiveData);
     setActiveData(newActiveData);
   }
 
@@ -356,8 +340,6 @@ const MapLayer = () => {
   }
 
   async function onShapeEdit(collection) {
-    console.log("[DEBUG] - START EDIT SHAPE:", collection);
-
     const currentCollectionState = allCollectionsRef.current.find(
       (c) => c.id == collection.id
     );
@@ -366,6 +348,7 @@ const MapLayer = () => {
       await updateCollection({
         ...currentCollectionState,
         shape: collection.shape,
+        type: collection.type || collection.shape.shape,
       });
     }
 
@@ -397,8 +380,8 @@ const MapLayer = () => {
       return next;
     });
 
-    console.log("[DEBUG] - FINISH EDIT SHAPE:", collection.id);
   }
+
 
   function onEditEvents(e) {
     setMarkersInBounds(e);
@@ -519,6 +502,7 @@ const MapLayer = () => {
     const collectionUpdateFields = {
       markers: globalMIBRef.current,
       shape: shapeProps,
+      type: c.type,
       date: getCurrentDateTime(),
     };
 
@@ -529,8 +513,6 @@ const MapLayer = () => {
   }
 
   async function deleteCollection(c) {
-    console.log("[DEBUG] - [DELETE COLLECTION] - ENTER", c);
-
     allCollectionsRef.current = allCollectionsRef.current.filter(
       (col) => col.id != c.id
     );
@@ -553,8 +535,6 @@ const MapLayer = () => {
     toggleMarkersCard("");
     setMarkersInBounds([]);
     setOpacityOfDOMMarkers(1);
-
-    console.log("[DEBUG] - [DELETE COLLECTION] - EXIT");
   }
 
   function setTool(tool) {
@@ -615,8 +595,6 @@ const MapLayer = () => {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
-        <SectionsLayer />
-
         <MarkerClusterLayer
           data={activeData}
           onMarkerClick={displayMarkerCard}
@@ -626,7 +604,10 @@ const MapLayer = () => {
         <ScaleControl position="bottomleft" />
         <ZoomControl position="bottomright" />
 
-        <SectionsLayer sectionImages={sectionImages} areTitlesEnabled={titlesVisibility}/>
+        <SectionsLayer
+          sectionImages={sectionImages}
+          areTitlesEnabled={titlesVisibility}
+        />
       </MapContainer>
 
       <SingleMarkerCard
@@ -656,9 +637,7 @@ const MapLayer = () => {
 
       <Box w="fit" m="12px" pos="relative" h="100%" pointerEvents="none">
         <VStack w="22.5vw">
-          <EasyButtons
-            openUserCard={setUserCardOpen}
-          ></EasyButtons>
+          <EasyButtons openUserCard={setUserCardOpen}></EasyButtons>
 
           {/* The User Cards*/}
 

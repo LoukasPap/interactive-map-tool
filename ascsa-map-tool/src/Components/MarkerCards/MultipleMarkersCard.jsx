@@ -33,7 +33,7 @@ import { MarkerButton } from "./SingleMarkerCardFooter";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { addCollectionDB, fetchPointData, pointQueryKey } from "../../Queries";
-import { getShapeProperties } from "../ShapeHelpers";
+import { getShapeProperties } from "../../Helpers/ShapeHelpers";
 
 const eraToColorMapping = {
   Neolithic: "gray.700",
@@ -53,8 +53,6 @@ const eraToColorMapping = {
   Unknown: "gray.950",
 };
 
-const pageSize = 25;
-
 const MultipleMarkersCard = ({
   collection = {},
   markers,
@@ -63,8 +61,8 @@ const MultipleMarkersCard = ({
   isVisible,
   onMarkerClick,
 }) => {
-  console.log("markers in MultipleMarkersCard: ", collection);
-
+  
+  const pageSize = 25;
   const [page, setPage] = useState(1);
 
   const startRange = (page - 1) * pageSize;
@@ -83,7 +81,7 @@ const MultipleMarkersCard = ({
 
   const addCollectionMutation = useMutation({
     mutationFn: (data) => addCollectionDB(data),
-    onError: (error, variables, context) => {
+    onError: (error) => {
       console.log(`[LOG] Error storing collection! --> ${error}`);
     },
   });
@@ -357,6 +355,7 @@ const MultipleMarkersCard = ({
           </ButtonGroup>
         </Pagination.Root>
       </Card.Header>
+      
       <Card.Body
         pt="0"
         gap="2"

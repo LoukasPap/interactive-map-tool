@@ -1,6 +1,6 @@
 import { Text, Button, Card, Spinner, Box, Icon } from "@chakra-ui/react";
 import { useRef, useState } from "react";
-import ArtifactsFilters from "./Subcomponets/ArtifactsFilters";
+import ArtifactsFilters from "./Subcomponents/ArtifactsFilters";
 import { Tooltip } from "../ui/tooltip";
 import { LuInfo } from "react-icons/lu";
 
@@ -13,7 +13,6 @@ const FilterCard = ({ areFiltersOpen = false, setFilters, filterLoading }) => {
   }
 
   const applyFilters = () => {
-    console.log("changed,", filtersState.current);
     setFilters(filtersState.current);
   };
 

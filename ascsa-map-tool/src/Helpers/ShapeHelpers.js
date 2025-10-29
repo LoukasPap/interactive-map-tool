@@ -1,6 +1,5 @@
 export function getShapeProperties(shapeType, obj) {
   const layer = obj.layer || obj;
-  console.log("layer", layer);
 
   let props = {
     type: shapeType,
@@ -15,7 +14,7 @@ export function getShapeProperties(shapeType, obj) {
   return props;
 }
 
-export function restoreShape(map, shapeData) {
+export function restoreShape(shapeData) {
   if (!shapeData || !shapeData.type) return null;
 
   const { type, geojson, options } = shapeData;
@@ -50,14 +49,12 @@ export function restoreShape(map, shapeData) {
       console.warn("Unknown shape type:", type);
   }
 
-  if (layer) {
-    if (layer.pm) {
-      layer.pm.enable({
-        allowEditing: true,
-        draggable: true,
-        snappable: false,
-      });
-    }
+  if (layer && layer.pm) {
+    layer.pm.enable({
+      allowEditing: true,
+      draggable: true,
+      snappable: false,
+    });
   }
 
   return layer;

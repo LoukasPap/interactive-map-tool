@@ -1,4 +1,4 @@
-import { getMonumentIcon } from "./IconHelpers";
+import { getMonumentIcon } from "./MarkerIconHelpers";
 import { fetchPointData, pointQueryKey } from "../Queries";
 
 const eraToColor = {
@@ -45,8 +45,6 @@ export function attachEvents(marker, onMarkerClick, feature, qc) {
 
   marker.on({
     click: async (e) => {
-      console.log("Clicked marker:", feature);
-
       const res = await qc.fetchQuery({queryKey: pointQueryKey(feature.Name), queryFn: () => fetchPointData(feature.Name)});
       const point = res.point;
       onMarkerClick({point})

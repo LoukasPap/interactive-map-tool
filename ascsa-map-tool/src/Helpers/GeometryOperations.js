@@ -3,7 +3,7 @@ import { booleanPointInPolygon } from "@turf/boolean-point-in-polygon";
 import { bboxPolygon } from "@turf/bbox-polygon";
 import { point, polygon } from "@turf/helpers";
 
-import { globalMIBRef } from "./MapLayer";
+import { globalMIBRef } from "../Components/MapLayer";
 
 export const checkIntersectingMarkers = (
   shapeType,

@@ -120,13 +120,6 @@ const SingleMarkerCard = ({ marker, toggleCard, isVisible }) => {
     }
   }, [marker]);
 
-  const [copied, setCopied] = useState(false);
-
-  const handleCopy = () => {
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-    console.log("finito");
-  };
 
   const calculateAspectRatio = (width, height) => {
     // Simplify the ratio
@@ -265,7 +258,6 @@ const SingleMarkerCard = ({ marker, toggleCard, isVisible }) => {
       <Card.Body gap="4" maxH="100%" overflow="auto">
         <DataList.Root color="black" size="lg">
           <SimpleGrid columns={3} gap="4">
-            {/* {point && point.f.proper} */}
             {propList.map((prop) => (
               <DataList.Item
                 key={prop}

@@ -1,23 +1,27 @@
-import { Box, IconButton } from "@chakra-ui/react";
+import { Icon, IconButton } from "@chakra-ui/react";
 
 const ActionButton = ({ icon, event, isActive, id }) => {
   return (
     <IconButton
       variant="solid"
       rounded="sm"
-      overflow={"hidden"}
+      overflow="hidden"
       bg={isActive ? "gray.950" : "white"}
       color={isActive ? "white" : "gray.900"}
       border="1px solid #d4d4d8"
       backgroundClip="padding-box"
-      _hover={isActive ? { bg: "#161616", backgroundClip:"padding-box" } : { bg: "gray.300" }}
+      _hover={
+        isActive
+          ? { bg: "#161616", backgroundClip: "padding-box" }
+          : { bg: "gray.300", transform: "scale(1.1)" }
+      }
       id={id}
       p="2.5"
       w="fit"
       h="fit"
       onClick={event}
     >
-      {icon}
+      <Icon>{icon}</Icon>
     </IconButton>
   );
 };
